@@ -51,7 +51,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
         },
       };
       const cardId = "xcard-" + randomId().toLowerCase();
-      const profileLink = `https://${process.env.HOST_URL}/profile/${cardId}`;
+      const profileLink = `http://${process.env.HOST_URL}/profile/${cardId}`;
       const qrCode = await QRCode.toBuffer(profileLink, options);
       const qrFile = {
         buffer: qrCode,
@@ -198,9 +198,8 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
             const modifiedProduct = await Promise.all(
               product?.products?.map(async (item) => {
                 const { _id, ...all } = item;
-                const buff = await imageFileToBase64(item?.image?.path);
                 const upload = await uploadBufferFile(
-                  { ...all.image, buffer: buff },
+                  { ...all.image, buffer: item?.image?.base64 },
                   "products",
                   getRandomFileName("product-")
                 );
@@ -285,7 +284,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
               video: { ...video, link: video?.link },
             });
             let message = { success: "User Profile Created" };
-            return res.json({ success: true, message, data: user });
+            return res.status(201).send({ success: true, message, data: user });
           }
           return next(
             new ErrorResponse(
@@ -323,7 +322,7 @@ export const createAdminUserProfile = asyncHandler(async (req, res, next) => {
           const user = await User.create({
             username: phone,
             uid: userRecord?.uid,
-            role: req?.query?.role ?? "user",
+            role: "admin",
             providerData: userRecord?.providerData,
           });
           await Profile.create({
@@ -355,6 +354,22 @@ export const createAdminUserProfile = asyncHandler(async (req, res, next) => {
 });
 
 /**
+ * @desc    Delete User Account
+ * @route   DELETE /api/v1/user/delete
+ * @access  Private/Admin Private/User
+ * @schema  Private
+ */
+
+export const deleteUser = asyncHandler(async (req, res, next) => {
+  //TODO Delete users linked product images and profile and banner images from google storage
+  const { user } = req?.query;
+  const userid = await User.findByIdAndDelete(user);
+  admin.auth().deleteUser(userid?.uid);
+  await Profile.deleteMany({ user: userid });
+  let message = { success: "User Account Deleted" };
+  return res.status(200).send({ success: true, message });
+});
+/**
  * @desc    Update User Profile
  * @route   POST /api/v1/user/update
  * @access  Private/Admin Private/User
@@ -375,7 +390,10 @@ export const updateUserProfile = asyncHandler(async (req, res, next) => {
       }
 
       const profile = await Profile.findOneAndUpdate(
-        { user: req?.query?.user ?? req?.user?.id },
+        {
+          user: req?.query?.user ?? req?.user?.id,
+          _id: req?.query?.profile,
+        },
         {
           $set: {
             "profile.name": name,
@@ -515,6 +533,7 @@ async function mixinEngineAdd(req, array) {
   const updates = array.map((item) => {
     const query = {
       user: req?.query?.user ?? req?.user?.id,
+      _id: req?.query?.profile,
     };
     const { _id, ...rest } = item.data;
     const update = {
@@ -546,9 +565,9 @@ async function mixinEngineAddProduct(req, array) {
     const { _id, ...all } = item?.data;
     const query = {
       user: req?.query?.user ?? req?.user?.id,
+      _id: req?.query?.profile,
     };
-    const buf = await imageFileToBase64(item?.data?.image?.path);
-    const file = { ...item?.data?.image, buffer: buf };
+    const file = { ...item?.data?.image, buffer: item?.data?.image?.base64 };
     await uploadBufferFile(
       file,
       "products",
@@ -575,10 +594,9 @@ async function mixinEngineEditProduct(req, array) {
   array.map(async (item) => {
     const { _id, ...all } = item?.data;
     // Check if the edit has change for new image
-    if (item?.data?.image?.path) {
+    if (item?.data?.image?.base64) {
       // TODO: Delete Old Image File From Bucket
-      const buf = await imageFileToBase64(item?.data?.image?.path);
-      const file = { ...item?.data?.image, buffer: buf };
+      const file = { ...item?.data?.image, buffer: item?.data?.image?.base64 };
       await uploadBufferFile(
         file,
         "products",
@@ -586,17 +604,19 @@ async function mixinEngineEditProduct(req, array) {
       ).then(async (image) => {
         const query = {
           user: req?.query?.user ?? req?.user?.id,
+          _id: req?.query?.profile,
           [`${item?.section}.${item?.section}s._id`]: item.data?._id,
         };
         await Profile.updateOne(query, {
           $set: {
-            [`${item?.section}.${item?.section}s`]: { ...all, image },
+            [`${item?.section}.${item?.section}s.$`]: { ...all, image },
           },
         });
       });
     } else {
       const query = {
         user: req?.query?.user ?? req?.user?.id,
+        _id: req?.query?.profile,
         [`${item?.section}.${item?.section}s._id`]: item.data?._id,
       };
       await Profile.updateOne(query, {
@@ -619,6 +639,7 @@ function mixinEngineDelete(req, array) {
   const updates = array.map((item) => {
     const query = {
       user: req?.query?.user ?? req?.user?.id,
+      _id: req?.query?.profile,
       [`${item?.section}.${item?.section}s._id`]: item.data?._id,
     };
     const update = {
@@ -655,6 +676,7 @@ function mixinEngineEdit(req, array) {
     if (item?.section == "video" || item?.section == "bank") {
       query = {
         user: req?.query?.user ?? req?.user?.id,
+        _id: req?.query?.profile,
       };
       update =
         item?.section == "video"
@@ -665,6 +687,7 @@ function mixinEngineEdit(req, array) {
     } else {
       query = {
         user: req?.query?.user ?? req?.user?.id,
+        _id: req?.query?.profile,
         [`${item?.section}.${item?.section}s._id`]: item.data?._id,
       };
       update = {
@@ -694,6 +717,7 @@ function mixinEngineStatus(req, array) {
   const updates = array.map((item) => {
     const query = {
       user: req?.query?.user ?? req?.user?.id,
+      _id: req?.query?.profile,
     };
     const update = {
       [`${item?.section}.status`]: item.data,

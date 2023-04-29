@@ -54,6 +54,10 @@ userRouter
   );
 
 userRouter
+  .route("/delete")
+  .delete(protect, authorize("admin", "user"), userController.deleteUser);
+
+userRouter
   .route("/updateAdmin")
   .post(
     protect,

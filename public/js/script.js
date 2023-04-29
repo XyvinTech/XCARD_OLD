@@ -199,7 +199,7 @@ function createButton(type, value) {
     button.onclick = () => window.open(`https://wa.me/${value}`);
   } else if (type === "wabusiness") {
     const img = document.createElement("img");
-    img.src = "/images/wb.svg";
+    img.src = "/profile/public/images/wb.svg";
     img.alt = "WhatsApp Business";
     button.appendChild(img);
     button.onclick = () => window.open(`https://wa.me/${value}`);
@@ -228,7 +228,7 @@ function generateLinkCard(linkData) {
     <div class="link-card">
       <p class="link">${linkData.link}</p>
       <button class="image" onclick="window.open('${linkData.link}', '_blank')">
-        <img src="/images/arrow_outward.svg" alt="" class="arrow">
+        <img src="/profile/public/images/arrow_outward.svg" alt="" class="arrow">
       </button>
     </div>
   `;
