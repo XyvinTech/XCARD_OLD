@@ -40,6 +40,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
     bank,
     product,
   } = all;
+  console.log(all);
   delete bank?.bankDetails?._id;
   delete video?.link?._id;
   await uploadFiles(req?.files, "profiles")
@@ -51,7 +52,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
         },
       };
       const cardId = "xcard-" + randomId().toLowerCase();
-      const profileLink = `http://${process.env.HOST_URL}/profile/${cardId}`;
+      const profileLink = `${process.env.HOST_URL_HTTPS}/profile/${cardId}`;
       const qrCode = await QRCode.toBuffer(profileLink, options);
       const qrFile = {
         buffer: qrCode,
@@ -82,9 +83,8 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
           const modifiedProduct = await Promise.all(
             product?.products?.map(async (item) => {
               const { _id, ...all } = item;
-              const buff = await imageFileToBase64(item?.image?.path);
               const upload = await uploadBufferFile(
-                { ...all.image, buffer: buff },
+                { ...all.image, buffer: item?.image?.base64 },
                 "products",
                 getRandomFileName("product-")
               );
@@ -106,6 +106,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
             },
             contact: {
               ...contact,
+              status: contact?.contacts?.length > 0 ? true : false,
               contacts: contact?.contacts.map((obj) => {
                 const filteredObj = Object.fromEntries(
                   Object.entries(obj).filter(([key, value]) => value !== null)
@@ -116,6 +117,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
             },
             social: {
               ...social,
+              status: social?.socials?.length > 0 ? true : false,
               socials: social?.socials.map((obj) => {
                 const filteredObj = Object.fromEntries(
                   Object.entries(obj).filter(([key, value]) => value !== null)
@@ -126,6 +128,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
             },
             website: {
               ...website,
+              status: website?.websites?.length > 0 ? true : false,
               websites: website?.websites.map((obj) => {
                 const filteredObj = Object.fromEntries(
                   Object.entries(obj).filter(([key, value]) => value !== null)
@@ -136,6 +139,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
             },
             service: {
               ...service,
+              status: service?.services?.length > 0 ? true : false,
               services: service?.services.map((obj) => {
                 const filteredObj = Object.fromEntries(
                   Object.entries(obj).filter(([key, value]) => value !== null)
@@ -146,6 +150,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
             },
             award: {
               ...award,
+              status: award?.awards?.length > 0 ? true : false,
               awards: award?.awards.map((obj) => {
                 const filteredObj = Object.fromEntries(
                   Object.entries(obj).filter(([key, value]) => value !== null)
@@ -156,6 +161,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
             },
             certificate: {
               ...certificate,
+              status: certificate?.certificates?.length > 0 ? true : false,
               certificates: certificate?.certificates.map((obj) => {
                 const filteredObj = Object.fromEntries(
                   Object.entries(obj).filter(([key, value]) => value !== null)
@@ -164,7 +170,11 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
                 return filteredObj;
               }),
             },
-            product: { ...product, products: modifiedProduct },
+            product: {
+              ...product,
+              status: modifiedProduct.length > 0 ? true : false,
+              products: modifiedProduct,
+            },
             bank: { ...bank, bankDetails: bank?.bankDetails },
             video: { ...video, link: video?.link },
           });
@@ -221,6 +231,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
               },
               contact: {
                 ...contact,
+                status: contact?.contacts?.length > 0 ? true : false,
                 contacts: contact?.contacts.map((obj) => {
                   const filteredObj = Object.fromEntries(
                     Object.entries(obj).filter(([key, value]) => value !== null)
@@ -231,6 +242,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
               },
               social: {
                 ...social,
+                status: social?.socials?.length > 0 ? true : false,
                 socials: social?.socials.map((obj) => {
                   const filteredObj = Object.fromEntries(
                     Object.entries(obj).filter(([key, value]) => value !== null)
@@ -241,6 +253,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
               },
               website: {
                 ...website,
+                status: website?.websites?.length > 0 ? true : false,
                 websites: website?.websites.map((obj) => {
                   const filteredObj = Object.fromEntries(
                     Object.entries(obj).filter(([key, value]) => value !== null)
@@ -251,6 +264,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
               },
               service: {
                 ...service,
+                status: service?.services?.length > 0 ? true : false,
                 services: service?.services.map((obj) => {
                   const filteredObj = Object.fromEntries(
                     Object.entries(obj).filter(([key, value]) => value !== null)
@@ -261,6 +275,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
               },
               award: {
                 ...award,
+                status: award?.awards?.length > 0 ? true : false,
                 awards: award?.awards.map((obj) => {
                   const filteredObj = Object.fromEntries(
                     Object.entries(obj).filter(([key, value]) => value !== null)
@@ -271,6 +286,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
               },
               certificate: {
                 ...certificate,
+                status: certificate?.certificates?.length > 0 ? true : false,
                 certificates: certificate?.certificates.map((obj) => {
                   const filteredObj = Object.fromEntries(
                     Object.entries(obj).filter(([key, value]) => value !== null)
@@ -279,9 +295,21 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
                   return filteredObj;
                 }),
               },
-              product: { ...product, products: modifiedProduct },
-              bank: { ...bank, bankDetails: bank?.bankDetails },
-              video: { ...video, link: video?.link },
+              product: {
+                ...product,
+                status: modifiedProduct.length > 0 ? true : false,
+                products: modifiedProduct,
+              },
+              bank: {
+                ...bank,
+                status: bank?.bankDetails?.accnumber ? true : false,
+                bankDetails: bank?.bankDetails,
+              },
+              video: {
+                ...video,
+                status: video?.link?.link ? true : false,
+                link: video?.link,
+              },
             });
             let message = { success: "User Profile Created" };
             return res.status(201).send({ success: true, message, data: user });

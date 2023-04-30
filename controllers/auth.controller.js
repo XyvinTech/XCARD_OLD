@@ -3,6 +3,7 @@ import admin from "firebase-admin";
 import User from "../models/User.js";
 import ErrorResponse from "../utils/error.response.js";
 import Profile from "../models/Profile.js";
+import sendSMS from "../utils/sms.sender.js";
 
 /**
  * @desc    Number Sign In User
@@ -13,6 +14,7 @@ import Profile from "../models/Profile.js";
 export const loginUser = asyncHandler(async (req, res, next) => {
   // Get the Google OAuth token from the request
   const idToken = req.body.clientToken;
+
   // Verify the token with Firebase
   admin
     .auth()
@@ -73,9 +75,20 @@ export const checkUser = asyncHandler(async (req, res, next) => {
     return next(new ErrorResponse("Please pass phone number", 400));
   }
   const user = await User.findOne({ username: req?.body?.phone });
+  const customAuthToken = await admin.auth().createCustomToken(user.uid);
   if (user) {
     let message = { success: "User Registered" };
-    return res.json({ success: true, message });
+    const otp = Math.floor(Math.random() * 9000) + 1000;
+    sendSMS({
+      mobile: `${user?.username}`,
+      body: `Dear Customer, Your OTP is ${otp}. Please do not share with anyone. Skybertech`,
+    });
+    return res.json({
+      success: true,
+      message,
+      authToken: customAuthToken,
+      otp: otp,
+    });
   }
   return next(new ErrorResponse("User not registered", 400));
 });
