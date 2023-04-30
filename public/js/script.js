@@ -79,7 +79,6 @@ const createVcard = () => {
     `EMAIL;TYPE=WORK:${personData.email}`,
     `ORG:${personData.name}`,
     `TITLE:${personData.position}`,
-    `ADR;TYPE=WORK:;;${personData.address}`,
     `TEL;TYPE=CELL:${personData.phone}`,
     "END:VCARD",
   ].join("\n");

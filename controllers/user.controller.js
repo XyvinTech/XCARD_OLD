@@ -200,7 +200,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
               },
             };
             const cardId = "xcard-" + randomId().toLowerCase();
-            const profileLink = `https://${process.env.HOST_URL}/profile/${cardId}`;
+            const profileLink = `${process.env.HOST_URL_HTTPS}/profile/${cardId}`;
             const qrCode = await QRCode.toBuffer(profileLink, options);
             const qrFile = {
               buffer: qrCode,
@@ -822,7 +822,7 @@ export const createUserProfileBulk = asyncHandler(async (req, res, next) => {
         },
       };
       const cardId = "xcard-" + randomId().toLowerCase();
-      const profileLink = `https://${process.env.HOST_URL}/profile/${cardId}`;
+      const profileLink = `${process.env.HOST_URL_HTTPS}/profile/${cardId}`;
       const qrCode = await QRCode.toBuffer(profileLink, options);
       const qrFile = {
         buffer: qrCode,
@@ -962,7 +962,7 @@ export const createUserProfileCloudBulk = asyncHandler(
           },
         };
         const cardId = "xcard-" + randomId().toLowerCase();
-        const profileLink = `https://${process.env.HOST_URL}/profile/${cardId}`;
+        const profileLink = `${process.env.HOST_URL_HTTPS}/profile/${cardId}`;
         const qrCode = await QRCode.toBuffer(profileLink, options);
         const qrFile = {
           buffer: qrCode,
