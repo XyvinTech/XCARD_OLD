@@ -39,9 +39,11 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
     award,
     bank,
     product,
+    enquiry,
   } = all;
   delete bank?.bankDetails?._id;
   delete video?.link?._id;
+  delete enquiry?.email?._id;
   await uploadFiles(req?.files, "profiles")
     .then(async (images) => {
       const options = {
@@ -184,6 +186,11 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
               status: video?.link?.link ? true : false,
               link: video?.link,
             },
+            enquiry: {
+              ...enquiry,
+              status: enquiry?.email?.email ? true : false,
+              email: enquiry?.email,
+            },
           });
 
           let message = { success: "User Profile Created" };
@@ -316,6 +323,11 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
                 ...video,
                 status: video?.link?.link ? true : false,
                 link: video?.link,
+              },
+              enquiry: {
+                ...enquiry,
+                status: enquiry?.email?.email ? true : false,
+                email: enquiry?.email,
               },
             });
             let message = { success: "User Profile Created" };
@@ -509,7 +521,13 @@ async function mixinEngine(req, array) {
     "certificate",
     "product",
   ];
-  const validEditSection = [...validAddSection, "contact", "bank", "video"];
+  const validEditSection = [
+    ...validAddSection,
+    "contact",
+    "bank",
+    "video",
+    "enquiry",
+  ];
   const validDeleteSection = [...validAddSection];
   const add = [];
   const addProduct = [];
@@ -708,7 +726,11 @@ function mixinEngineEdit(req, array) {
     let update;
     let query;
     // Create Add Query For Bank and Video
-    if (item?.section == "video" || item?.section == "bank") {
+    if (
+      item?.section == "video" ||
+      item?.section == "bank" ||
+      item?.section == "enquiry"
+    ) {
       query = {
         user: req?.query?.user ?? req?.user?.id,
         _id: req?.query?.profile,
@@ -718,6 +740,8 @@ function mixinEngineEdit(req, array) {
           ? {
               $set: { [`${item?.section}.link`]: item.data },
             }
+          : item?.section == "enquiry"
+          ? { $set: { [`${item?.section}.email`]: rest } }
           : { $set: { [`${item?.section}.bankDetails`]: rest } };
     } else {
       query = {

@@ -180,6 +180,16 @@ const ProfileSchema = new mongoose.Schema(
         },
       },
     },
+    enquiry: {
+      status: { type: Boolean, default: false },
+      email: {
+        email: { type: String, default: "" },
+        _id: {
+          type: mongoose.Schema.ObjectId,
+          default: new mongoose.Types.ObjectId(),
+        },
+      },
+    },
   },
   { timestamps: true }
 );
