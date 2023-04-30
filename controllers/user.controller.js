@@ -374,11 +374,10 @@ export const createAdminUserProfile = asyncHandler(async (req, res, next) => {
           });
           await Profile.create({
             user: user?.id,
-            group: req?.query?.group,
             profile: {
               ...profile,
-              profilePicture: images[1],
               profileBanner: images[0],
+              profilePicture: images[1],
             },
             contact,
           });
