@@ -21,17 +21,14 @@ const model = document.querySelector("#model");
 
 function toggleModel(name, link) {
   model.innerHTML = "";
-  console.log("length", link.length);
   const h1 = document.createElement("h1");
   h1.classList.add("model_heading");
   h1.innerHTML = name;
 
   model.appendChild(h1);
-  console.log(link);
   link.forEach((item) => {
     var datacard = inputCard(item);
     model.appendChild(datacard);
-    console.log(datacard);
   });
   model_container.classList.add("show");
 }

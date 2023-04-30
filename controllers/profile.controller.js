@@ -87,6 +87,5 @@ export const deleteProfile = asyncHandler(async (req, res, next) => {
  */
 export const viewProfile = asyncHandler(async (req, res, next) => {
   const profile = await Profile.findOne({ "card.cardId": req?.params?.id });
-  console.log(req?.params?.id);
   res.render("index", { data: profile });
 });

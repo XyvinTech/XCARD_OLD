@@ -5,7 +5,6 @@
 import ErrorResponse from "../utils/error.response.js";
 
 const errorHandler = (err, req, res, next) => {
-  // console.log("IM HERE");
   let error = { ...err };
   error.message = err.message;
   // Mongoose bad ObjectId

@@ -16,25 +16,23 @@ h3 {
   --subTextDark: #ffffff; */
 
   --bg: #fff;
-  --fg:#000;
+  --fg: #000;
   --lightAc: #828282;
   --bodyContent: #4f4f4f;
   --subData: #4f4f4f;
-  --linkBg: #E0E0E0;
+  --linkBg: #e0e0e0;
   --subText: #333333;
   --border: #c5c5c5;
 
-  --modelWrap:#fff;
-  --modelInp:#BDBDBD82;
-  --modelTxt: #7C56FE;
-  --modelMainerp:#05050571;
+  --modelWrap: #fff;
+  --modelInp: #bdbdbd82;
+  --modelTxt: #7c56fe;
+  --modelMainerp: #05050571;
 
   --bankBorder: #000000;
 
-  --btnBg: #BEFF6C;
-  --btnTxt: #7C56FE;
-
-  
+  --btnBg: #beff6c;
+  --btnTxt: #7c56fe;
 }
 :root.dark {
   /* --fg: #fff;
@@ -44,7 +42,7 @@ h3 {
   --linkBgDark: #333333;
   --subTextDark: #FFFFFF; */
 
-  --fg:#fff;
+  --fg: #fff;
   --bg: #000;
   --lightAc: #828282;
   --bodyContent: #bdbdbd;
@@ -53,14 +51,14 @@ h3 {
   --subText: #ffffff;
   --border: #1b240f;
 
-  --modelWrap:#0e0e0e;
-  --modelInp:#333333;
-  --modelTxt: #BEFF6C;
+  --modelWrap: #0e0e0e;
+  --modelInp: #333333;
+  --modelTxt: #beff6c;
 
   --bankBorder: #c5c5c5;
 
-  --btnBg: #1C1C1E;
-  --btnTxt: #BEFF6C;
+  --btnBg: #1c1c1e;
+  --btnTxt: #beff6c;
 }
 
 body {
@@ -85,19 +83,16 @@ body {
   margin-top: 20px;
 } */
 
-
-#award-cards{
-
+#award-cards {
   display: flex;
   justify-content: space-evenly;
   align-items: center;
   flex-direction: row;
-  margin:5%;
+  margin: 5%;
   flex-wrap: wrap;
-
 }
 
-.award_card{
+.award_card {
   border: 0.6px solid #333333;
   padding: 3% 8%;
   border-radius: 16px;
@@ -108,14 +103,14 @@ body {
   min-width: 100px;
   margin: 2%;
 }
-.award_card > h3{
+.award_card > h3 {
   color: var(--bodyContent);
   font-size: 14px;
   font-weight: 600;
   padding: 0px;
   margin: 0px;
 }
-.award_card > p{
+.award_card > p {
   color: var(--lightAc);
   padding: 0px;
   margin: 0px;
@@ -234,7 +229,6 @@ input[name="subject"]::placeholder {
   width: 100%;
 }
 
-
 .card {
   box-sizing: border-box;
   width: 100%;
@@ -252,7 +246,7 @@ input[name="subject"]::placeholder {
   box-sizing: border-box;
   width: 100%;
   height: 104px;
-  background-image: url("image.png");
+  background-image: url("/profile/public/images/image.png");
   background-size: cover;
   border-bottom: 1px solid var(--lightAc);
   border-radius: 14px 14px 0 0;
@@ -463,7 +457,6 @@ iframe {
   column-gap: 25px;
   flex-wrap: wrap;
   text-decoration: none;
-
 }
 
 .discription {
@@ -688,7 +681,6 @@ iframe {
 
 } */
 
-
 .certif-section {
   display: flex;
   justify-content: center;
@@ -710,7 +702,7 @@ iframe {
   flex-wrap: wrap;
 }
 
-#save-contact{
+#save-contact {
   margin-top: 38px;
   width: 178px;
   height: 51px;
@@ -722,7 +714,7 @@ iframe {
   background-color: var(--btnBg);
   color: var(--btnTxt);
 }
-#save-contact > div > p{
+#save-contact > div > p {
   margin: 0px;
   padding: 0px;
   font-weight: 600;

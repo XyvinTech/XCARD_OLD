@@ -17,7 +17,11 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
-    <link rel="stylesheet" href="/css/style.css" id="pagestyle" />
+    <link
+      rel="stylesheet"
+      href="/profile/public/css/style.css"
+      id="pagestyle"
+    />
     <title>Xcard Profile</title>
   </head>
 
@@ -43,14 +47,14 @@
         <div onclick="lightMode()" class="button-overlay" id="butnLgt">
           <a href="#">
             <div class="contents">
-              <img src="/images/light_mode.svg" alt="" />
+              <img src="/profile/public/images/light_mode.svg" alt="" />
               <p id="mode">light mode</p>
             </div>
           </a>
         </div>
         <div class="profile-image-overlay">
           <img
-            src="<%= data.profile.profilePicture.public %>"
+            src="<%= data.profil?.profilePicture?.public %>"
             alt="Profile Image"
           />
         </div>
@@ -145,7 +149,7 @@
 
     <script
       defer
-      src="/js/script.js"
+      src="/profile/public/js/script.js"
       data="<%= JSON.stringify(data) %>"
     ></script>
   </body>

@@ -40,7 +40,6 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
     bank,
     product,
   } = all;
-  console.log(all);
   delete bank?.bankDetails?._id;
   delete video?.link?._id;
   await uploadFiles(req?.files, "profiles")
@@ -175,8 +174,16 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
               status: modifiedProduct.length > 0 ? true : false,
               products: modifiedProduct,
             },
-            bank: { ...bank, bankDetails: bank?.bankDetails },
-            video: { ...video, link: video?.link },
+            bank: {
+              ...bank,
+              status: bank?.bankDetails?.accnumber ? true : false,
+              bankDetails: bank?.bankDetails,
+            },
+            video: {
+              ...video,
+              status: video?.link?.link ? true : false,
+              link: video?.link,
+            },
           });
 
           let message = { success: "User Profile Created" };
