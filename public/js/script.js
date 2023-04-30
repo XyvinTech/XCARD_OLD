@@ -77,7 +77,7 @@ const createVcard = () => {
     "VERSION:3.0",
     `FN:${personData.name}`,
     `EMAIL;TYPE=WORK:${personData.email}`,
-    `ORG:${personData.company}`,
+    `ORG:${personData.name}`,
     `TITLE:${personData.position}`,
     `ADR;TYPE=WORK:;;${personData.address}`,
     `TEL;TYPE=CELL:${personData.phone}`,
