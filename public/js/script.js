@@ -373,6 +373,12 @@ function renderBankDetails() {
 // Call the renderBankDetails function to render the bank details
 renderBankDetails();
 
+let formVisibility = data?.enquiry?.status;
+
+if (!formVisibility) {
+  document.getElementsByClassName("enq-section")[0].style.display = "none";
+}
+
 if (email) {
   const emailInputs = document.querySelectorAll(
     '.enq-icons input[type="text"]'
@@ -383,7 +389,7 @@ if (email) {
     const email = emailInputs[1].value;
     const phone = emailInputs[2].value;
     const subject = emailInputs[3].value;
-    const mailtoLink = `mailto:${email}?subject=${subject}&body=Name: ${name}%0APhone: ${phone}`;
+    const mailtoLink = `mailto:${data?.enquiry?.email?.email}?subject="Hi ${data?.profile?.name}, would like to connect"&body=Name: ${name}%0APhone: ${phone}%0AMessage: ${subject}%0AEnquiry submitted via xcard`;
     window.location.href = mailtoLink;
   });
 } else {
