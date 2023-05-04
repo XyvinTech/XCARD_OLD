@@ -465,3 +465,6 @@ saveContactBtn.addEventListener("click", () => {
 });
 
 // --------
+const formEmail = "";
+const formSubmit = document.querySelector("form");
+formSubmit.setAttribute("action", `mailto:${formEmail}`);
