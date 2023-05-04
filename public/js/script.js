@@ -389,7 +389,7 @@ if (email) {
     const email = emailInputs[1].value;
     const phone = emailInputs[2].value;
     const subject = emailInputs[3].value;
-    const mailtoLink = `mailto:${data?.enquiry?.email?.email}?subject="Hi ${data?.profile?.name}, would like to connect"&body=Name: ${name}%0APhone: ${phone}%0AMessage: ${subject}%0AEnquiry submitted via xcard`;
+    const mailtoLink = `mailto:${data?.enquiry?.email?.email}?subject=Hi ${data?.profile?.name}, would like to connect&body=Name: ${name}%0APhone: ${phone}%0AMessage: ${subject}`;
     window.location.href = mailtoLink;
   });
 } else {
