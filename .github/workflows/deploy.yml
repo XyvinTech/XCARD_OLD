@@ -19,7 +19,7 @@ jobs:
         run: ssh ubuntu@45.118.161.254 'sudo apt update && sudo apt upgrade -y'
 
       - name: Clone project repository
-        run: git clone https://github.com/withniyaz/xcard-API.git
+        run: git clone git@github.com:withniyaz/xcard-API.git
 
       - name: Deploy to directory
         run: ssh ubuntu@45.118.161.254 'sudo rsync -avz --delete xcard-API/ /var/www/'
