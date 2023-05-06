@@ -75,8 +75,15 @@ const server = httpServer.listen(
   console.info(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`)
 );
 
-const httpsServer = https.createServer(app);
 if (process.env.NODE_ENV === "production") {
+  const credentials = {
+    key: fs.readFileSync("./ssl/app_visitingcard_store.key"),
+    cert: fs.readFileSync("./ssl/app_visitingcard_store.crt"),
+    ca: fs.readFileSync("./ssl/app_visitingcard_store.ca-bundle"),
+    requestCert: false,
+    rejectUnauthorized: false,
+  };
+  const httpsServer = https.createServer(app, credentials);
   const secureServer = httpsServer.listen(
     SECUREPORT,
     console.info(
