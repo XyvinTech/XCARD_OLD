@@ -22,7 +22,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Deploy to /var/www/
-        run: sudo rsync -avz --delete ${{ github.workspace }}/ /var/www/
+        run: sudo rsync -avz --delete ${{ github.workspace }}/ /var/www/xcard
 
       - name: Build and run project
         run: |
