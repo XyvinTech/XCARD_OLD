@@ -1,0 +1,31 @@
+name: Deploy to Linux Server
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set up SSH connection
+        uses: webfactory/ssh-agent@v0.5.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Update Linux Server
+        run: ssh ubuntu@45.118.161.254 'sudo apt update && sudo apt upgrade -y'
+
+      - name: Clone project repository
+        run: git clone https://github.com/withniyaz/xcard-API.git
+
+      - name: Deploy to directory
+        run: ssh ubuntu@45.118.161.254 'sudo rsync -avz --delete xcard-API/ /var/www/'
+
+      - name: Build and run project
+        run: |
+          cd your-project
+          # Build your project commands here
+          # Run your project commands here
