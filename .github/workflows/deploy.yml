@@ -26,6 +26,4 @@ jobs:
 
       - name: Build and run project
         run: |
-          cd your-project
-          # Build your project commands here
-          # Run your project commands here
+          cd xcard
