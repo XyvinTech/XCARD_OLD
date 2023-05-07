@@ -9,7 +9,7 @@ import routes from "./routes/index.js";
 import admin from "firebase-admin";
 import errorMiddleware from "./middlewares/error.middleware.js";
 import { serviceAccount } from "./configs/dev-xcard-firebase.js";
-
+import * as fs from "fs";
 // Controller
 
 // Initialize Firebase
@@ -83,9 +83,10 @@ if (process.env.NODE_ENV === "production") {
     requestCert: false,
     rejectUnauthorized: false,
   };
-  const httpsServer = https.createServer(app, credentials);
+  const httpsServer = https.createServer(credentials, app);
   const secureServer = httpsServer.listen(
     SECUREPORT,
+    "0.0.0.0",
     console.info(
       `Secure Server running in ${process.env.NODE_ENV} mode on port ${SECUREPORT}`
     )
