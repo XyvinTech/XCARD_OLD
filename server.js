@@ -76,21 +76,25 @@ const server = httpServer.listen(
 );
 
 if (process.env.NODE_ENV === "production") {
-  const credentials = {
+  let credentials = {
     key: fs.readFileSync("./ssl/app_visitingcard_store.key"),
     cert: fs.readFileSync("./ssl/app_visitingcard_store.crt"),
-    ca: fs.readFileSync("./ssl/app_visitingcard_store.pem"),
-    requestCert: true,
-    rejectUnauthorized: false,
+    ca: fs.readFileSync("./ssl/app_visitingcard_store.ca-bundle"),
   };
   const httpsServer = https.createServer(credentials, app);
   const secureServer = httpsServer.listen(
     SECUREPORT,
-    "0.0.0.0",
     console.info(
       `Secure Server running in ${process.env.NODE_ENV} mode on port ${SECUREPORT}`
     )
   );
+
+  app.use((req, res, next) => {
+    if (req.protocol === "http") {
+      res.redirect(301, `https://${req.headers.host}${req.url}`);
+    }
+    next();
+  });
 }
 
 function exitHandler(options, exitCode) {
