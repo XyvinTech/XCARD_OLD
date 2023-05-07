@@ -77,7 +77,7 @@ const server = httpServer.listen(
 
 if (process.env.NODE_ENV === "production") {
   const credentials = {
-    key: fs.readFileSync("./ssl/app_visitingcard_store.key"),
+    key: fs.readFileSync("./ssl/app_visitingcard_store.pem"),
     cert: fs.readFileSync("./ssl/app_visitingcard_store_cert.pem"),
     ca: fs.readFileSync("./ssl/app_visitingcard_store_bundle.pem"),
   };
