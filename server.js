@@ -77,9 +77,9 @@ const server = httpServer.listen(
 
 if (process.env.NODE_ENV === "production") {
   const credentials = {
-    // cert: fs.readFileSync("./ssl/app_visitingcard_store.crt"),
-    // ca: fs.readFileSync("./ssl/app_visitingcard_store.ca-bundle"),
-    // key: fs.readFileSync("./ssl/app_visitingcard_store.key", "utf8"),
+    cert: fs.readFileSync("./ssl/app_visitingcard_store.crt"),
+    ca: fs.readFileSync("./ssl/app_visitingcard_store.ca-bundle"),
+    key: fs.readFileSync("./ssl/app_visitingcard_store.key"),
   };
   const httpsServer = https.createServer(credentials, app);
   const secureServer = httpsServer.listen(
