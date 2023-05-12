@@ -201,10 +201,12 @@ if (!contactVisible || contactsData.length === 0) {
 const contactsIconsDiv = document.getElementById("contacts-icons");
 
 contactsData.forEach((data) => {
-  const button = createButton(data.type, data.value);
-  contactsIconsDiv.appendChild(button);
+  if (data.value !== "") {
+    const button = createButton(data.type, data.value, data);
+    contactsIconsDiv.appendChild(button);
+  }
 });
-function createButton(type, value) {
+function createButton(type, value, all) {
   const button = document.createElement("button");
   button.classList.add("image");
 
@@ -218,7 +220,7 @@ function createButton(type, value) {
   } else if (type === "location") {
     icon.classList.add("fa-solid", "fa-location-dot");
     button.onclick = () => {
-      toggleModel("Address", value);
+      toggleModel("location", [all?.value, all?.street, all?.pincode]);
     };
   } else if (type === "whatsapp") {
     icon.classList.add("fa-brands", "fa-whatsapp");
@@ -317,6 +319,10 @@ const ytEmbed = `https://www.youtube.com/embed/${ytLink.split("v=")[1]}`;
 const youtubeUrl = ytStatus ? ytEmbed : "";
 videoFrame.style.display = ytStatus ? "block" : "none";
 
+if (!ytStatus) {
+  document.getElementsByClassName("embedding")[0].style.display = "none";
+}
+
 // set the src attribute of the iframe element
 videoFrame.setAttribute("src", youtubeUrl);
 
@@ -364,12 +370,12 @@ products.forEach((product) => {
 
   const cardSubtitleElem = document.createElement("p");
   cardSubtitleElem.classList.add("card-subtitle", "striked-price");
-  cardSubtitleElem.textContent = product?.offerPrice;
+  cardSubtitleElem.textContent = product?.offerPrice ? product?.price : "";
   cardContentElem.appendChild(cardSubtitleElem);
 
   const cardButtonElem = document.createElement("button");
   cardButtonElem.classList.add("card-button");
-  cardButtonElem.textContent = product?.price;
+  cardButtonElem.textContent = product?.offerPrice ?? product?.price;
   cardContentElem.appendChild(cardButtonElem);
   cardButtonElem.addEventListener("click", (e) => {
     if (product.link) {
@@ -388,12 +394,19 @@ productsSection.appendChild(productsIcons);
 // -------
 // Define the bank details data as an object
 
-const bankDetails = data?.bank?.bankDetails;
+const bankDetails = {
+  name: data?.bank?.bankDetails?.name,
+  accountNumber: data?.bank?.bankDetails?.accnumber,
+  bankName: data?.bank?.bankDetails?.bank,
+  branch: data?.bank?.bankDetails?.branch,
+  ifscCode: data?.bank?.bankDetails?.ifsc,
+  swiftCode: data?.bank?.bankDetails?.swift,
+  vatNumber: data?.bank?.bankDetails?.vat,
+};
 
-let bankVisibility = data?.bank?.status;
+let bankVisibility = !data?.bank?.status;
 
-console.log(document.getElementsByClassName("bank-section")[0]);
-if (!bankVisibility && Object.values(bankDetails).every((val) => val === "")) {
+if (bankVisibility) {
   document.getElementsByClassName("bank-section")[0].style.display = "none";
 }
 
@@ -441,18 +454,18 @@ function renderBankDetails() {
   <div class="bank-row">
   <div class="bank-col">
     ${
-      !isStringEmpty(bankDetails.accnumber)
+      !isStringEmpty(bankDetails.accountNumber)
         ? `<p class="dtl-head">Account Number</p>
-    <p class="dtl">${bankDetails.accnumber}</p>`
+    <p class="dtl">${bankDetails.accountNumber}</p>`
         : ""
     }
 
   </div>
   <div class="bank-col">
   ${
-    !isStringEmpty(bankDetails.bank)
+    !isStringEmpty(bankDetails.bankName)
       ? `<p class="dtl-head">Bank Name</p>
-  <p class="dtl">${bankDetails.bank}</p>`
+  <p class="dtl">${bankDetails.bankName}</p>`
       : ""
   }
   </div>
@@ -470,9 +483,9 @@ function renderBankDetails() {
   </div>
   <div class="bank-col">
   ${
-    !isStringEmpty(bankDetails.ifsc)
+    !isStringEmpty(bankDetails.ifscCode)
       ? `<p class="dtl-head">IFSC Code</p>
-  <p class="dtl">${bankDetails.ifsc}</p>`
+  <p class="dtl">${bankDetails.ifscCode}</p>`
       : ""
   }
   </div>
@@ -482,17 +495,17 @@ function renderBankDetails() {
   <div class="bank-row">
   <div class="bank-col">
   ${
-    !isStringEmpty(bankDetails.swift)
+    !isStringEmpty(bankDetails.swiftCode)
       ? `<p class="dtl-head">Swift Code</p>
-  <p class="dtl">${bankDetails.swift}</p>`
+  <p class="dtl">${bankDetails.swiftCode}</p>`
       : ""
   }
   </div>
   <div class="bank-col">
   ${
-    !isStringEmpty(bankDetails.vat)
+    !isStringEmpty(bankDetails.vatNumber)
       ? `<p class="dtl-head">VAT Number</p>
-  <p class="dtl">${bankDetails.vat}</p>`
+  <p class="dtl">${bankDetails.vatNumber}</p>`
       : ""
   }
   </div>
