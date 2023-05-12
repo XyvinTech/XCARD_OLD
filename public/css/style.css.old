@@ -8,12 +8,19 @@ h3 {
   padding: 0;
 }
 :root.light {
+  /* --fg: #fff;
+  --darkAc: #333;
+  --bodyContentDark: #bdbdbd;
+  --subDataDark: #4f4f4f;
+  --linkBgDark: #333333;
+  --subTextDark: #ffffff; */
+
   --bg: #fff;
   --fg: #000;
   --lightAc: #828282;
   --bodyContent: #4f4f4f;
   --subData: #4f4f4f;
-  --linkBg: #f2f2f2;
+  --linkBg: #e0e0e0;
   --subText: #333333;
   --border: #c5c5c5;
 
@@ -24,15 +31,17 @@ h3 {
 
   --bankBorder: #000000;
 
-  --btnBg: #7c56fe;
-  --btnTxt: #beff6c;
-
-  --frameCardButton: #fff;
-
-  --awdBor: #ffffff;
-  --awdBg: #f2f2f2;
+  --btnBg: #beff6c;
+  --btnTxt: #7c56fe;
 }
 :root.dark {
+  /* --fg: #fff;
+  --darkAc: #333;
+  --bodyContentDark: #BDBDBD;
+  --subDataDark: rgba(255, 255, 255, 0.4);
+  --linkBgDark: #333333;
+  --subTextDark: #FFFFFF; */
+
   --fg: #fff;
   --bg: #000;
   --lightAc: #828282;
@@ -48,13 +57,8 @@ h3 {
 
   --bankBorder: #c5c5c5;
 
-  --btnBg: #beff6c;
-  --btnTxt: #7c56fe;
-
-  --frameCardButton: #000;
-
-  --awdBor: #f2f2f2;
-  --awdBg: #000;
+  --btnBg: #1c1c1e;
+  --btnTxt: #beff6c;
 }
 
 body {
@@ -75,15 +79,6 @@ body {
   overflow: hidden;
 }
 
-.user_name {
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--subText);
-  line-height: 40px;
-  margin-top: 6%;
-  margin-bottom: 3%;
-}
-
 /* .button-overlay{
   margin-top: 20px;
 } */
@@ -98,7 +93,7 @@ body {
 }
 
 .award_card {
-  border: 0.6px solid var(--awdBor);
+  border: 0.6px solid #333333;
   padding: 3% 8%;
   border-radius: 16px;
   display: flex;
@@ -107,7 +102,6 @@ body {
   align-items: center;
   min-width: 100px;
   margin: 2%;
-  background-color: var(--awdBg);
 }
 .award_card > h3 {
   color: var(--bodyContent);
@@ -153,8 +147,7 @@ input {
   border: none;
 }
 
-input[type="submit"],
-#btn_hi {
+input[type="submit"] {
   background-color: #beff6c;
   color: #000;
 }
@@ -216,12 +209,10 @@ input[name="subject"]::placeholder {
 }
 
 .dtl {
-  max-width: 160px;
   font-size: 14px;
   font-weight: 600;
   line-height: 21px;
   color: var(--subText);
-  overflow-x: hidden;
 }
 
 .head {
@@ -256,7 +247,7 @@ input[name="subject"]::placeholder {
   box-sizing: border-box;
   width: 100%;
   height: 104px;
-  background-image: url("/profile/public/images/image.png");
+  background-image: url("/profile/public/image.png");
   background-size: cover;
   border-bottom: 1px solid var(--lightAc);
   border-radius: 14px 14px 0 0;
@@ -292,14 +283,14 @@ input[name="subject"]::placeholder {
 }
 
 .card-button {
-  background-color: var(--btnBg);
+  background-color: #beff6c;
   border-radius: 10px;
   width: 95%;
   height: 37px;
   margin-top: 8px;
   border-width: 1px;
   border: none;
-  color: var(--frameCardButton);
+  color: #333333;
   font-size: 14px;
   font-weight: bold;
   text-align: center;
@@ -382,8 +373,7 @@ input[name="subject"]::placeholder {
   color: var(--subText);
 }
 
-.submit_btn,
-#btn_hi {
+.submit_btn {
   width: 80%;
 }
 
@@ -397,11 +387,13 @@ input[name="subject"]::placeholder {
   height: auto;
   margin: 6%;
   min-height: 171px;
+  height: auto;
 }
 
 .video {
   /* margin: 10%; */
-  /* width: ; */
+  /* width: 100%; */
+  height: auto;
   min-height: 171px;
   min-width: 75vw;
   height: auto;
@@ -433,7 +425,6 @@ iframe {
   background-color: var(--linkBg);
   color: var(--darkAc);
   width: 100%;
-  max-height: 58px;
   margin: 3% 10% 3% 10%;
   border-radius: 12px;
 }
@@ -446,20 +437,15 @@ iframe {
 
 .image {
   background-color: #beff6c;
-  margin: 3px;
-  width: 50px;
-  height: 50px;
+  margin: 5px;
+  width: 57px;
+  height: 58px;
   border-radius: 12px;
   border: none;
 }
 
-.image {
-  background-color: var(--btnBg);
-}
-.image i,
-.btnBg {
+.image i {
   transform: scale(1.8);
-  color: var(--btnTxt);
 }
 
 .contacts-icons,
@@ -480,7 +466,7 @@ iframe {
 
 .image-container {
   position: relative;
-  top: -7vh;
+  top: -10vh;
 }
 
 .image-container img[alt="Image"] {
@@ -489,6 +475,20 @@ iframe {
     url(.jpg), #000000;
   border: 0.5px solid rgba(43, 175, 164, 0.5);
   border-radius: 0px 0px 24px 24px;
+}
+
+.image-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: inherit;
+  /* 50% opacity black */
+  z-index: 1;
+  /* make sure the overlay is below the div content */
 }
 
 .button-overlay {
@@ -500,28 +500,42 @@ iframe {
 
 .button-overlay a {
   display: inline-block;
-  padding: 8px;
+  padding: 10px;
   background-color: #333;
   color: var(--fg);
   text-decoration: none;
   border: 1px solid #beff6c;
   box-shadow: 1px 8px 31px rgba(0, 0, 0, 0.64);
   backdrop-filter: blur(3.5px);
-  border-radius: 25px;
-  position: relative;
+  border-radius: 14px;
 }
 
 .button-overlay a img {
-  width: 21px;
-  height: 21px;
+  width: 18px;
+  height: 18px;
+}
+
+.contents {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  text-align: center;
+  vertical-align: middle;
+  font-size: 12;
+  color: #beff6c;
+}
+
+.contents p {
   padding: 0px;
   margin: 0px;
+  padding-left: 1vw;
 }
 
 .profile-image-overlay {
   position: absolute;
-  bottom: -10vh;
-  left: 5vw;
+  bottom: -5vh;
+  left: 6vw;
   z-index: 3;
   width: 133px;
   height: 133px;
@@ -533,6 +547,32 @@ iframe {
 .profile-image-overlay img {
   position: relative;
   width: 100%;
+}
+
+.glassy-strip {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 50px;
+  background: rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(6.5px);
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  z-index: 1;
+  border-radius: 0px 0px 24px 24px;
+}
+
+.glassy-strip h2 {
+  position: relative;
+  font-size: 1.5rem;
+  color: #fff;
+  text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  margin: 0;
+  padding: 0;
+  align-self: center;
+  margin-left: 40vw;
 }
 
 .discription {
@@ -647,6 +687,7 @@ iframe {
   align-items: center;
   flex-direction: column;
   color: var(--linkBgDark);
+  margin: 7.5%;
   width: auto;
   margin-bottom: 0px;
 }

@@ -22,7 +22,7 @@
       href="/profile/public/css/style.css"
       id="pagestyle"
     />
-    <title>Protfolio</title>
+    <title>Xcard Profile</title>
   </head>
 
   <body>
@@ -38,7 +38,8 @@
         <div onclick="darkMode()" class="button-overlay" id="butnDrk">
           <a href="#">
             <div class="contents">
-              <img src="/profile/public/images/dark_mode.svg" alt="" />
+              <i class="fa-solid fa-moon"></i>
+              <p id="mode">dark mode</p>
             </div>
           </a>
         </div>
@@ -47,6 +48,7 @@
           <a href="#">
             <div class="contents">
               <img src="/profile/public/images/light_mode.svg" alt="" />
+              <p id="mode">light mode</p>
             </div>
           </a>
         </div>
@@ -56,9 +58,11 @@
             alt="Profile Image"
           />
         </div>
+        <div class="glassy-strip">
+          <h2 id="name"><%= data.profile.name %></h2>
+        </div>
       </div>
       <div class="discription">
-        <h2 class="user_name" id="name"><%= data.profile.name %></h2>
         <p class="disc" id="position"><%= data.profile.designation %></p>
         <p class="company" id="company"><%= data.profile.companyName %></p>
       </div>
@@ -95,7 +99,6 @@
       <hr />
       <div id="websites-container" class="websites-icons"></div>
     </div>
-
     <div class="services-section section">
       <h3 class="services-head head">Services</h3>
       <hr />
@@ -127,7 +130,6 @@
       <h3 class="bank-head head">Bank Details</h3>
       <div class="bank-icons" id="bank-details"></div>
     </div>
-
     <form>
       <div class="enq-section section">
         <h3 class="enq-head head">Enquiry</h3>
@@ -146,17 +148,6 @@
         </div>
       </div>
     </form>
-
-    <div class="section btm">
-      <button id="btn_hi">
-        <img src="/profile/public/images/wp.png" alt="" /> Send Hai
-      </button>
-    </div>
-
-    <footer class="footer btm">
-      <span> Powered By </span>
-      <img src="/profile/public/images/sponsor.png" alt="" />
-    </footer>
 
     <script
       defer

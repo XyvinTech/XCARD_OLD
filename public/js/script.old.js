@@ -1,10 +1,6 @@
-const data = JSON.parse(document.currentScript.getAttribute("data"));
-const altBtn = document.getElementById("btn_hi");
-altBtn.style.display = "none";
-
 const darkBtn = document.getElementById("butnDrk");
 const lightBtn = document.getElementById("butnLgt");
-
+const data = JSON.parse(document.currentScript.getAttribute("data"));
 window.addEventListener("load", () => darkMode());
 
 const darkMode = () => {
@@ -23,19 +19,16 @@ const lightMode = () => {
 const model_container = document.querySelector(".model_container");
 const model = document.querySelector("#model");
 
-function toggleModel(name, link, copy = false) {
+function toggleModel(name, link) {
   model.innerHTML = "";
-  console.log("length", link.length);
   const h1 = document.createElement("h1");
   h1.classList.add("model_heading");
   h1.innerHTML = name;
 
   model.appendChild(h1);
-  console.log(link);
   link.forEach((item) => {
-    var datacard = inputCard(item, (copy = true));
+    var datacard = inputCard(item);
     model.appendChild(datacard);
-    console.log(datacard);
   });
   model_container.classList.add("show");
 }
@@ -44,7 +37,7 @@ function hideModel() {
   model_container.classList.remove("show");
 }
 
-function inputCard(data, copy = false) {
+function inputCard(data) {
   // Create a div element
   const div = document.createElement("div");
   div.classList.add("input_section");
@@ -58,39 +51,16 @@ function inputCard(data, copy = false) {
   input.name = "";
   input.id = "";
 
-  div.appendChild(input);
-  if (copy) {
-    const i = document.createElement("i");
-    i.addEventListener("click", () => {
-      copyToClipboard(data);
-    });
-    i.classList.add("fa", "fa-copy");
-    div.appendChild(i);
-  }
   // Create an i element
+  // const i = document.createElement("i");
+  // i.classList.add("fa", "fa-copy");
 
   // Append input and i elements to the div element
+  div.appendChild(input);
+  // div.appendChild(i);
 
   // Return the div element as an HTML string
   return div;
-}
-
-function copyToClipboard(text) {
-  if (navigator.clipboard) {
-    navigator.clipboard.writeText(text);
-    return; //codes below wont be executed
-  }
-  const textArea = document.createElement("textarea");
-  textArea.value = text;
-
-  document.body.appendChild(textArea);
-
-  textArea.focus();
-  textArea.select();
-
-  document.execCommand("copy");
-
-  document.body.removeChild(textArea);
 }
 
 const personData = {
@@ -164,8 +134,8 @@ for (const social of socialMedia.socials) {
         iconClass = "fa-solid fa-link";
     }
     socialMediaHTML += `
-      <a href="${social.value}" class="image sm-icons">
-        <i class="${iconClass}"></i>
+      <a href="https://${social.value}" class="image sm-icons">
+        <i class="${iconClass}" style="color: #7c56fe;"></i>
       </a>
     `;
   }
@@ -224,25 +194,21 @@ function createButton(type, value) {
     icon.classList.add("fa-brands", "fa-whatsapp");
     button.onclick = () => window.open(`https://wa.me/${value}`);
   } else if (type === "wabusiness") {
-    const img = `<svg width="25" height="25" viewBox="0 0 25 25" fill="var(--btnTxt)" xmlns="http://www.w3.org/2000/svg">
-    <path fill-rule="evenodd" clip-rule="evenodd" d="M21.0564 3.69444C18.7945 1.43052 15.7866 0.183221 12.5814 0.181885C5.97766 0.181885 0.603173 5.55436 0.6005 12.1582C0.597893 14.2599 1.1495 16.325 2.19968 18.1455L0.5 24.3519L6.85128 22.6864C8.60802 23.6429 10.5764 24.144 12.5766 24.1442H12.5815C19.1845 24.1442 24.5596 18.7711 24.5623 12.1673C24.5635 8.96709 23.3185 5.95783 21.0564 3.69431V3.69444ZM12.5815 22.1219H12.5774C10.7941 22.1222 9.04354 21.6429 7.50908 20.7343L7.14543 20.5186L3.37668 21.5075L4.38262 17.8341L4.1462 17.4568C3.14843 15.8701 2.62022 14.0333 2.62266 12.1589C2.62534 6.67029 7.09251 2.20498 12.5854 2.20498C15.2449 2.20605 17.7454 3.24286 19.6255 5.12456C21.5056 7.00627 22.5404 9.50728 22.5389 12.1676C22.5368 17.6567 18.0697 22.1226 12.5811 22.1226L12.5815 22.1219Z" fill="var(--btnTxt)"/>
-    <path fill-rule="evenodd" clip-rule="evenodd" d="M8.56446 17.9598C8.64878 18.0106 8.82199 18.0106 9.21931 18.0102C10.9052 18.0087 12.3614 18.0036 13.3973 18.0036C18.2313 18.0036 18.1042 12.9146 15.844 12.2797C16.1751 11.6932 17.6834 10.5915 16.7505 8.3142C15.8284 6.06243 11.8612 6.57349 9.14808 6.57482C8.14415 6.57482 8.29436 7.31668 8.29944 8.47003C8.30773 10.2968 8.30091 15.2414 8.29944 17.3788C8.29944 17.8121 8.43028 17.8787 8.56446 17.9598ZM10.6561 16.0948C11.1125 16.0948 12.1891 16.0948 13.1121 16.0933C14.1572 16.0917 15.0877 15.6029 15.0645 14.5624C15.0475 13.5824 14.3955 13.2608 13.4904 13.1709C12.6284 13.1792 11.6425 13.1792 10.6561 13.1792V16.0948ZM10.6561 11.2109C12.4743 11.1859 13.1758 11.2842 14.1685 11.0356C14.8501 10.648 15.1487 9.21242 14.1724 8.72462C13.4942 8.38583 11.4901 8.5017 10.6561 8.53645V11.2109Z" fill="var(--btnTxt)"/>
-    </svg>
-    `;
-    const imgWrapper = document.createElement("div");
-    imgWrapper.innerHTML = img;
-    button.appendChild(imgWrapper.firstChild);
-
+    const img = document.createElement("img");
+    img.src = "/profile/public/images/wb.svg";
+    img.alt = "WhatsApp Business";
+    button.appendChild(img);
     button.onclick = () => window.open(`https://wa.me/${value}`);
-
-    altBtn.onclick = () => window.open(`https://wa.me/${value}`);
-    altBtn.style.display = "block";
   }
+  icon.style.color = "#7c56fe";
 
   button.appendChild(icon);
 
   return button;
 }
+
+// ---
+
 // example data, replace with your own
 const linksData = data?.website?.websites;
 
@@ -258,11 +224,7 @@ function generateLinkCard(linkData) {
     <div class="link-card">
       <p class="link">${linkData.link}</p>
       <button class="image" onclick="window.open('${linkData.link}', '_blank')">
-      
-      <svg class='arrow' width="14" height="14" viewBox="0 0 14 14" fill="var(--btnTxt)" xmlns="http://www.w3.org/2000/svg">
-      <path d="M2.10691 13.2783L0.758644 11.93L10.0039 2.68471H1.72169V0.758606H13.2783V12.3152H11.3522V4.03298L2.10691 13.2783Z" fill="var(--btnTxt)"/>
-      </svg>
-      
+        <img src="/profile/public/images/arrow_outward.svg" alt="" class="arrow">
       </button>
     </div>
   `;
@@ -298,11 +260,6 @@ services.forEach((service) => {
   titleElem.textContent = service.label;
   serviceElem.appendChild(titleElem);
   servicesIcons.appendChild(serviceElem);
-  serviceElem.addEventListener("click", () => {
-    if (service.value) {
-      window.open(service.value, "_blank");
-    }
-  });
 });
 
 // get the video container and iframe element
@@ -310,11 +267,9 @@ const videoContainer = document.querySelector(".embedding .video");
 const videoFrame = videoContainer.querySelector("iframe");
 
 let ytStatus = data?.video?.status;
-const ytLink = ytStatus ? data?.video?.link?.link : "";
-const ytEmbed = `https://www.youtube.com/embed/${ytLink.split("v=")[1]}`;
 
 // set the YouTube video URL
-const youtubeUrl = ytStatus ? ytEmbed : "";
+const youtubeUrl = ytStatus ? data?.video?.link?.link : "";
 videoFrame.style.display = ytStatus ? "block" : "none";
 
 // set the src attribute of the iframe element
@@ -359,23 +314,18 @@ products.forEach((product) => {
 
   const cardTitleElem = document.createElement("h1");
   cardTitleElem.classList.add("card-title");
-  cardTitleElem.textContent = product.name;
+  cardTitleElem.textContent = product?.name;
   cardContentElem.appendChild(cardTitleElem);
 
   const cardSubtitleElem = document.createElement("p");
-  cardSubtitleElem.classList.add("card-subtitle", "striked-price");
+  cardSubtitleElem.classList.add("card-subtitle");
   cardSubtitleElem.textContent = product?.offerPrice;
   cardContentElem.appendChild(cardSubtitleElem);
 
   const cardButtonElem = document.createElement("button");
   cardButtonElem.classList.add("card-button");
-  cardButtonElem.textContent = product?.price;
+  cardButtonElem.textContent = product.price;
   cardContentElem.appendChild(cardButtonElem);
-  cardButtonElem.addEventListener("click", (e) => {
-    if (product.link) {
-      window.open(product.link, "_blank");
-    }
-  });
 
   productsIcons.appendChild(cardElem);
 });
@@ -386,46 +336,24 @@ productsSection.appendChild(document.createElement("hr"));
 productsSection.appendChild(productsIcons);
 
 // -------
-// Define the bank details data as an object
 
+// Define the bank details data as an object
 const bankDetails = data?.bank?.bankDetails;
 
 let bankVisibility = data?.bank?.status;
 
-console.log(document.getElementsByClassName("bank-section")[0]);
-if (!bankVisibility && Object.values(bankDetails).every((val) => val === "")) {
+if (!bankVisibility || Object.values(bankDetails).every((val) => val === "")) {
   document.getElementsByClassName("bank-section")[0].style.display = "none";
 }
 
 // Get the bank details container element
 const bankDetailsContainer = document.getElementById("bank-details");
 
-const isStringEmpty = (str) => {
-  if (str === "") return true;
-  else return false;
-};
-
-const shortName = (name) => {
-  let wrd = name.split(" ");
-  switch (wrd.length) {
-    case 1:
-      return wrd[0];
-    case 2:
-      if (wrd[0].length > 9) {
-        return `${wrd[0]} <br/> ${wrd[1]}`;
-      } else return `${wrd[0]} <br/> ${wrd[1]}`;
-    case 3:
-      return `${wrd[0]} ${wrd[1]} <br/> ${wrd[2]}`;
-    case 4:
-      return `${wrd[0]} ${wrd[1]} <br/> ${wrd[2]} ${wrd[3]}`;
-  }
-};
-
 // Create a function to dynamically render the bank details
 function renderBankDetails() {
   // Check if all bank details are empty
   const isEmpty = Object.values(bankDetails).every((val) => val === "");
-  if (isEmpty || bankVisibility) {
+  if (isEmpty || !bankVisibility) {
     // If all bank details are empty, don't render anything
     bankDetailsContainer.innerHTML = "";
     return;
@@ -433,92 +361,23 @@ function renderBankDetails() {
 
   // Otherwise, create the bank details HTML dynamically
   let bankDetailsHTML = "";
-  bankDetailsHTML += `<div class="bank-row"><div class="bank-col"><p class="dtl-head">Name</p><p class="dtl" style="text-align: left;">${shortName(
-    bankDetails.name
-  )}</p>
-  </div><div class="bank-col"></div></div>`;
-  bankDetailsHTML += `
-  <div class="bank-row">
-  <div class="bank-col">
-    ${
-      !isStringEmpty(bankDetails.accnumber)
-        ? `<p class="dtl-head">Account Number</p>
-    <p class="dtl">${bankDetails.accnumber}</p>`
-        : ""
-    }
-
-  </div>
-  <div class="bank-col">
-  ${
-    !isStringEmpty(bankDetails.bank)
-      ? `<p class="dtl-head">Bank Name</p>
-  <p class="dtl">${bankDetails.bank}</p>`
-      : ""
-  }
-  </div>
-</div>
-                      `;
-  bankDetailsHTML += `
-  <div class="bank-row">
-  <div class="bank-col">
-  ${
-    !isStringEmpty(bankDetails.branch)
-      ? `<p class="dtl-head">Branch</p>
-  <p class="dtl">${bankDetails.branch}</p>`
-      : ""
-  }
-  </div>
-  <div class="bank-col">
-  ${
-    !isStringEmpty(bankDetails.ifsc)
-      ? `<p class="dtl-head">IFSC Code</p>
-  <p class="dtl">${bankDetails.ifsc}</p>`
-      : ""
-  }
-  </div>
-</div>
-  `;
-  bankDetailsHTML += `
-  <div class="bank-row">
-  <div class="bank-col">
-  ${
-    !isStringEmpty(bankDetails.swift)
-      ? `<p class="dtl-head">Swift Code</p>
-  <p class="dtl">${bankDetails.swift}</p>`
-      : ""
-  }
-  </div>
-  <div class="bank-col">
-  ${
-    !isStringEmpty(bankDetails.vat)
-      ? `<p class="dtl-head">VAT Number</p>
-  <p class="dtl">${bankDetails.vat}</p>`
-      : ""
-  }
-  </div>
-</div>
-  `;
+  bankDetailsHTML += `<div class="bank-row"><div class="bank-col"><p class="dtl-head">Name</p><p class="dtl">${bankDetails.name}</p></div><div class="bank-col"></div></div>`;
+  bankDetailsHTML += `<div class="bank-row"><div class="bank-col"><p class="dtl-head">Account Number</p><p class="dtl">${bankDetails.accnumber}</p></div><div class="bank-col"><p class="dtl-head">Bank Name</p><p class="dtl">${bankDetails.bank}</p></div></div>`;
+  bankDetailsHTML += `<div class="bank-row"><div class="bank-col"><p class="dtl-head">Branch</p><p class="dtl">${bankDetails.branch}</p></div><div class="bank-col"><p class="dtl-head">IFSC Code</p><p class="dtl">${bankDetails.ifsc}</p></div></div>`;
+  bankDetailsHTML += `<div class="bank-row"><div class="bank-col"><p class="dtl-head">Swift Code</p><p class="dtl">${bankDetails.swift}</p></div><div class="bank-col"><p class="dtl-head">VAT Number</p><p class="dtl">${bankDetails.vat}</p></div></div>`;
 
   // Set the bank details container HTML to the dynamically generated HTML
   bankDetailsContainer.innerHTML = bankDetailsHTML;
-  const bankArr = document.getElementsByClassName("bank-col");
-  console.log(bankArr);
-  for (let i = 0; i < bankArr.length; i++) {
-    if (bankArr[i].children.length === 0) {
-      bankArr[i].style.display = "none";
-    }
-    bankArr[i].addEventListener("click", () => {
-      const colName = bankArr[i].children[0].innerHTML;
-      let colValue = bankArr[i].children[1].innerHTML;
-      // remove the <br> tag from the colValue
-      colValue = colValue.replace("<br>", "");
-      toggleModel(colName, [colValue], (copy = true));
-    });
-  }
 }
 
 // Call the renderBankDetails function to render the bank details
 renderBankDetails();
+
+let formVisibility = data?.enquiry?.status;
+
+if (!formVisibility) {
+  document.getElementsByClassName("enq-section")[0].style.display = "none";
+}
 
 if (email) {
   const emailInputs = document.querySelectorAll(
