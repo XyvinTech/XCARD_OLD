@@ -99,6 +99,7 @@ const personData = {
   company: data?.profile?.companyName,
   position: data?.profile?.designation,
   phone: data?.contact?.contacts[0]?.value,
+  address: `${data?.contact?.contacts[3]?.value}, ${data?.contact?.contacts[3]?.street}, ${data?.contact?.contacts[3]?.pincode}`,
 };
 
 const createVcard = () => {
@@ -107,8 +108,9 @@ const createVcard = () => {
     "VERSION:3.0",
     `FN:${personData.name}`,
     `EMAIL;TYPE=WORK:${personData.email}`,
-    `ORG:${personData.name}`,
+    `ORG:${personData.company}`,
     `TITLE:${personData.position}`,
+    `ADR;TYPE=WORK:;;${personData.address}`,
     `TEL;TYPE=CELL:${personData.phone}`,
     "END:VCARD",
   ].join("\n");
@@ -631,6 +633,14 @@ saveContactBtn.addEventListener("click", () => {
 const formEmail = "";
 const formSubmit = document.querySelector("form");
 formSubmit.setAttribute("action", `mailto:${formEmail}`);
+
+// Function to scroll to the top of the page
+function scrollToTop() {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  });
+}
 
 // Function to scroll to the top of the page
 function scrollToTop() {
