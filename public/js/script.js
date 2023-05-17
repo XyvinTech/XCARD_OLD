@@ -160,6 +160,9 @@ for (const social of socialMedia.socials) {
       case "twitter":
         iconClass = "fa-brands fa-twitter";
         break;
+      case "facebook":
+        iconClass = "fa-brands fa-facebook";
+        break;
       default:
         iconClass = "fa-solid fa-link";
     }
@@ -628,3 +631,33 @@ saveContactBtn.addEventListener("click", () => {
 const formEmail = "";
 const formSubmit = document.querySelector("form");
 formSubmit.setAttribute("action", `mailto:${formEmail}`);
+
+// Function to scroll to the top of the page
+function scrollToTop() {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  });
+}
+
+function handleScroll() {
+  var scrollButton = document.getElementById("scrollButton");
+  var footer = document.getElementById("footer");
+  var footerOffset = footer.offsetTop;
+  var scrollButtonPosition = window.pageYOffset + window.innerHeight;
+
+  if (scrollButtonPosition > footerOffset) {
+    scrollButton.style.bottom = scrollButtonPosition - footerOffset + 16 + "px";
+  } else {
+    scrollButton.style.bottom = "16px";
+  }
+
+  if (window.pageYOffset > 200) {
+    scrollButton.style.display = "block";
+  } else {
+    scrollButton.style.display = "none";
+  }
+}
+
+// Attach the scroll event listener to the window
+window.addEventListener("scroll", handleScroll);

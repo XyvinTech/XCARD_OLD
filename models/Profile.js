@@ -95,7 +95,7 @@ const ProfileSchema = new mongoose.Schema(
             value: String,
             type: {
               type: String,
-              enum: ["instagram", "linkedin", "twitter", "other"],
+              enum: ["instagram", "linkedin", "twitter", "facebook", "other"],
             },
           },
         ],
@@ -114,6 +114,11 @@ const ProfileSchema = new mongoose.Schema(
             label: "Twitter",
             value: "",
             type: "twitter",
+          },
+          {
+            label: "Facebook",
+            value: "",
+            type: "facebook",
           },
         ],
       },

@@ -22,7 +22,17 @@ h3 {
   --modelTxt: #7c56fe;
   --modelMainerp: #05050571;
 
-  --bankBorder: #000000;
+  --scrollBorder: #4f4f4f;
+  --scrollIcon: #fff;
+  --scrollBg: linear-gradient(
+    138.61deg,
+    #686868 -7.97%,
+    rgba(157, 157, 157, 0) 122.9%
+  );
+
+  --cardBorder: #33333314;
+
+  --bankBorder: #33333314;
 
   --btnBg: #7c56fe;
   --btnTxt: #beff6c;
@@ -46,14 +56,24 @@ h3 {
   --modelInp: #333333;
   --modelTxt: #beff6c;
 
-  --bankBorder: #c5c5c5;
+  --scorollBorder: #ffffff;
+  --scrollIcon: #333;
+  --scrollBg: linear-gradient(
+    138.61deg,
+    #ffffff -7.97%,
+    rgba(255, 255, 255, 0) 122.9%
+  );
+
+  --cardBorder: #333333;
+
+  --bankBorder: #f2f2f230;
 
   --btnBg: #beff6c;
   --btnTxt: #7c56fe;
 
   --frameCardButton: #000;
 
-  --awdBor: #f2f2f2;
+  --awdBor: #f2f2f230;
   --awdBg: #000;
 }
 
@@ -72,7 +92,7 @@ body {
 
 .hero {
   position: relative;
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 
 .user_name {
@@ -100,7 +120,7 @@ body {
 .award_card {
   border: 0.6px solid var(--awdBor);
   padding: 3% 8%;
-  border-radius: 16px;
+  border-radius: 14px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -108,6 +128,8 @@ body {
   min-width: 100px;
   margin: 2%;
   background-color: var(--awdBg);
+  width: 167px;
+  height: 64px;
 }
 .award_card > h3 {
   color: var(--bodyContent);
@@ -196,6 +218,7 @@ input[name="subject"]::placeholder {
   justify-content: space-evenly;
   align-items: center;
   flex-direction: row;
+  gap: 10px;
   width: 100%;
   border-radius: 14px;
 }
@@ -211,17 +234,19 @@ input[name="subject"]::placeholder {
 
 .dtl-head {
   color: var(--subData);
-  font-size: 12px;
+  font-size: 14px;
+  font-weight: 300;
   margin: 0px;
 }
 
 .dtl {
   max-width: 160px;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: bold;
   line-height: 21px;
+  word-wrap: break-word;
   color: var(--subText);
-  overflow-x: hidden;
+  /* overflow-x: hidden; */
 }
 
 .head {
@@ -243,7 +268,7 @@ input[name="subject"]::placeholder {
   width: 100%;
   max-width: 167px;
   height: 200px;
-  border: 1px solid var(--lightAc);
+  border: 1px solid var(--cardBorder);
   background-color: var(--bg);
   border-radius: 14px;
   position: relative;
@@ -256,9 +281,9 @@ input[name="subject"]::placeholder {
   box-sizing: border-box;
   width: 100%;
   height: 104px;
-  background-image: url("/profile/public/images/image.png");
+  background-image: url("image.png");
   background-size: cover;
-  border-bottom: 1px solid var(--lightAc);
+  border-bottom: 1px solid var(--cardBorder);
   border-radius: 14px 14px 0 0;
 }
 
@@ -489,6 +514,7 @@ iframe {
     url(.jpg), #000000;
   border: 0.5px solid rgba(43, 175, 164, 0.5);
   border-radius: 0px 0px 24px 24px;
+  height: 60vw;
 }
 
 .button-overlay {
@@ -519,13 +545,12 @@ iframe {
 }
 
 .profile-image-overlay {
-  position: absolute;
-  bottom: -10vh;
-  left: 5vw;
+  position: static;
+  top: -10vh;
   z-index: 3;
   width: 133px;
   height: 133px;
-  border: 7px solid rgba(255, 255, 255, 0.1);
+  border: 2px solid #ffffff;
   border-radius: 32px;
   overflow: hidden;
 }
@@ -535,11 +560,18 @@ iframe {
   width: 100%;
 }
 
+.user-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  margin-top: -17.5vh;
+}
+
 .discription {
   height: fit-content;
-  margin-top: -7.5vh;
-  margin-bottom: 5vw;
-  margin-left: 45vw;
   line-height: 1vh;
   width: 60%;
 }
@@ -746,20 +778,36 @@ section {
   align-items: center;
   flex-direction: column;
   padding: 5% 10%;
+  padding-bottom: 15%;
 }
 
 .footer {
   display: flex;
   flex-direction: row;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
-  background-color: var(--linkBg);
-  padding: 3% 10%;
+  background-color: #333;
+  color: #fff;
+  padding: 3% 5%;
 }
-.footer > span {
-  padding-right: 0.8rem;
+
+.pwrd {
   font-size: 0.8rem;
   color: #878787;
+}
+
+.learn-more {
+  font-size: 0.8rem;
+  color: #beff6c;
+}
+
+.ftr-right > i {
+  font-size: 0.8rem;
+  color: #beff6c;
+}
+
+a {
+  text-decoration: none;
 }
 
 form {
@@ -779,13 +827,7 @@ form {
 }
 
 @media (max-width: 420px) {
-  .profile-image-overlay {
-    width: 80px;
-    height: 80px;
-  }
-
   .discription {
-    /* padding-left: 5vw; */
     width: 50%;
   }
 
@@ -801,4 +843,30 @@ form {
   p {
     font-size: 0.8em;
   }
+}
+#name {
+  word-wrap: break-word;
+  line-height: 1.3em;
+}
+
+#scrollButton {
+  display: none;
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  z-index: 99;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--scrollBg);
+  backdrop-filter: blur(2px);
+  border-color: var(--scrollBorder);
+}
+#scrollButton > i {
+  color: var(--scrollIcon);
+  font-size: 1.8em;
+}
+
+main {
+  position: relative;
 }

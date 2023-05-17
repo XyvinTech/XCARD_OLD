@@ -26,6 +26,7 @@
   </head>
 
   <body>
+    <main>
     <div class="hero">
       <div class="model_container">
         <div onclick="hideModel()" class="demo"></div>
@@ -50,13 +51,14 @@
             </div>
           </a>
         </div>
+      </div>
+      <div class="user-info">
         <div class="profile-image-overlay">
           <img
             src="<%= data?.profile?.profilePicture?.public %>"
             alt="Profile Image"
           />
         </div>
-      </div>
       <div class="discription">
         <h2 class="user_name" id="name"><%= data.profile.name %></h2>
         <p class="disc" id="position"><%= data.profile.designation %></p>
@@ -152,11 +154,22 @@
         <img src="/profile/public/images/wp.png" alt="" /> Send Hai
       </button>
     </div>
+    <button id="scrollButton" onclick="scrollToTop()"> <i class="fa-solid fa-arrow-up"></i></button>
+   </main>
 
-    <footer class="footer btm">
-      <span> Powered By </span>
-      <img src="/profile/public/images/sponsor.png" alt="" />
-    </footer>
+   <footer class="footer btm" id="footer">
+    <div class="ftr-left">
+      <span class="pwrd"> Powered By </span>
+      <span class="name-brand"> Skybertech </span>
+    </div>
+    <a href="">
+      <div class="ftr-right">
+        <span class="learn-more"> View more </span>
+
+        <i class="fa-solid fa-arrow-right"></i>
+      </div>
+    </a>
+  </footer>
 
     <script
       defer
