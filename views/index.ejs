@@ -27,149 +27,135 @@
 
   <body>
     <main>
-    <div class="hero">
-      <div class="model_container">
-        <div onclick="hideModel()" class="demo"></div>
-        <div class="model" id="model"></div>
-        <div onclick="hideModel()" class="demo"></div>
-      </div>
-
-      <div class="image-container">
-        <img src="<%= data?.profile?.profileBanner?.public %>" alt="Image" />
-        <div onclick="darkMode()" class="button-overlay" id="butnDrk">
-          <a href="#">
-            <div class="contents">
-              <img src="/profile/public/images/dark_mode.svg" alt="" />
-            </div>
-          </a>
+      <div class="hero">
+        <div class="model_container">
+          <div onclick="hideModel()" class="demo"></div>
+          <div class="model" id="model"></div>
+          <div onclick="hideModel()" class="demo"></div>
         </div>
 
-        <div onclick="lightMode()" class="button-overlay" id="butnLgt">
-          <a href="#">
-            <div class="contents">
-              <img src="/profile/public/images/light_mode.svg" alt="" />
-            </div>
-          </a>
-        </div>
-      </div>
-      <div class="user-info">
-        <div class="profile-image-overlay">
-          <img
-            src="<%= data?.profile?.profilePicture?.public %>"
-            alt="Profile Image"
-          />
-        </div>
-      <div class="discription">
-        <h2 class="user_name" id="name"><%= data.profile.name %></h2>
-        <p class="disc" id="position"><%= data.profile.designation %></p>
-        <p class="company" id="company"><%= data.profile.companyName %></p>
-      </div>
-    </div>
-
-    <div class="section save">
-      <div class="save-btn">
-        <button id="save-contact">
-          <div class="save-text">
-            <p>Save Contact</p>
+        <div class="image-container">
+          <img src="<%= data?.profile?.profileBanner?.public %>" alt="Image" />
+          <div onclick="darkMode()" class="button-overlay" id="butnDrk">
+            <a href="#">
+              <div class="contents">
+                <img src="/profile/public/images/dark_mode.svg" alt="" />
+              </div>
+            </a>
           </div>
+
+          <div onclick="lightMode()" class="button-overlay" id="butnLgt">
+            <a href="#">
+              <div class="contents">
+                <img src="/profile/public/images/light_mode.svg" alt="" />
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <div class="user-info">
+          <div class="profile-image-overlay">
+            <img
+              src="<%= data?.profile?.profilePicture?.public %>"
+              alt="Profile Image"
+            />
+          </div>
+          <div class="discription">
+            <h2 class="user_name" id="name"><%= data.profile.name %></h2>
+            <p class="disc" id="position"><%= data.profile.designation %></p>
+            <p class="company" id="company"><%= data.profile.companyName %></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section save">
+        <div class="save-btn">
+          <button id="save-contact">
+            <div class="save-text">
+              <p>Save Contact</p>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <div class="main-section section">
+        <p class="details" id="bio"><%= data.profile.bio %></p>
+      </div>
+
+      <div class="contacts-section section">
+        <h3 class="contacts-head head">Contacts</h3>
+        <hr />
+        <div class="contacts-icons" id="contacts-icons"></div>
+      </div>
+
+      <div class="social-media-section section" id="social-media-section">
+        <h3 class="sm-head head">Social Media</h3>
+        <hr />
+        <div class="sm-icons" id="sm-icons"></div>
+      </div>
+
+      <div class="websites-section section">
+        <h3 class="websites-head head">Websites</h3>
+        <hr />
+        <div id="websites-container" class="websites-icons"></div>
+      </div>
+
+      <div class="services-section section">
+        <h3 class="services-head head">Services</h3>
+        <hr />
+        <div class="services-icons" id="services-icons"></div>
+      </div>
+
+      <div class="embedding section">
+        <div class="video">
+          <iframe src="" frameborder="0" allowfullscreen></iframe>
+        </div>
+      </div>
+
+      <div class="products-section section" id="products-section"></div>
+
+      <div class="awards_section section">
+        <h3 class="awards-head head">Awards</h3>
+        <hr />
+
+        <div id="award-cards"></div>
+      </div>
+
+      <div class="certif-section section" id="certif-section">
+        <h3 class="certif-head head">Certifications</h3>
+        <hr />
+        <div class="certif-icons" id="certif-icons"></div>
+      </div>
+
+      <div class="bank-section section">
+        <h3 class="bank-head head">Bank Details</h3>
+        <div class="bank-icons" id="bank-details"></div>
+      </div>
+
+      <div class="section btm">
+        <button id="btn_hi">
+          <img src="/profile/public/images/wp.png" alt="" /> Send Hai
         </button>
       </div>
-    </div>
 
-    <div class="main-section section">
-      <p class="details" id="bio"><%= data.profile.bio %></p>
-    </div>
-
-    <div class="contacts-section section">
-      <h3 class="contacts-head head">Contacts</h3>
-      <hr />
-      <div class="contacts-icons" id="contacts-icons"></div>
-    </div>
-
-    <div class="social-media-section section" id="social-media-section">
-      <h3 class="sm-head head">Social Media</h3>
-      <hr />
-      <div class="sm-icons" id="sm-icons"></div>
-    </div>
-
-    <div class="websites-section section">
-      <h3 class="websites-head head">Websites</h3>
-      <hr />
-      <div id="websites-container" class="websites-icons"></div>
-    </div>
-
-    <div class="services-section section">
-      <h3 class="services-head head">Services</h3>
-      <hr />
-      <div class="services-icons" id="services-icons"></div>
-    </div>
-
-    <div class="embedding section">
-      <div class="video">
-        <iframe src="" frameborder="0" allowfullscreen></iframe>
-      </div>
-    </div>
-
-    <div class="products-section section" id="products-section"></div>
-
-    <div class="awards_section section">
-      <h3 class="awards-head head">Awards</h3>
-      <hr />
-
-      <div id="award-cards"></div>
-    </div>
-
-    <div class="certif-section section" id="certif-section">
-      <h3 class="certif-head head">Certifications</h3>
-      <hr />
-      <div class="certif-icons" id="certif-icons"></div>
-    </div>
-
-    <div class="bank-section section">
-      <h3 class="bank-head head">Bank Details</h3>
-      <div class="bank-icons" id="bank-details"></div>
-    </div>
-
-    <form>
-      <div class="enq-section section">
-        <h3 class="enq-head head">Enquiry</h3>
-        <hr />
-        <div class="enq-icons">
-          <input type="text" name="name" id="name" placeholder="Name" />
-          <input type="text" name="email" id="email" placeholder="Email" />
-          <input type="text" name="phone" id="phone" placeholder="Phone" />
-          <input
-            type="text"
-            name="subject"
-            id="subject"
-            placeholder="Enter message"
-          />
-          <input type="submit" class="submit_btn" />
-        </div>
-      </div>
-    </form>
-
-    <div class="section btm">
-      <button id="btn_hi">
-        <img src="/profile/public/images/wp.png" alt="" /> Send Hai
+      <button id="scrollButton" onclick="scrollToTop()">
+        <i class="fa-solid fa-arrow-up"></i>
       </button>
-    </div>
-    <button id="scrollButton" onclick="scrollToTop()"> <i class="fa-solid fa-arrow-up"></i></button>
-   </main>
+    </main>
 
-   <footer class="footer btm" id="footer">
-    <div class="ftr-left">
-      <span class="pwrd"> Powered By </span>
-      <span class="name-brand"> Skybertech </span>
-    </div>
-    <a href="">
-      <div class="ftr-right">
-        <span class="learn-more"> View more </span>
-
-        <i class="fa-solid fa-arrow-right"></i>
+    <footer class="footer btm" id="footer">
+      <div class="ftr-left">
+        <span class="pwrd"> Powered By </span>
+        <span class="name-brand"> Skybertech </span>
       </div>
-    </a>
-  </footer>
+      <a href="">
+        <div class="ftr-right">
+          <span class="learn-more"> View more </span>
+
+          <i class="fa-solid fa-arrow-right"></i>
+        </div>
+      </a>
+    </footer>
 
     <script
       defer
