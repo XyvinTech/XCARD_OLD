@@ -165,6 +165,21 @@ for (const social of socialMedia.socials) {
       case "facebook":
         iconClass = "fa-brands fa-facebook";
         break;
+      case "spotify":
+        iconClass = "fa-brands fa-spotify";
+        break;
+      case "medium":
+        iconClass = "fa-brands fa-medium";
+        break;
+      case "youtube":
+        iconClass = "fa-brands fa-youtube-play";
+        break;
+      case "github":
+        iconClass = "fa-brands fa-github";
+        break;
+      case "behance":
+        iconClass = "fa-brands fa-behance";
+        break;
       default:
         iconClass = "fa-solid fa-link";
     }
@@ -633,14 +648,6 @@ saveContactBtn.addEventListener("click", () => {
 const formEmail = "";
 const formSubmit = document.querySelector("form");
 formSubmit.setAttribute("action", `mailto:${formEmail}`);
-
-// Function to scroll to the top of the page
-function scrollToTop() {
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth",
-  });
-}
 
 // Function to scroll to the top of the page
 function scrollToTop() {
