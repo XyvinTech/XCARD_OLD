@@ -18,6 +18,7 @@ import fs from "fs";
 import { Stream } from "stream";
 import getFileFromUrl from "../helpers/getfilefromurl.helper.js";
 import { Buffer } from "node:buffer";
+import getSocialMedia from "../helpers/socialmediaregex.helper.js";
 
 /**
  * @desc    Create new user profile
@@ -583,16 +584,36 @@ async function statusEngine(req, array) {
  */
 async function mixinEngineAdd(req, array) {
   const updates = array.map((item) => {
-    const query = {
-      user: req?.query?.user ?? req?.user?.id,
-      _id: req?.query?.profile,
-    };
     const { _id, ...rest } = item.data;
-    const update = {
-      $push: {
-        [`${item?.section}.${item?.section}s`]: rest,
-      },
-    };
+    let update;
+    let query;
+    // Only for social section
+    if (item?.section == "social") {
+      const getSocial = getSocialMedia(rest?.value);
+      const socialmedia = {
+        label: getSocial === "Other" ? "Social Media" : getSocial,
+        type: getSocial.toLowerCase(),
+      };
+      query = {
+        user: req?.query?.user ?? req?.user?.id,
+        _id: req?.query?.profile,
+      };
+      update = {
+        $push: {
+          [`${item?.section}.${item?.section}s`]: { ...rest, ...socialmedia },
+        },
+      };
+    } else {
+      query = {
+        user: req?.query?.user ?? req?.user?.id,
+        _id: req?.query?.profile,
+      };
+      update = {
+        $push: {
+          [`${item?.section}.${item?.section}s`]: rest,
+        },
+      };
+    }
     return { query, update };
   });
   Promise.all(
@@ -742,6 +763,25 @@ function mixinEngineEdit(req, array) {
           : item?.section == "enquiry"
           ? { $set: { [`${item?.section}.email`]: rest } }
           : { $set: { [`${item?.section}.bankDetails`]: rest } };
+    } else if (item?.section == "social") {
+      const getSocial = getSocialMedia(rest?.value);
+      const socialmedia = {
+        label: getSocial === "Other" ? "Social Media" : getSocial,
+        type: getSocial.toLowerCase(),
+      };
+      query = {
+        user: req?.query?.user ?? req?.user?.id,
+        _id: req?.query?.profile,
+        [`${item?.section}.${item?.section}s._id`]: item.data?._id,
+      };
+      update = {
+        $set: {
+          [`${item?.section}.${item?.section}s.$`]: {
+            ...item.data,
+            ...socialmedia,
+          },
+        },
+      };
     } else {
       query = {
         user: req?.query?.user ?? req?.user?.id,
