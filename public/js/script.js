@@ -274,12 +274,20 @@ if (!linkStatus || linksData.length == 0) {
   document.getElementsByClassName("websites-section")[0].style.display = "none";
 }
 
+function addHttpsToLinks(link) {
+  if (!link.startsWith("http://") && !link.startsWith("https://")) {
+    link = "https://" + link;
+  }
+  return link;
+}
+
 // function to generate link card HTML for a single link
 function generateLinkCard(linkData) {
+  const link = addHttpsToLinks(linkData.link);
   return `
     <div class="link-card">
       <p class="link">${linkData.link}</p>
-      <button class="image" onclick="window.open('${linkData.link}', '_blank')">
+      <button class="image" onclick="window.open('${link}', '_blank')">
       
       <svg class='arrow' width="14" height="14" viewBox="0 0 14 14" fill="var(--btnTxt)" xmlns="http://www.w3.org/2000/svg">
       <path d="M2.10691 13.2783L0.758644 11.93L10.0039 2.68471H1.72169V0.758606H13.2783V12.3152H11.3522V4.03298L2.10691 13.2783Z" fill="var(--btnTxt)"/>
@@ -582,47 +590,27 @@ function renderBankDetails() {
 // Call the renderBankDetails function to render the bank details
 renderBankDetails();
 
-if (email) {
-  const emailInputs = document.querySelectorAll(
-    '.enq-icons input[type="text"]'
-  );
-  const submitBtn = document.querySelector(".enq-icons .submit_btn");
-  submitBtn.addEventListener("click", () => {
-    const name = emailInputs[0].value;
-    const email = emailInputs[1].value;
-    const phone = emailInputs[2].value;
-    const subject = emailInputs[3].value;
-    const mailtoLink = `mailto:${data?.enquiry?.email?.email}?subject=Hi ${data?.profile?.name}, would like to connect&body=Name: ${name}%0APhone: ${phone}%0AMessage: ${subject}`;
-    window.location.href = mailtoLink;
-  });
-} else {
-  const enqSection = document.querySelector(".enq-section");
-  enqSection.style.display = "none";
-}
-
 // --------
 
-const awardsData = data?.award?.awards;
+// define an array of services
+const awards = data?.award?.awards;
 
-let awardVisibility = data?.award?.status;
+let awardStatus = data?.award?.status;
 
-// main code
-
-if (!awardVisibility || awardsData.length === 0) {
-  let e = document.getElementsByClassName("awards_section");
-  document.getElementsByClassName("awards_section")[0].style.display = "none";
+if (!awardStatus || awards.length == 0) {
+  document.getElementsByClassName("awards-section")[0].style.display = "none";
 }
 
 const awardCardsDiv = document.getElementById("award-cards");
 
-awardsData.forEach((award) => {
+awards.forEach((award) => {
   const card = createAwardCard(award);
   awardCardsDiv.appendChild(card);
 });
 
 function createAwardCard(award) {
   const card = document.createElement("div");
-  card.classList.add("award_card");
+  card.classList.add("award-card");
 
   const name = document.createElement("h3");
   name.textContent = award.label;
@@ -644,13 +632,6 @@ let certifVisibility = data?.certificate?.status;
 
 // main code
 
-if (!certifVisibility || certif.length === 0) {
-  const certifSection = document.getElementById("certif-section");
-  if (certifSection) {
-    certifSection.style.display = "none";
-  }
-}
-
 // get the services-icons container
 const certifIcons = document.getElementById("certif-icons");
 
@@ -667,16 +648,6 @@ certif.forEach((service) => {
     toggleModel("Certificate", [service.label, service.value])
   );
 });
-
-const saveContactBtn = document.getElementById("save-contact");
-saveContactBtn.addEventListener("click", () => {
-  createVcard();
-});
-
-// --------
-const formEmail = "";
-const formSubmit = document.querySelector("form");
-formSubmit.setAttribute("action", `mailto:${formEmail}`);
 
 // Function to scroll to the top of the page
 function scrollToTop() {
