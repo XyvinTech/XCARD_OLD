@@ -333,10 +333,39 @@ const videoFrame = videoContainer.querySelector("iframe");
 
 let ytStatus = data?.video?.status;
 const ytLink = ytStatus ? data?.video?.link?.link : "";
-const ytEmbed = `https://youtu.be/RknpaZGw_80`;
+
+function getEmbeddedLink(youtubeLink) {
+  // Extract the video ID from the YouTube link
+  const videoId = extractVideoId(youtubeLink);
+
+  // Generate the embedded link
+  const embeddedLink = `https://www.youtube.com/embed/${videoId}`;
+
+  return embeddedLink;
+}
+
+// Function to extract the video ID from the YouTube link
+function extractVideoId(link) {
+  // Patterns to match different YouTube link formats
+  const patterns = [
+    /(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|watch\?.+&amp;v=))([\w-]{11})/,
+    /^([\w-]{11})$/,
+  ];
+
+  for (const pattern of patterns) {
+    const match = link.match(pattern);
+    if (match) {
+      return match[1];
+    }
+  }
+
+  // Return null if no video ID is found
+  return null;
+}
+const embeddedLink = getEmbeddedLink(ytLink);
 
 // set the YouTube video URL
-const youtubeUrl = ytStatus ? ytEmbed : "";
+const youtubeUrl = ytStatus ? embeddedLink : "";
 videoFrame.style.display = ytStatus ? "block" : "none";
 
 if (!ytStatus) {
