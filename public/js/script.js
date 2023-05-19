@@ -333,7 +333,7 @@ const videoFrame = videoContainer.querySelector("iframe");
 
 let ytStatus = data?.video?.status;
 const ytLink = ytStatus ? data?.video?.link?.link : "";
-const ytEmbed = `https://www.youtube.com/watch?v=RknpaZGw_80`;
+const ytEmbed = `https://youtu.be/RknpaZGw_80`;
 
 // set the YouTube video URL
 const youtubeUrl = ytStatus ? ytEmbed : "";
