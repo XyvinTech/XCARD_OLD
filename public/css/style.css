@@ -342,7 +342,7 @@ input[name="subject"]::placeholder {
   display: flex;
   justify-content: space-evenly;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: left;
   flex-direction: row;
   margin: 0px;
   width: 100%;
