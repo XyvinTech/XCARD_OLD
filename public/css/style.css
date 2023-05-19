@@ -266,15 +266,13 @@ input[name="subject"]::placeholder {
 .card {
   box-sizing: border-box;
   width: 100%;
-  max-width: 167px;
+  max-width: 135px;
   height: 200px;
   border: 1px solid var(--cardBorder);
   background-color: var(--bg);
   border-radius: 14px;
   position: relative;
   margin: 2%;
-  /* padding: 2px; */
-  /* padding: 2px 0 10px 0; */
 }
 
 .card-image {
@@ -343,6 +341,7 @@ input[name="subject"]::placeholder {
 .products-icons {
   display: flex;
   justify-content: space-evenly;
+  flex-wrap: wrap;
   align-items: center;
   flex-direction: row;
   margin: 0px;
