@@ -129,7 +129,7 @@ body {
   margin: 2%;
   background-color: var(--awdBg);
   width: 167px;
-  height: 64px;
+  min-height: 64px;
 }
 .award-card > h3 {
   color: var(--bodyContent);
@@ -246,6 +246,7 @@ input[name="subject"]::placeholder {
   line-height: 21px;
   word-wrap: break-word;
   color: var(--subText);
+  text-align: start;
   /* overflow-x: hidden; */
 }
 
@@ -867,4 +868,8 @@ form {
 
 main {
   position: relative;
+}
+
+.bank-name {
+  max-width: 100%;
 }

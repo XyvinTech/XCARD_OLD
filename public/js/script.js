@@ -99,10 +99,14 @@ const personData = {
   company: data?.profile?.companyName,
   position: data?.profile?.designation,
   phone: data?.contact?.contacts[0]?.value,
+  websites: data?.website?.websites,
   address: `${data?.contact?.contacts[3]?.value}, ${data?.contact?.contacts[3]?.street}, ${data?.contact?.contacts[3]?.pincode}`,
+  whatsapp: data?.contact?.contacts?.find((item) => item.type === "whatsapp")
+    .value,
 };
 
 const createVcard = () => {
+  const websites = personData.websites;
   const vcardData = [
     "BEGIN:VCARD",
     "VERSION:3.0",
@@ -112,6 +116,8 @@ const createVcard = () => {
     `TITLE:${personData.position}`,
     `ADR;TYPE=WORK:;;${personData.address}`,
     `TEL;TYPE=CELL:${personData.phone}`,
+    ...websites.map((website) => `URL:${website.link}`),
+    `X-SOCIALPROFILE;TYPE=whatsapp:${personData.whatsapp}`,
     "END:VCARD",
   ].join("\n");
 
@@ -126,6 +132,11 @@ const createVcard = () => {
   // Release the object URL after the download has started
   URL.revokeObjectURL(url);
 };
+
+const saveContactBtn = document.getElementById("save-contact");
+saveContactBtn.addEventListener("click", () => {
+  createVcard();
+});
 
 // setup dynamic data from backend
 
@@ -179,6 +190,9 @@ for (const social of socialMedia.socials) {
         break;
       case "behance":
         iconClass = "fa-brands fa-behance";
+        break;
+      case "dribble":
+        iconClass = "fa-brands fa-dribble";
         break;
       default:
         iconClass = "fa-solid fa-link";
@@ -475,22 +489,6 @@ const isStringEmpty = (str) => {
   else return false;
 };
 
-const shortName = (name) => {
-  let wrd = name.split(" ");
-  switch (wrd.length) {
-    case 1:
-      return wrd[0];
-    case 2:
-      if (wrd[0].length > 9) {
-        return `${wrd[0]} <br/> ${wrd[1]}`;
-      } else return `${wrd[0]} <br/> ${wrd[1]}`;
-    case 3:
-      return `${wrd[0]} ${wrd[1]} <br/> ${wrd[2]}`;
-    case 4:
-      return `${wrd[0]} ${wrd[1]} <br/> ${wrd[2]} ${wrd[3]}`;
-  }
-};
-
 // Create a function to dynamically render the bank details
 function renderBankDetails() {
   // Check if all bank details are empty
@@ -503,10 +501,8 @@ function renderBankDetails() {
 
   // Otherwise, create the bank details HTML dynamically
   let bankDetailsHTML = "";
-  bankDetailsHTML += `<div class="bank-row"><div class="bank-col"><p class="dtl-head">Name</p><p class="dtl" style="text-align: left;">${shortName(
-    bankDetails.name
-  )}</p>
-  </div><div class="bank-col"></div></div>`;
+  bankDetailsHTML += `<div class="bank-row"><div class="bank-col"><p class="dtl-head">Name</p><p class="dtl bank-name" style="text-align: left;">${bankDetails.name}</p>
+  </div></div>`;
   bankDetailsHTML += `
   <div class="bank-row">
   <div class="bank-col">
@@ -632,6 +628,9 @@ let certifVisibility = data?.certificate?.status;
 
 // main code
 
+if (!certifVisibility || certif.length == 0) {
+  document.getElementsByClassName("certif-section")[0].style.display = "none";
+}
 // get the services-icons container
 const certifIcons = document.getElementById("certif-icons");
 

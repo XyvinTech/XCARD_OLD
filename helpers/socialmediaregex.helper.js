@@ -9,6 +9,7 @@ function getSocialMedia(link) {
     Medium: /(?:https?:\/\/)?(?:www\.)?medium\.com/i,
     Behance: /(?:https?:\/\/)?(?:www\.)?behance\.net/i,
     Github: /(?:https?:\/\/)?(?:www\.)?github\.com/i,
+    Dribble: /(?:https?:\/\/)?(?:www\.)?dribbble\.com/i,
   };
   for (const [socialMedia, regex] of Object.entries(socialMediaRegex)) {
     if (link.match(regex)) {
