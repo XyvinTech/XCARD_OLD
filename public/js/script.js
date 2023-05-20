@@ -192,7 +192,7 @@ for (const social of socialMedia.socials) {
         iconClass = "fa-brands fa-behance";
         break;
       case "dribble":
-        iconClass = "fa-brands fa-dribble";
+        iconClass = "fa-brands fa fa-dribbble";
         break;
       default:
         iconClass = "fa-solid fa-link";
