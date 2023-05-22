@@ -17,11 +17,7 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
-    <link
-      rel="stylesheet"
-      href="/profile/public/css/style.css"
-      id="pagestyle"
-    />
+    <link rel="stylesheet" href="/css/style.css" id="pagestyle" />
     <title>Protfolio</title>
   </head>
 
@@ -39,7 +35,7 @@
           <div onclick="darkMode()" class="button-overlay" id="butnDrk">
             <a href="#">
               <div class="contents">
-                <img src="/profile/public/images/dark_mode.svg" alt="" />
+                <img src="/images/dark_mode.svg" alt="" />
               </div>
             </a>
           </div>
@@ -47,7 +43,7 @@
           <div onclick="lightMode()" class="button-overlay" id="butnLgt">
             <a href="#">
               <div class="contents">
-                <img src="/profile/public/images/light_mode.svg" alt="" />
+                <img src="/images/light_mode.svg" alt="" />
               </div>
             </a>
           </div>
@@ -61,11 +57,9 @@
             />
           </div>
           <div class="discription">
-            <h2 class="user_name" id="name"><%= data?.profile?.name %></h2>
-            <p class="disc" id="position"><%= data?.profile?.designation %></p>
-            <p class="company" id="company">
-              <%= data?.profile?.companyName %>
-            </p>
+            <h2 class="user_name" id="name"><%= data.profile.name %></h2>
+            <p class="disc" id="position"><%= data.profile.designation %></p>
+            <p class="company" id="company"><%= data.profile.companyName %></p>
           </div>
         </div>
       </div>
@@ -81,7 +75,7 @@
       </div>
 
       <div class="main-section section">
-        <p class="details" id="bio"><%= data?.profile?.bio %></p>
+        <p class="details" id="bio"><%= data.profile.bio %></p>
       </div>
 
       <div class="contacts-section section">
@@ -141,7 +135,7 @@
 
       <div class="section btm">
         <button id="btn_hi">
-          <img src="/profile/public/images/wp.png" alt="" /> Send a hi!
+          <img src="/images/wp.png" alt="" /> Send a hi!
         </button>
       </div>
       <button
@@ -169,7 +163,7 @@
 
     <script
       defer
-      src="/profile/public/js/script.js"
+      src="/js/script.js"
       data="<%= JSON.stringify(data) %>"
     ></script>
   </body>
