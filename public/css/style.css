@@ -128,7 +128,7 @@ body {
   min-width: 100px;
   margin: 2%;
   background-color: var(--awdBg);
-  width: 167px;
+  width: 175px;
   min-height: 64px;
 }
 .award-card > h3 {
@@ -571,6 +571,7 @@ iframe {
 
 .discription {
   height: fit-content;
+  text-align: justify;
   line-height: 1vh;
   width: 60%;
 }

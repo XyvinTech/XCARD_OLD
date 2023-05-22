@@ -289,7 +289,7 @@ if (!linkStatus || linksData.length == 0) {
 }
 
 function addHttpsToLinks(link) {
-  if (!link.startsWith("http://") && !link.startsWith("https://")) {
+  if (!link?.startsWith("http://") && !link?.startsWith("https://")) {
     link = "https://" + link;
   }
   return link;
@@ -297,10 +297,10 @@ function addHttpsToLinks(link) {
 
 // function to generate link card HTML for a single link
 function generateLinkCard(linkData) {
-  const link = addHttpsToLinks(linkData.link);
+  const link = addHttpsToLinks(linkData?.link);
   return `
     <div class="link-card">
-      <p class="link">${linkData.link}</p>
+      <p class="link">${linkData?.link}</p>
       <button class="image" onclick="window.open('${link}', '_blank')">
       
       <svg class='arrow' width="14" height="14" viewBox="0 0 14 14" fill="var(--btnTxt)" xmlns="http://www.w3.org/2000/svg">
@@ -316,6 +316,7 @@ function generateLinkCard(linkData) {
 const websitesContainer = document.getElementById("websites-container");
 if (linksData.length > 0) {
   const linkCardsHtml = linksData
+    ?.filter((obj) => obj?.link !== null || obj?.link !== "")
     .map((linkData) => generateLinkCard(linkData))
     .join("");
   websitesContainer.innerHTML = linkCardsHtml;

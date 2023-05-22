@@ -79,4 +79,10 @@ userRouter
   .route("/createCloudBulk")
   .post(protect, authorize("admin"), userController.createUserProfileCloudBulk);
 
+// Special Routes on demand
+
+// userRouter
+//   .route("/deleteFirebaseUsers")
+//   .delete(userController.deleteFirebaseUser);
+
 export default userRouter;

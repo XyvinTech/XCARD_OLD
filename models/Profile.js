@@ -12,7 +12,7 @@ const ProfileSchema = new mongoose.Schema(
       ref: "Group",
     },
     card: {
-      cardId: { type: String, unique: true },
+      cardId: { type: String },
       cardWrited: { type: Number, default: 0 },
     },
     profile: {
@@ -20,7 +20,7 @@ const ProfileSchema = new mongoose.Schema(
       designation: { type: String },
       companyName: { type: String },
       bio: { type: String },
-      profileLink: { type: String, unique: true },
+      profileLink: { type: String },
       profilePicture: Object,
       profileBanner: Object,
       profileQR: Object,

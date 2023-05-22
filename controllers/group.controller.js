@@ -193,7 +193,7 @@ export const searchProfile = asyncHandler(async (req, res, next) => {
 
   const profiles = await Profile.find({
     group: req?.params?.id,
-    "profile.name": { $regex: searchQuery, $options: "i" },
+    "profile.name": { $regex: searchQuery.toLowerCase(), $options: "i" },
   }).populate({
     path: "group",
   });

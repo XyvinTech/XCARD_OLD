@@ -387,6 +387,7 @@ export const createAdminUserProfile = asyncHandler(async (req, res, next) => {
           return res.status(201).send({ success: true, message, data: user });
         })
         .catch(async (error) => {
+          console.log(error);
           return next(
             new ErrorResponse(
               `Something went wrong ${error?.errorInfo?.code}`,
@@ -396,7 +397,8 @@ export const createAdminUserProfile = asyncHandler(async (req, res, next) => {
         });
     })
     .catch((err) => {
-      return next(new ErrorResponse("File upload failed", 400));
+      console.log(err);
+      return next(new ErrorResponse(`File upload failed ${err}`, 400));
     });
 });
 
@@ -415,6 +417,37 @@ export const deleteUser = asyncHandler(async (req, res, next) => {
   await Profile.deleteMany({ user: userid });
   let message = { success: "User Account Deleted" };
   return res.status(200).send({ success: true, message });
+});
+
+/**
+ * @desc    Delete Firebase Users All
+ * @route   DELETE /api/v1/user/deleteFirebaseUsers
+ * @access  Private/Admin Private/User
+ * @schema  Private
+ */
+
+export const deleteFirebaseUser = asyncHandler(async (req, res, next) => {
+  admin
+    .auth()
+    .listUsers()
+    .then((listUsersResult) => {
+      const deletePromises = listUsersResult.users.map((userRecord) => {
+        return admin.auth().deleteUser(userRecord.uid);
+      });
+
+      return Promise.all(deletePromises);
+    })
+    .then(() => {
+      return res.status(200).send({
+        success: true,
+        message: "All Firebase users deleted successfully",
+      });
+    })
+    .catch((error) => {
+      return res
+        .status(400)
+        .send({ success: false, message: "Error deleting Firebase users" });
+    });
 });
 /**
  * @desc    Update User Profile
