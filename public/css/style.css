@@ -571,7 +571,7 @@ iframe {
 
 .discription {
   height: fit-content;
-  text-align: justify;
+  text-align: center;
   line-height: 1vh;
   width: 60%;
 }
@@ -711,7 +711,11 @@ iframe {
   font-weight: 600;
 }
 
-#bio,
+#bio {
+  margin: 0px;
+  text-align: justify;
+}
+
 #company {
   margin: 0px;
 }
