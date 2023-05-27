@@ -228,6 +228,7 @@ ProfileSchema.pre("save", async function (next) {
       "social",
       "product",
       "visible",
+      "enquiry",
     ];
     // Iterate over the array and remove each field from the document
     for (const field of fieldsToRemove) {

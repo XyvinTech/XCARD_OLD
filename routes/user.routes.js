@@ -61,10 +61,12 @@ userRouter
   .route("/updateAdmin")
   .post(
     protect,
-    authorize("admin"),
+    authorize("super", "admin"),
     upload.single("file"),
     userController.updateAdminUserProfile
   );
+
+userRouter.route("/admin").get(userController.getAllAdmin);
 
 userRouter
   .route("/createBulk")

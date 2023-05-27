@@ -403,6 +403,71 @@ export const createAdminUserProfile = asyncHandler(async (req, res, next) => {
 });
 
 /**
+ * @desc    Get All Admin Users
+ * @route   GET /api/v1/user/admin
+ * @access  Private/Super
+ * @schema  Private
+ */
+
+export const getAllAdmin = asyncHandler(async (req, res, next) => {
+  const profile = await Profile.aggregate([
+    {
+      $lookup: {
+        from: "users",
+        localField: "user",
+        foreignField: "_id",
+        as: "user",
+      },
+    },
+    {
+      $unwind: {
+        path: "$user",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $match: {
+        "user.role": "admin",
+      },
+    },
+    {
+      $lookup: {
+        from: "groups",
+        localField: "user._id",
+        foreignField: "groupAdmin",
+        as: "groups",
+      },
+    },
+    {
+      $lookup: {
+        from: "profiles",
+        localField: "groups._id",
+        foreignField: "group",
+        as: "profiles",
+      },
+    },
+    {
+      $addFields: {
+        groupCount: {
+          $size: "$groups",
+        },
+        profileCount: {
+          $size: "$profiles",
+        },
+      },
+    },
+    {
+      $project: {
+        groups: 0,
+        profiles: 0,
+      },
+    },
+  ]);
+  let message = { success: "All Admin Users with Counts" };
+  return res.status(200).send({ success: true, message, profile });
+});
+
+/**
  * @desc    Delete User Account
  * @route   DELETE /api/v1/user/delete
  * @access  Private/Admin Private/User
