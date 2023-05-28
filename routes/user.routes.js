@@ -65,9 +65,12 @@ userRouter
     upload.single("file"),
     userController.updateAdminUserProfile
   );
+//Super Admin Routes
 
 userRouter.route("/admin").get(userController.getAllAdmin);
+userRouter.route("/analytics").get(userController.getAdminAnalytics);
 
+//Super Admin Routes
 userRouter
   .route("/createBulk")
   .post(

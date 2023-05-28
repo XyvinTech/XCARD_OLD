@@ -124,8 +124,17 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
                 const filteredObj = Object.fromEntries(
                   Object.entries(obj).filter(([key, value]) => value !== null)
                 );
-                delete filteredObj["_id"]; // remove the _id key from the filtered object
-                return filteredObj;
+                delete filteredObj["_id"];
+                if (obj.type === "other") {
+                  const getSocial = getSocialMedia(filteredObj?.value);
+                  return {
+                    label: getSocial === "Other" ? "Social Media" : getSocial,
+                    type: getSocial.toLowerCase(),
+                    value: filteredObj.value,
+                  };
+                } else {
+                  return filteredObj;
+                }
               }),
             },
             website: {
@@ -441,8 +450,93 @@ export const getAllAdmin = asyncHandler(async (req, res, next) => {
     {
       $lookup: {
         from: "profiles",
-        localField: "groups._id",
-        foreignField: "group",
+        let: {
+          groupIdList: "$groups._id",
+        },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $in: ["$group", "$$groupIdList"],
+              },
+            },
+          },
+        ],
+        as: "profiles",
+      },
+    },
+    {
+      $addFields: {
+        groupCount: {
+          $size: "$groups",
+        },
+        profileCount: {
+          $size: "$profiles",
+        },
+      },
+    },
+    {
+      $project: {
+        groups: 0,
+        profiles: 0,
+      },
+    },
+  ]);
+  let message = { success: "All Admin Users with Counts" };
+  return res.status(200).send({ success: true, message, profile });
+});
+
+/**
+ * @desc    Get All Admin Analysis
+ * @route   GET /api/v1/user/analytics
+ * @access  Private/Super
+ * @schema  Private
+ */
+
+export const getAdminAnalytics = asyncHandler(async (req, res, next) => {
+  const profile = await Profile.aggregate([
+    {
+      $lookup: {
+        from: "users",
+        localField: "user",
+        foreignField: "_id",
+        as: "user",
+      },
+    },
+    {
+      $unwind: {
+        path: "$user",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $match: {
+        "user.role": "admin",
+      },
+    },
+    {
+      $lookup: {
+        from: "groups",
+        localField: "user._id",
+        foreignField: "groupAdmin",
+        as: "groups",
+      },
+    },
+    {
+      $lookup: {
+        from: "profiles",
+        let: {
+          groupIdList: "$groups._id",
+        },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $in: ["$group", "$$groupIdList"],
+              },
+            },
+          },
+        ],
         as: "profiles",
       },
     },
