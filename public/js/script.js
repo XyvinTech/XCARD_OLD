@@ -258,7 +258,7 @@ function createButton(type, value, all) {
     };
   } else if (type === "whatsapp") {
     icon.classList.add("fa-brands", "fa-whatsapp");
-    button.onclick = () => window.open(`https://wa.me/${value}`);
+    button.onclick = () => window.open(`https://wa.me/${value}?text='Hi'`);
   } else if (type === "wabusiness") {
     const img = `<svg width="25" height="25" viewBox="0 0 25 25" fill="var(--btnTxt)" xmlns="http://www.w3.org/2000/svg">
     <path fill-rule="evenodd" clip-rule="evenodd" d="M21.0564 3.69444C18.7945 1.43052 15.7866 0.183221 12.5814 0.181885C5.97766 0.181885 0.603173 5.55436 0.6005 12.1582C0.597893 14.2599 1.1495 16.325 2.19968 18.1455L0.5 24.3519L6.85128 22.6864C8.60802 23.6429 10.5764 24.144 12.5766 24.1442H12.5815C19.1845 24.1442 24.5596 18.7711 24.5623 12.1673C24.5635 8.96709 23.3185 5.95783 21.0564 3.69431V3.69444ZM12.5815 22.1219H12.5774C10.7941 22.1222 9.04354 21.6429 7.50908 20.7343L7.14543 20.5186L3.37668 21.5075L4.38262 17.8341L4.1462 17.4568C3.14843 15.8701 2.62022 14.0333 2.62266 12.1589C2.62534 6.67029 7.09251 2.20498 12.5854 2.20498C15.2449 2.20605 17.7454 3.24286 19.6255 5.12456C21.5056 7.00627 22.5404 9.50728 22.5389 12.1676C22.5368 17.6567 18.0697 22.1226 12.5811 22.1226L12.5815 22.1219Z" fill="var(--btnTxt)"/>
@@ -269,9 +269,9 @@ function createButton(type, value, all) {
     imgWrapper.innerHTML = img;
     button.appendChild(imgWrapper.firstChild);
 
-    button.onclick = () => window.open(`https://wa.me/${value}`);
+    button.onclick = () => window.open(`https://wa.me/${value}?text='Hi'`);
 
-    altBtn.onclick = () => window.open(`https://wa.me/${value}`);
+    altBtn.onclick = () => window.open(`https://wa.me/${value}?text='Hi'`);
     altBtn.style.display = "block";
   }
 
