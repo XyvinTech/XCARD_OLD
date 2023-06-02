@@ -28,7 +28,7 @@ export const loginUser = asyncHandler(async (req, res, next) => {
       let profiles;
       // To show the users admin in drawer,
       let profile;
-      if (user?.role == "admin") {
+      if (user?.role == "admin" || user?.role == "super") {
         profiles = await Profile.findOne({ user: user.id });
       } else {
         profiles = await Profile.find({ user: user.id }).populate({
@@ -75,9 +75,22 @@ export const checkUser = asyncHandler(async (req, res, next) => {
     return next(new ErrorResponse("Please pass phone number", 400));
   }
   const user = await User.findOne({ username: req?.body?.phone });
+
   const customAuthToken = await admin.auth().createCustomToken(user.uid);
   if (user) {
     let message = { success: "User Registered" };
+    // Test numbers and fixed OTP configuration
+    const testNumbers = ["+919747676503", "+919747676504"]; // Replace with your test numbers
+    const fixedOTP = 1234; // Replace with your fixed OTP
+    if (testNumbers.includes(req?.body?.phone)) {
+      // Return the fixed OTP for test numbers
+      return res.json({
+        success: true,
+        message,
+        authToken: customAuthToken,
+        otp: fixedOTP,
+      });
+    }
     const otp = Math.floor(Math.random() * 9000) + 1000;
     sendSMS({
       mobile: `${user?.username}`,
