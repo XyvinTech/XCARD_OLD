@@ -11,7 +11,11 @@ const authRouter = express.Router({ mergeParams: true });
 
 authRouter
   .route("/session")
-  .get(protect, authorize("user", "admin"), authController.getUserSession);
+  .get(
+    protect,
+    authorize("user", "admin", "super"),
+    authController.getUserSession
+  );
 authRouter.route("/checkuser").post(authController.checkUser);
 authRouter.route("/login").post(authController.loginUser);
 

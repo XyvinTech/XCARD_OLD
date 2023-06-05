@@ -19,6 +19,7 @@ import { Stream } from "stream";
 import getFileFromUrl from "../helpers/getfilefromurl.helper.js";
 import { Buffer } from "node:buffer";
 import getSocialMedia from "../helpers/socialmediaregex.helper.js";
+import { Types } from "mongoose";
 
 /**
  * @desc    Create new user profile
@@ -487,6 +488,119 @@ export const getAllAdmin = asyncHandler(async (req, res, next) => {
 });
 
 /**
+ * @desc    Search All Admin Users with Count
+ * @route   GET /api/v1/user/admin/search?query
+ * @access  Private/Super
+ * @schema  Private
+ */
+
+export const searchAllAdmin = asyncHandler(async (req, res, next) => {
+  const searchQuery = req.query.query;
+  const profile = await Profile.aggregate([
+    {
+      $lookup: {
+        from: "users",
+        localField: "user",
+        foreignField: "_id",
+        as: "user",
+      },
+    },
+    {
+      $unwind: {
+        path: "$user",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $match: {
+        "user.role": "admin",
+        "profile.name": { $regex: searchQuery, $options: "i" },
+      },
+    },
+    {
+      $lookup: {
+        from: "groups",
+        localField: "user._id",
+        foreignField: "groupAdmin",
+        as: "groups",
+      },
+    },
+    {
+      $lookup: {
+        from: "profiles",
+        let: {
+          groupIdList: "$groups._id",
+        },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $in: ["$group", "$$groupIdList"],
+              },
+            },
+          },
+        ],
+        as: "profiles",
+      },
+    },
+    {
+      $addFields: {
+        groupCount: {
+          $size: "$groups",
+        },
+        profileCount: {
+          $size: "$profiles",
+        },
+      },
+    },
+    {
+      $project: {
+        groups: 0,
+        profiles: 0,
+      },
+    },
+  ]);
+  let message = { success: "Search Results" };
+  return res.status(200).send({ success: true, message, profile });
+});
+
+/**
+ * @desc    Get all profiles of an admin
+ * @route   GET /api/v1/user/admin/profile?admin
+ * @access  Private/Super
+ * @schema  Private
+ */
+
+export const getAllProfilesOfAdmin = asyncHandler(async (req, res, next) => {
+  if (!req?.query?.admin) {
+    return next(new ErrorResponse("Please provide admin id", 400));
+  }
+  const profiles = await Profile.aggregate([
+    {
+      $lookup: {
+        from: "groups",
+        localField: "group",
+        foreignField: "_id",
+        as: "group",
+      },
+    },
+    {
+      $unwind: {
+        path: "$group",
+        preserveNullAndEmptyArrays: false,
+      },
+    },
+    {
+      $match: {
+        "group.groupAdmin": new Types.ObjectId(req?.query?.admin),
+      },
+    },
+  ]);
+  let message = { success: "All Admin Users" };
+  return res.status(200).send({ success: true, message, profiles });
+});
+
+/**
  * @desc    Get All Admin Analysis
  * @route   GET /api/v1/user/analytics
  * @access  Private/Super
@@ -559,6 +673,83 @@ export const getAdminAnalytics = asyncHandler(async (req, res, next) => {
   ]);
   let message = { success: "All Admin Users with Counts" };
   return res.status(200).send({ success: true, message, profile });
+});
+
+/**
+ * @desc    Get All Admin Profile,Groups,Admins Count Analysis
+ * @route   GET /api/v1/user/analytics/counts
+ * @access  Private/Super
+ * @schema  Private
+ */
+
+export const getAdminCountAnalytics = asyncHandler(async (req, res, next) => {
+  const counts = await User.aggregate([
+    {
+      $match: {
+        role: "admin",
+      },
+    },
+    {
+      $group: {
+        _id: 1,
+        count: {
+          $sum: 1,
+        },
+      },
+    },
+    {
+      $addFields: {
+        name: "Total Admins",
+      },
+    },
+    {
+      $unionWith: {
+        coll: "groups",
+        pipeline: [
+          {
+            $group: {
+              _id: 2,
+              count: {
+                $sum: 1,
+              },
+            },
+          },
+          {
+            $addFields: {
+              name: "Total Groups",
+            },
+          },
+        ],
+      },
+    },
+    {
+      $unionWith: {
+        coll: "users",
+        pipeline: [
+          {
+            $match: {
+              role: "user",
+            },
+          },
+          {
+            $group: {
+              _id: 3,
+              count: {
+                $sum: 1,
+              },
+            },
+          },
+          {
+            $addFields: {
+              name: "Total Profiles",
+            },
+          },
+        ],
+      },
+    },
+  ]);
+  let message = { success: "All User Counts" };
+  return res.status(200).send({ success: true, message, counts: counts });
 });
 
 /**

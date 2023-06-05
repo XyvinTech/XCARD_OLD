@@ -117,7 +117,7 @@ export const getUserSession = asyncHandler(async (req, res, next) => {
   let profiles;
   // To show the users admin in drawer,
   let profile;
-  if (user?.role == "admin") {
+  if (user?.role == "admin" || user?.role == "super") {
     profiles = await Profile.findOne({ user: user.id });
   } else {
     profiles = await Profile.find({ user: user.id }).populate({

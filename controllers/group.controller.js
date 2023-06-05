@@ -136,6 +136,49 @@ export const getAllGroup = asyncHandler(async (req, res, next) => {
 });
 
 /**
+ * @desc    Get All Group Based of a particular Admin
+ * @route   GET /api/v1/group/admin
+ * @access  Private/Super
+ * @schema  Private
+ */
+export const getAllAdminGroup = asyncHandler(async (req, res, next) => {
+  const group = await Group.aggregate([
+    {
+      $match: {
+        groupAdmin: new Types.ObjectId(req?.query?.id),
+      },
+    },
+    {
+      $lookup: {
+        from: "profiles",
+        localField: "_id",
+        foreignField: "group",
+        as: "profiles",
+      },
+    },
+    {
+      $project: {
+        name: 1,
+        groupAdmin: 1,
+        groupPicture: 1,
+        createdAt: 1,
+        updatedAt: 1,
+        userCount: {
+          $size: "$profiles",
+        },
+      },
+    },
+    {
+      $sort: {
+        userCount: -1,
+      },
+    },
+  ]);
+  let message = { success: "All Groups" };
+  return res.status(200).send({ success: true, message, data: group });
+});
+
+/**
  * @desc    Search for group
  * @route   GET /api/v1/group/search
  * @access  Private/Admin

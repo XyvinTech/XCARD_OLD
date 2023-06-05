@@ -67,8 +67,21 @@ userRouter
   );
 //Super Admin Routes
 
-userRouter.route("/admin").get(userController.getAllAdmin);
-userRouter.route("/analytics").get(userController.getAdminAnalytics);
+userRouter
+  .route("/admin")
+  .get(protect, authorize("super"), userController.getAllAdmin);
+userRouter
+  .route("/admin/search")
+  .get(protect, authorize("super"), userController.searchAllAdmin);
+userRouter
+  .route("/admin/profiles")
+  .get(protect, authorize("super"), userController.getAllProfilesOfAdmin);
+userRouter
+  .route("/analytics")
+  .get(protect, authorize("super"), userController.getAdminAnalytics);
+userRouter
+  .route("/analytics/counts")
+  .get(protect, authorize("super"), userController.getAdminCountAnalytics);
 
 //Super Admin Routes
 userRouter

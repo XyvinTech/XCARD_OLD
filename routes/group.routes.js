@@ -23,6 +23,10 @@ groupRouter
   .get(protect, authorize("admin"), groupController.getAllGroup);
 
 groupRouter
+  .route("/admin")
+  .get(protect, authorize("super"), groupController.getAllAdminGroup);
+
+groupRouter
   .route("/create")
   .post(protect, authorize("admin"), groupController.createGroup);
 
