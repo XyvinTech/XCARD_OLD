@@ -26,6 +26,8 @@ groupRouter
   .route("/admin")
   .get(protect, authorize("super"), groupController.getAllAdminGroup);
 
+groupRouter.route("/admin/search").get(groupController.searchAllAdminGroup);
+
 groupRouter
   .route("/create")
   .post(protect, authorize("admin"), groupController.createGroup);

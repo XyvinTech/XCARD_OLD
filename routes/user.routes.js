@@ -76,6 +76,12 @@ userRouter
 userRouter
   .route("/admin/profiles")
   .get(protect, authorize("super"), userController.getAllProfilesOfAdmin);
+
+userRouter
+  .route("/admin/profiles/search")
+  .get(protect, authorize("super"), userController.searchAllProfilesOfAdmin);
+
+userRouter.route("/admin/export").get(userController.exportAdminData);
 userRouter
   .route("/analytics")
   .get(protect, authorize("super"), userController.getAdminAnalytics);

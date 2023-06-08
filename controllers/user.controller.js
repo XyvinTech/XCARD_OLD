@@ -20,6 +20,7 @@ import getFileFromUrl from "../helpers/getfilefromurl.helper.js";
 import { Buffer } from "node:buffer";
 import getSocialMedia from "../helpers/socialmediaregex.helper.js";
 import { Types } from "mongoose";
+import Group from "../models/Group.js";
 
 /**
  * @desc    Create new user profile
@@ -54,7 +55,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
           light: "#1C1C1E", // light color
         },
       };
-      const cardId = "xcard-" + randomId().toLowerCase();
+      const cardId = `${profile?.name}-` + randomId().toLowerCase();
       const profileLink = `${process.env.HOST_URL_HTTPS}/profile/${cardId}`;
       const qrCode = await QRCode.toBuffer(profileLink, options);
       const qrFile = {
@@ -217,7 +218,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
                 light: "#1C1C1E", // light color
               },
             };
-            const cardId = "xcard-" + randomId().toLowerCase();
+            const cardId = `${profile?.name}-` + randomId().toLowerCase();
             const profileLink = `${process.env.HOST_URL_HTTPS}/profile/${cardId}`;
             const qrCode = await QRCode.toBuffer(profileLink, options);
             const qrFile = {
@@ -387,10 +388,20 @@ export const createAdminUserProfile = asyncHandler(async (req, res, next) => {
             user: user?.id,
             profile: {
               ...profile,
-              profileBanner: images[0],
-              profilePicture: images[1],
+              companyName: profile?.name,
+              profilePicture: images[0],
             },
-            contact,
+            contac: {
+              ...contact,
+              status: true,
+              contacts: contact?.contacts.map((obj) => {
+                const filteredObj = Object.fromEntries(
+                  Object.entries(obj).filter(([key, value]) => value !== null)
+                );
+                delete filteredObj["_id"]; // remove the _id key from the filtered object
+                return filteredObj;
+              }),
+            },
           });
 
           let message = { success: "Admin User Profile Created" };
@@ -598,6 +609,198 @@ export const getAllProfilesOfAdmin = asyncHandler(async (req, res, next) => {
   ]);
   let message = { success: "All Admin Users" };
   return res.status(200).send({ success: true, message, profiles });
+});
+
+/**
+ * @desc    Search all profiles of an admin
+ * @route   GET /api/v1/user/admin/profile/search?admin&query?
+ * @access  Private/Super
+ * @schema  Private
+ */
+
+export const searchAllProfilesOfAdmin = asyncHandler(async (req, res, next) => {
+  const searchQuery = req.query.query;
+  if (!req?.query?.admin) {
+    return next(new ErrorResponse("Please provide admin id", 400));
+  }
+  const profiles = await Profile.aggregate([
+    {
+      $lookup: {
+        from: "groups",
+        localField: "group",
+        foreignField: "_id",
+        as: "group",
+      },
+    },
+    {
+      $unwind: {
+        path: "$group",
+        preserveNullAndEmptyArrays: false,
+      },
+    },
+    {
+      $match: {
+        "group.groupAdmin": new Types.ObjectId(req?.query?.admin),
+        "profile.name": { $regex: searchQuery, $options: "i" },
+      },
+    },
+  ]);
+  let message = { success: "All Admin Users" };
+  return res.status(200).send({ success: true, message, profiles });
+});
+
+/**
+ * @desc    Export all profiles, analytics of an admin
+ * @route   GET /api/v1/user/admin/export?admin
+ * @access  Private/Super
+ * @schema  Private
+ */
+
+export const exportAdminData = asyncHandler(async (req, res, next) => {
+  const admin = await Profile.findOne({
+    user: new Types.ObjectId(req?.query?.admin),
+  });
+  const groups = await Group.aggregate([
+    {
+      $match: {
+        groupAdmin: new Types.ObjectId(req?.query?.admin),
+      },
+    },
+    {
+      $lookup: {
+        from: "profiles",
+        localField: "_id",
+        foreignField: "group",
+        as: "profiles",
+      },
+    },
+    {
+      $project: {
+        name: 1,
+        groupAdmin: 1,
+        groupPicture: 1,
+        createdAt: 1,
+        updatedAt: 1,
+        userCount: {
+          $size: "$profiles",
+        },
+      },
+    },
+    {
+      $sort: {
+        userCount: -1,
+      },
+    },
+  ]);
+  const profiles = await Profile.aggregate([
+    {
+      $lookup: {
+        from: "groups",
+        localField: "group",
+        foreignField: "_id",
+        as: "group",
+      },
+    },
+    {
+      $unwind: {
+        path: "$group",
+        preserveNullAndEmptyArrays: false,
+      },
+    },
+    {
+      $match: {
+        "group.groupAdmin": new Types.ObjectId(req?.query?.admin),
+      },
+    },
+  ]);
+
+  const adminPhone = admin?.contact?.contacts?.filter(
+    (item) => item.type === "phone"
+  )[0]?.value;
+  const adminEmail = admin?.contact?.contacts?.filter(
+    (item) => item.type === "email"
+  )[0]?.value;
+  // Extract the specific fields from the data
+  const extractedAdmin = [
+    {
+      Name: admin?.profile?.name,
+      Bio: admin?.profile?.bio,
+      Phone: adminPhone,
+      Email: adminEmail,
+      Created: admin.createdAt,
+    },
+  ];
+  const extractedGroup = groups.map((item) => {
+    return {
+      Name: item?.name,
+      Created: item.createdAt,
+    };
+  });
+  const extractedData = profiles.map((item) => {
+    const phone = item?.contact?.contacts?.filter(
+      (item) => item.type === "phone"
+    )[0]?.value;
+    const email = item?.contact?.contacts?.filter(
+      (item) => item.type === "email"
+    )[0]?.value;
+    const social = item?.social?.socials
+      ?.filter((obj) => obj?.value != null && obj?.value != "")
+      ?.map((obj, inx) => {
+        return `Social ${inx + 1} ${obj?.value}`;
+      })
+      .join(", ");
+    const website = item?.website?.websites
+      ?.filter((obj) => obj?.link != null && obj?.link != "")
+      ?.map((obj, inx) => {
+        return `Website ${inx + 1} ${obj?.link}`;
+      })
+      .join(", ");
+    const skippedField = "_id";
+    const bank = Object.entries(item?.bank?.bankDetails)
+      .map(function ([key, value]) {
+        if (value == null || value == "") return;
+        else return key === skippedField ? "" : `${key}: ${value}`;
+      })
+      .filter(Boolean)
+      .join(", ");
+    return {
+      Name: item.profile?.name,
+      Company: item.profile?.companyName,
+      Designation: item.profile?.designation,
+      Phone: phone,
+      Email: email,
+      Social: social,
+      Website: website,
+      Bank: bank,
+      Created: item.createdAt,
+    };
+  });
+  // Convert data to Excel worksheet
+  const worksheet = xlsx.utils.json_to_sheet(extractedAdmin);
+  const worksheet1 = xlsx.utils.json_to_sheet(extractedGroup);
+  const worksheet2 = xlsx.utils.json_to_sheet(extractedData);
+  const workbook = xlsx.utils.book_new();
+  xlsx.utils.book_append_sheet(workbook, worksheet, "Admin");
+  xlsx.utils.book_append_sheet(workbook, worksheet1, "Groups");
+  xlsx.utils.book_append_sheet(workbook, worksheet2, "Profiles");
+
+  // Generate the Excel file
+  const excelBuffer = xlsx.write(workbook, {
+    type: "buffer",
+    bookType: "xlsx",
+  });
+  // Set the response headers for file download
+  res.setHeader(
+    "Content-Type",
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+  );
+  res.setHeader(
+    "Content-Disposition",
+    "attachment; filename=exported-file.xlsx"
+  );
+
+  let message = { success: "Admin Data Exported" };
+  return res.send(excelBuffer);
 });
 
 /**
@@ -867,7 +1070,7 @@ export const updateAdminUserProfile = asyncHandler(async (req, res, next) => {
       }
       if (image !== undefined) {
         const profile = await Profile.findOneAndUpdate(
-          { user: req?.user?.id },
+          { user: req?.query?.admin ? req?.query?.admin : req?.user?.id },
           {
             $set: { profile: { ...req?.body, profilePicture: image } },
           },
@@ -877,7 +1080,7 @@ export const updateAdminUserProfile = asyncHandler(async (req, res, next) => {
         return res.status(200).send({ success: true, message, data: profile });
       } else {
         const profile = await Profile.findOneAndUpdate(
-          { user: req?.user?.id },
+          { user: req?.query?.admin ? req?.query?.admin : req?.user?.id },
           {
             $set: {
               "profile.companyName": req?.body?.companyName,
@@ -1267,7 +1470,7 @@ export const createUserProfileBulk = asyncHandler(async (req, res, next) => {
           light: "#1C1C1E", // light color
         },
       };
-      const cardId = "xcard-" + randomId().toLowerCase();
+      const cardId = `${profile?.name}-` + randomId().toLowerCase();
       const profileLink = `${process.env.HOST_URL_HTTPS}/profile/${cardId}`;
       const qrCode = await QRCode.toBuffer(profileLink, options);
       const qrFile = {
@@ -1407,7 +1610,7 @@ export const createUserProfileCloudBulk = asyncHandler(
             light: "#1C1C1E", // light color
           },
         };
-        const cardId = "xcard-" + randomId().toLowerCase();
+        const cardId = `${profile?.name}-` + randomId().toLowerCase();
         const profileLink = `${process.env.HOST_URL_HTTPS}/profile/${cardId}`;
         const qrCode = await QRCode.toBuffer(profileLink, options);
         const qrFile = {
