@@ -55,7 +55,8 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
           light: "#1C1C1E", // light color
         },
       };
-      const cardId = `${profile?.name}-` + randomId().toLowerCase().trim();
+      const cardId =
+        `${profile?.name.toLowerCase().trim()}-` + randomId().toLowerCase();
       const profileLink = `${process.env.HOST_URL_HTTPS}/profile/${cardId}`;
       const qrCode = await QRCode.toBuffer(profileLink, options);
       const qrFile = {
@@ -219,7 +220,8 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
               },
             };
             const cardId =
-              `${profile?.name}-` + randomId().toLowerCase().trim();
+              `${profile?.name.toLowerCase().trim()}-` +
+              randomId().toLowerCase();
             const profileLink = `${process.env.HOST_URL_HTTPS}/profile/${cardId}`;
             const qrCode = await QRCode.toBuffer(profileLink, options);
             const qrFile = {
@@ -1471,7 +1473,8 @@ export const createUserProfileBulk = asyncHandler(async (req, res, next) => {
           light: "#1C1C1E", // light color
         },
       };
-      const cardId = `${profile?.name}-` + randomId().toLowerCase().trim();
+      const cardId =
+        `${profile?.name.toLowerCase().trim()}-` + randomId().toLowerCase();
       const profileLink = `${process.env.HOST_URL_HTTPS}/profile/${cardId}`;
       const qrCode = await QRCode.toBuffer(profileLink, options);
       const qrFile = {
@@ -1611,7 +1614,8 @@ export const createUserProfileCloudBulk = asyncHandler(
             light: "#1C1C1E", // light color
           },
         };
-        const cardId = `${profile?.name}-` + randomId().toLowerCase().trim();
+        const cardId =
+          `${profile?.name.toLowerCase().trim()}-` + randomId().toLowerCase();
         const profileLink = `${process.env.HOST_URL_HTTPS}/profile/${cardId}`;
         const qrCode = await QRCode.toBuffer(profileLink, options);
         const qrFile = {
