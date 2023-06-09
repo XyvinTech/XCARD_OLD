@@ -31,6 +31,8 @@ const storage = multer.diskStorage({
 
 const excel = multer({ storage });
 
+userRouter.route("/appversion").get(userController.appVersion);
+
 userRouter
   .route("/create")
   .post(
@@ -81,7 +83,10 @@ userRouter
   .route("/admin/profiles/search")
   .get(protect, authorize("super"), userController.searchAllProfilesOfAdmin);
 
-userRouter.route("/admin/export").get(userController.exportAdminData);
+userRouter
+  .route("/admin/export")
+  .get(protect, authorize("super"), userController.exportAdminData);
+
 userRouter
   .route("/analytics")
   .get(protect, authorize("super"), userController.getAdminAnalytics);

@@ -21,6 +21,8 @@ import { Buffer } from "node:buffer";
 import getSocialMedia from "../helpers/socialmediaregex.helper.js";
 import { Types } from "mongoose";
 import Group from "../models/Group.js";
+import Setting from "../models/Setting.js";
+import Nodemailer from "nodemailer";
 
 /**
  * @desc    Create new user profile
@@ -50,6 +52,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
   await uploadFiles(req?.files, "profiles")
     .then(async (images) => {
       const options = {
+        scale: 12,
         color: {
           dark: "#BEFF6C", // dark color
           light: "#1C1C1E", // light color
@@ -215,6 +218,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
           if (error?.errorInfo?.code === "auth/phone-number-already-exists") {
             const user = await User.findOne({ username: phone });
             const options = {
+              scale: 12,
               color: {
                 dark: "#BEFF6C", // dark color
                 light: "#1C1C1E", // light color
@@ -661,150 +665,177 @@ export const searchAllProfilesOfAdmin = asyncHandler(async (req, res, next) => {
  */
 
 export const exportAdminData = asyncHandler(async (req, res, next) => {
-  const admin = await Profile.findOne({
-    user: new Types.ObjectId(req?.query?.admin),
-  });
-  const groups = await Group.aggregate([
-    {
-      $match: {
-        groupAdmin: new Types.ObjectId(req?.query?.admin),
-      },
-    },
-    {
-      $lookup: {
-        from: "profiles",
-        localField: "_id",
-        foreignField: "group",
-        as: "profiles",
-      },
-    },
-    {
-      $project: {
-        name: 1,
-        groupAdmin: 1,
-        groupPicture: 1,
-        createdAt: 1,
-        updatedAt: 1,
-        userCount: {
-          $size: "$profiles",
+  try {
+    const superadmin = await Profile.findOne({
+      user: new Types.ObjectId(req?.user?.id),
+    });
+    const admin = await Profile.findOne({
+      user: new Types.ObjectId(req?.query?.admin),
+    });
+    const groups = await Group.aggregate([
+      {
+        $match: {
+          groupAdmin: new Types.ObjectId(req?.query?.admin),
         },
       },
-    },
-    {
-      $sort: {
-        userCount: -1,
+      {
+        $lookup: {
+          from: "profiles",
+          localField: "_id",
+          foreignField: "group",
+          as: "profiles",
+        },
       },
-    },
-  ]);
-  const profiles = await Profile.aggregate([
-    {
-      $lookup: {
-        from: "groups",
-        localField: "group",
-        foreignField: "_id",
-        as: "group",
+      {
+        $project: {
+          name: 1,
+          groupAdmin: 1,
+          groupPicture: 1,
+          createdAt: 1,
+          updatedAt: 1,
+          userCount: {
+            $size: "$profiles",
+          },
+        },
       },
-    },
-    {
-      $unwind: {
-        path: "$group",
-        preserveNullAndEmptyArrays: false,
+      {
+        $sort: {
+          userCount: -1,
+        },
       },
-    },
-    {
-      $match: {
-        "group.groupAdmin": new Types.ObjectId(req?.query?.admin),
+    ]);
+    const profiles = await Profile.aggregate([
+      {
+        $lookup: {
+          from: "groups",
+          localField: "group",
+          foreignField: "_id",
+          as: "group",
+        },
       },
-    },
-  ]);
+      {
+        $unwind: {
+          path: "$group",
+          preserveNullAndEmptyArrays: false,
+        },
+      },
+      {
+        $match: {
+          "group.groupAdmin": new Types.ObjectId(req?.query?.admin),
+        },
+      },
+    ]);
 
-  const adminPhone = admin?.contact?.contacts?.filter(
-    (item) => item.type === "phone"
-  )[0]?.value;
-  const adminEmail = admin?.contact?.contacts?.filter(
-    (item) => item.type === "email"
-  )[0]?.value;
-  // Extract the specific fields from the data
-  const extractedAdmin = [
-    {
-      Name: admin?.profile?.name,
-      Bio: admin?.profile?.bio,
-      Phone: adminPhone,
-      Email: adminEmail,
-      Created: admin.createdAt,
-    },
-  ];
-  const extractedGroup = groups.map((item) => {
-    return {
-      Name: item?.name,
-      Created: item.createdAt,
-    };
-  });
-  const extractedData = profiles.map((item) => {
-    const phone = item?.contact?.contacts?.filter(
+    const adminPhone = admin?.contact?.contacts?.filter(
       (item) => item.type === "phone"
     )[0]?.value;
-    const email = item?.contact?.contacts?.filter(
+    const adminEmail = admin?.contact?.contacts?.filter(
       (item) => item.type === "email"
     )[0]?.value;
-    const social = item?.social?.socials
-      ?.filter((obj) => obj?.value != null && obj?.value != "")
-      ?.map((obj, inx) => {
-        return `Social ${inx + 1} ${obj?.value}`;
-      })
-      .join(", ");
-    const website = item?.website?.websites
-      ?.filter((obj) => obj?.link != null && obj?.link != "")
-      ?.map((obj, inx) => {
-        return `Website ${inx + 1} ${obj?.link}`;
-      })
-      .join(", ");
-    const skippedField = "_id";
-    const bank = Object.entries(item?.bank?.bankDetails)
-      .map(function ([key, value]) {
-        if (value == null || value == "") return;
-        else return key === skippedField ? "" : `${key}: ${value}`;
-      })
-      .filter(Boolean)
-      .join(", ");
-    return {
-      Name: item.profile?.name,
-      Company: item.profile?.companyName,
-      Designation: item.profile?.designation,
-      Phone: phone,
-      Email: email,
-      Social: social,
-      Website: website,
-      Bank: bank,
-      Created: item.createdAt,
+    const superadminEmail = superadmin?.contact?.contacts?.filter(
+      (item) => item.type === "email"
+    )[0]?.value;
+    // Extract the specific fields from the data
+    const extractedAdmin = [
+      {
+        Name: admin?.profile?.name,
+        Bio: admin?.profile?.bio,
+        Phone: adminPhone,
+        Email: adminEmail,
+        Created: admin.createdAt,
+      },
+    ];
+    const extractedGroup = groups.map((item) => {
+      return {
+        Name: item?.name,
+        Created: item.createdAt,
+      };
+    });
+    const extractedData = profiles.map((item) => {
+      const phone = item?.contact?.contacts?.filter(
+        (item) => item.type === "phone"
+      )[0]?.value;
+      const email = item?.contact?.contacts?.filter(
+        (item) => item.type === "email"
+      )[0]?.value;
+      const social = item?.social?.socials
+        ?.filter((obj) => obj?.value != null && obj?.value != "")
+        ?.map((obj, inx) => {
+          return `Social ${inx + 1} ${obj?.value}`;
+        })
+        .join(", ");
+      const website = item?.website?.websites
+        ?.filter((obj) => obj?.link != null && obj?.link != "")
+        ?.map((obj, inx) => {
+          return `Website ${inx + 1} ${obj?.link}`;
+        })
+        .join(", ");
+      const skippedField = "_id";
+      const bank = Object.entries(item?.bank?.bankDetails)
+        .map(function ([key, value]) {
+          if (value == null || value == "") return;
+          else return key === skippedField ? "" : `${key}: ${value}`;
+        })
+        .filter(Boolean)
+        .join(", ");
+      return {
+        Name: item.profile?.name,
+        Company: item.profile?.companyName,
+        Designation: item.profile?.designation,
+        Phone: phone,
+        Email: email,
+        Social: social,
+        Website: website,
+        Bank: bank,
+        Created: item.createdAt,
+      };
+    });
+    // Convert data to Excel worksheet
+    const worksheet = xlsx.utils.json_to_sheet(extractedAdmin);
+    const worksheet1 = xlsx.utils.json_to_sheet(extractedGroup);
+    const worksheet2 = xlsx.utils.json_to_sheet(extractedData);
+    const workbook = xlsx.utils.book_new();
+    xlsx.utils.book_append_sheet(workbook, worksheet, "Admin");
+    xlsx.utils.book_append_sheet(workbook, worksheet1, "Groups");
+    xlsx.utils.book_append_sheet(workbook, worksheet2, "Profiles");
+    // Generate the Excel file
+    const excelBuffer = xlsx.write(workbook, {
+      type: "buffer",
+      bookType: "xlsx",
+    });
+
+    // Create a Nodemailer transporter
+    const transporter = Nodemailer.createTransport({
+      service: process.env.NODE_MAILER_PROVIDER,
+      auth: {
+        user: process.env.NODE_MAILER_USER,
+        pass: process.env.NODE_MAILER_PASS,
+      },
+    });
+
+    // Compose the email
+    const mailOptions = {
+      from: process.env.NODE_MAILER_USER,
+      to: superadminEmail,
+      subject: `${admin?.profile?.name} Exported Data`,
+      text: "Please find attached excel file.",
+      attachments: [
+        {
+          filename: `${admin?.profile?.name.toLowerCase()}-exported-data.xlsx`,
+          content: excelBuffer,
+        },
+      ],
     };
-  });
-  // Convert data to Excel worksheet
-  const worksheet = xlsx.utils.json_to_sheet(extractedAdmin);
-  const worksheet1 = xlsx.utils.json_to_sheet(extractedGroup);
-  const worksheet2 = xlsx.utils.json_to_sheet(extractedData);
-  const workbook = xlsx.utils.book_new();
-  xlsx.utils.book_append_sheet(workbook, worksheet, "Admin");
-  xlsx.utils.book_append_sheet(workbook, worksheet1, "Groups");
-  xlsx.utils.book_append_sheet(workbook, worksheet2, "Profiles");
-
-  // Generate the Excel file
-  const excelBuffer = xlsx.write(workbook, {
-    type: "buffer",
-    bookType: "xlsx",
-  });
-  // Set the response headers for file download
-  res.setHeader(
-    "Content-Type",
-    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-  );
-  res.setHeader(
-    "Content-Disposition",
-    "attachment; filename=exported-file.xlsx"
-  );
-
-  let message = { success: "Admin Data Exported" };
-  return res.send(excelBuffer);
+    // Send the email
+    const info = await transporter.sendMail(mailOptions);
+    let message = { success: `Export Data sent to ${superadminEmail}` };
+    res.status(200).json({ message });
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ message: "An error occurred while sending the email" });
+  }
 });
 
 /**
@@ -1469,6 +1500,7 @@ export const createUserProfileBulk = asyncHandler(async (req, res, next) => {
     const newUsers = users.filter((u) => !existingPhones.includes(u.username));
     newUsers.map(async (idx, inx) => {
       const options = {
+        scale: 12,
         color: {
           dark: "#BEFF6C", // dark color
           light: "#1C1C1E", // light color
@@ -1549,6 +1581,26 @@ export const createUserProfileBulk = asyncHandler(async (req, res, next) => {
 });
 
 /**
+ * @desc    Get Application Version
+ * @route   GET /api/v1/user/appversion
+ * @access  Oublic
+ */
+export const appVersion = asyncHandler(async (req, res, next) => {
+  if (!req.query.app) {
+    let message = { success: "Please pass app and platform" };
+    return res.status(400).json({ success: false, message });
+  }
+  const settings = await Setting.findById(process.env.SETTINGS_DOCUMENT_ID, {
+    application: 1,
+  });
+  let update = settings.application[req.query.app][req.query.platform];
+  res.status(200).json({
+    success: true,
+    data: update,
+  });
+});
+
+/**
  * @desc    Create user profile bulk from cloud
  * @route   POST /api/v1/user/createCloudBulk
  * @access  Private/Admin
@@ -1611,6 +1663,7 @@ export const createUserProfileCloudBulk = asyncHandler(
       );
       newUsers.map(async (idx, inx) => {
         const options = {
+          scale: 12,
           color: {
             dark: "#BEFF6C", // dark color
             light: "#1C1C1E", // light color
