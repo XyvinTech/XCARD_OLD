@@ -100,7 +100,7 @@ const personData = {
   position: data?.profile?.designation,
   phone: data?.contact?.contacts[0]?.value,
   websites: [{ link: `${window.location.href}` }, ...data?.website?.websites],
-  address: `${data?.contact?.contacts[3]?.value}, ${data?.contact?.contacts[3]?.street}, ${data?.contact?.contacts[3]?.pincode}`,
+  address: `${data?.contact?.contacts[3]?.value}, ${data?.contact?.contacts[3]?.street}}`,
   whatsapp: data?.contact?.contacts?.find((item) => item.type === "whatsapp")
     .value,
 };
