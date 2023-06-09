@@ -111,7 +111,7 @@ const createVcard = () => {
   const vcardData = [
     "BEGIN:VCARD",
     "VERSION:3.0",
-    `PHOTO:VALUE=URL:${personData.profilePic}`,
+    `PHOTO;TYPE=JPEG;VALUE=URI:${personData.profilePic}`,
     `FN:${personData.name}`,
     `EMAIL;TYPE=WORK:${personData.email}`,
     `ORG:${personData.company}`,
