@@ -94,6 +94,7 @@ function copyToClipboard(text) {
 }
 
 const personData = {
+  profilePic: data?.profile?.profilePicture?.public,
   name: data?.profile?.name,
   email: data?.contact?.contacts[1]?.value,
   company: data?.profile?.companyName,
@@ -110,6 +111,7 @@ const createVcard = () => {
   const vcardData = [
     "BEGIN:VCARD",
     "VERSION:3.0",
+    `PHOTO;VALUE=URL:${personData.profilePic}`,
     `FN:${personData.name}`,
     `EMAIL;TYPE=WORK:${personData.email}`,
     `ORG:${personData.company}`,
