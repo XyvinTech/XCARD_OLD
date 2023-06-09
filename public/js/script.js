@@ -101,7 +101,7 @@ const personData = {
   position: data?.profile?.designation,
   phone: data?.contact?.contacts[0]?.value,
   websites: [{ link: `${window.location.href}` }, ...data?.website?.websites],
-  address: `${data?.contact?.contacts[3]?.value}, ${data?.contact?.contacts[3]?.street}}`,
+  address: `${data?.contact?.contacts[3]?.value}, ${data?.contact?.contacts[3]?.street}`,
   whatsapp: data?.contact?.contacts?.find((item) => item.type === "whatsapp")
     .value,
 };
@@ -111,7 +111,7 @@ const createVcard = () => {
   const vcardData = [
     "BEGIN:VCARD",
     "VERSION:3.0",
-    `PHOTO;VALUE=URL:${personData.profilePic}`,
+    `PHOTO:VALUE=URL:${personData.profilePic}`,
     `FN:${personData.name}`,
     `EMAIL;TYPE=WORK:${personData.email}`,
     `ORG:${personData.company}`,
