@@ -253,9 +253,7 @@ function createButton(type, value, all) {
     button.onclick = () => window.open(`mailto:${value}`);
   } else if (type === "location") {
     icon.classList.add("fa-solid", "fa-location-dot");
-    button.onclick = () => {
-      toggleModel("location", [all?.value, all?.street, all?.pincode]);
-    };
+    button.onclick = () => window.open(`${all?.pincode}`);
   } else if (type === "whatsapp") {
     icon.classList.add("fa-brands", "fa-whatsapp");
     button.onclick = () => window.open(`https://wa.me/${value}?text='Hi'`);
