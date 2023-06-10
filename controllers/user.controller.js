@@ -52,7 +52,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
   await uploadFiles(req?.files, "profiles")
     .then(async (images) => {
       const options = {
-        scale: 26,
+        scale: 34,
         color: {
           dark: "#BEFF6C", // dark color
           light: "#1C1C1E", // light color
@@ -218,7 +218,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
           if (error?.errorInfo?.code === "auth/phone-number-already-exists") {
             const user = await User.findOne({ username: phone });
             const options = {
-              scale: 26,
+              scale: 34,
               color: {
                 dark: "#BEFF6C", // dark color
                 light: "#1C1C1E", // light color
@@ -724,6 +724,11 @@ export const exportAdminData = asyncHandler(async (req, res, next) => {
           "group.groupAdmin": new Types.ObjectId(req?.query?.admin),
         },
       },
+      {
+        $sort: {
+          "group.name": 1,
+        },
+      },
     ]);
 
     const adminPhone = admin?.contact?.contacts?.filter(
@@ -781,6 +786,7 @@ export const exportAdminData = asyncHandler(async (req, res, next) => {
       return {
         Name: item.profile?.name,
         Company: item.profile?.companyName,
+        Group: item?.group?.name,
         Designation: item.profile?.designation,
         Phone: phone,
         Email: email,
@@ -1500,7 +1506,7 @@ export const createUserProfileBulk = asyncHandler(async (req, res, next) => {
     const newUsers = users.filter((u) => !existingPhones.includes(u.username));
     newUsers.map(async (idx, inx) => {
       const options = {
-        scale: 26,
+        scale: 34,
         color: {
           dark: "#BEFF6C", // dark color
           light: "#1C1C1E", // light color
@@ -1663,7 +1669,7 @@ export const createUserProfileCloudBulk = asyncHandler(
       );
       newUsers.map(async (idx, inx) => {
         const options = {
-          scale: 26,
+          scale: 34,
           color: {
             dark: "#BEFF6C", // dark color
             light: "#1C1C1E", // light color
