@@ -80,7 +80,7 @@ export const checkUser = asyncHandler(async (req, res, next) => {
   if (user) {
     let message = { success: "User Registered" };
     // Test numbers and fixed OTP configuration
-    const testNumbers = ["+919747676503", "+919747676504"]; // Replace with your test numbers
+    const testNumbers = ["+919747676503", "+919747676504", "+919747676505"]; // Replace with your test numbers
     const fixedOTP = 1234; // Replace with your fixed OTP
     if (testNumbers.includes(req?.body?.phone)) {
       // Return the fixed OTP for test numbers
