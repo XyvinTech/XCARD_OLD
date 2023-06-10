@@ -785,8 +785,8 @@ export const exportAdminData = asyncHandler(async (req, res, next) => {
         .join(", ");
       return {
         Name: item.profile?.name,
-        Company: item.profile?.companyName,
         Group: item?.group?.name,
+        Company: item.profile?.companyName,
         Designation: item.profile?.designation,
         Phone: phone,
         Email: email,
