@@ -52,7 +52,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
   await uploadFiles(req?.files, "profiles")
     .then(async (images) => {
       const options = {
-        scale: 12,
+        scale: 20,
         color: {
           dark: "#BEFF6C", // dark color
           light: "#1C1C1E", // light color
@@ -218,7 +218,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
           if (error?.errorInfo?.code === "auth/phone-number-already-exists") {
             const user = await User.findOne({ username: phone });
             const options = {
-              scale: 12,
+              scale: 20,
               color: {
                 dark: "#BEFF6C", // dark color
                 light: "#1C1C1E", // light color
@@ -1500,7 +1500,7 @@ export const createUserProfileBulk = asyncHandler(async (req, res, next) => {
     const newUsers = users.filter((u) => !existingPhones.includes(u.username));
     newUsers.map(async (idx, inx) => {
       const options = {
-        scale: 12,
+        scale: 20,
         color: {
           dark: "#BEFF6C", // dark color
           light: "#1C1C1E", // light color
@@ -1663,7 +1663,7 @@ export const createUserProfileCloudBulk = asyncHandler(
       );
       newUsers.map(async (idx, inx) => {
         const options = {
-          scale: 12,
+          scale: 20,
           color: {
             dark: "#BEFF6C", // dark color
             light: "#1C1C1E", // light color
