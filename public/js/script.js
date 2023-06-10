@@ -108,10 +108,13 @@ const personData = {
 
 const createVcard = () => {
   const websites = personData.websites;
+  const nameParts = personData.name.split(" ");
+  const firstName = nameParts[0];
+  const lastName = nameParts.slice(1).join(" ");
   const vcardData = [
     "BEGIN:VCARD",
     "VERSION:3.0",
-    `PHOTO;TYPE=JPEG;VALUE=URI:${personData.profilePic}`,
+    `N:${lastName};${firstName};;`,
     `FN:${personData.name}`,
     `EMAIL;TYPE=WORK:${personData.email}`,
     `ORG:${personData.company}`,
