@@ -84,12 +84,17 @@ userRouter
   .get(protect, authorize("super"), userController.searchAllProfilesOfAdmin);
 
 userRouter
+  .route("/admin/analytics")
+  .get(protect, authorize("super"), userController.getSingleAdminAnalytics);
+
+userRouter
   .route("/admin/export")
   .get(protect, authorize("super"), userController.exportAdminData);
 
 userRouter
   .route("/analytics")
   .get(protect, authorize("super"), userController.getAdminAnalytics);
+
 userRouter
   .route("/analytics/counts")
   .get(protect, authorize("super"), userController.getAdminCountAnalytics);

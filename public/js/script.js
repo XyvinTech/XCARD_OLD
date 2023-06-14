@@ -132,7 +132,9 @@ const createVcard = () => {
   const downloadLink = document.createElement("a");
   downloadLink.href = url;
   downloadLink.download = `${personData.name}.vcf`;
+  document.body.appendChild(downloadLink);
   downloadLink.click();
+  document.body.removeChild(downloadLink);
 
   // Release the object URL after the download has started
   URL.revokeObjectURL(url);

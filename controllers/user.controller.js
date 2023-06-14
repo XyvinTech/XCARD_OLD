@@ -920,6 +920,82 @@ export const getAdminAnalytics = asyncHandler(async (req, res, next) => {
 });
 
 /**
+ * @desc    Get Admin Analysis by id
+ * @route   GET /api/v1/user/admin/analytics
+ * @access  Private/Super
+ * @schema  Private
+ */
+
+export const getSingleAdminAnalytics = asyncHandler(async (req, res, next) => {
+  const [profile] = await Profile.aggregate([
+    {
+      $lookup: {
+        from: "users",
+        localField: "user",
+        foreignField: "_id",
+        as: "user",
+      },
+    },
+    {
+      $unwind: {
+        path: "$user",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $match: {
+        "user.role": "admin",
+        "user._id": new Types.ObjectId(req?.query?.admin),
+      },
+    },
+    {
+      $lookup: {
+        from: "groups",
+        localField: "user._id",
+        foreignField: "groupAdmin",
+        as: "groups",
+      },
+    },
+    {
+      $lookup: {
+        from: "profiles",
+        let: {
+          groupIdList: "$groups._id",
+        },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $in: ["$group", "$$groupIdList"],
+              },
+            },
+          },
+        ],
+        as: "profiles",
+      },
+    },
+    {
+      $addFields: {
+        groupCount: {
+          $size: "$groups",
+        },
+        profileCount: {
+          $size: "$profiles",
+        },
+      },
+    },
+    {
+      $project: {
+        groups: 0,
+        profiles: 0,
+      },
+    },
+  ]);
+  let message = { success: "All Admin Users with Counts" };
+  return res.status(200).send({ success: true, message, profile });
+});
+
+/**
  * @desc    Get All Admin Profile,Groups,Admins Count Analysis
  * @route   GET /api/v1/user/analytics/counts
  * @access  Private/Super
@@ -1113,7 +1189,14 @@ export const updateAdminUserProfile = asyncHandler(async (req, res, next) => {
         const profile = await Profile.findOneAndUpdate(
           { user: req?.query?.admin ? req?.query?.admin : req?.user?.id },
           {
-            $set: { profile: { ...req?.body, profilePicture: image } },
+            $set: {
+              profile: {
+                ...req?.body,
+                name: req?.body?.companyName,
+                companyName: req?.body?.companyName,
+                profilePicture: image,
+              },
+            },
           },
           { new: true }
         );
@@ -1124,6 +1207,7 @@ export const updateAdminUserProfile = asyncHandler(async (req, res, next) => {
           { user: req?.query?.admin ? req?.query?.admin : req?.user?.id },
           {
             $set: {
+              "profile.name": req?.body?.companyName,
               "profile.companyName": req?.body?.companyName,
               "profile.bio": req?.body?.bio,
             },
