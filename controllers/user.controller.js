@@ -399,7 +399,7 @@ export const createAdminUserProfile = asyncHandler(async (req, res, next) => {
               companyName: profile?.name,
               profilePicture: images[0],
             },
-            contac: {
+            contact: {
               ...contact,
               status: true,
               contacts: contact?.contacts.map((obj) => {
@@ -416,12 +416,8 @@ export const createAdminUserProfile = asyncHandler(async (req, res, next) => {
           return res.status(201).send({ success: true, message, data: user });
         })
         .catch(async (error) => {
-          console.log(error);
           return next(
-            new ErrorResponse(
-              `Something went wrong ${error?.errorInfo?.code}`,
-              400
-            )
+            new ErrorResponse(`Error: ${error?.errorInfo?.message}`, 400)
           );
         });
     })
