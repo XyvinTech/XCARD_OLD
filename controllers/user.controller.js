@@ -1328,7 +1328,7 @@ export const updateSuperAdminUserProfile = asyncHandler(async (req, res, next) =
       //TODO: Delete old profile picture from Firebase Storage
       const updateArray = JSON?.parse(req?.body?.update) ?? [];
       if (Array?.isArray(updateArray) && updateArray?.length > 0) {
-        mixinEngine(req, updateArray);
+        mixinEngineAdmin(req, updateArray);
       }
       if (image !== undefined) {
         const profile = await Profile.findOneAndUpdate(
@@ -1420,6 +1420,39 @@ async function mixinEngine(req, array) {
   editProduct.length > 0 && mixinEngineEditProduct(req, editProduct);
 }
 
+async function mixinEngineAdmin(req, array) {
+  const validAddSection = [
+    "contact",
+    "website",
+    "service",
+    "award",
+    "certificate",
+    "product",
+  ];
+  const validEditSection = [
+    ...validAddSection,
+    "contact",
+    "bank",
+    "video",
+    "enquiry",
+  ];
+  const add = [];
+  const edit = [];
+  //Sort All the actions and send to different mixins
+  for (let index = 0; index < array.length; index++) {
+    const element = array[index];
+    if (element.action === "add") {
+      validAddSection.includes(element.section) && add.push(element);
+    }
+    if (element.action === "edit") {
+      validEditSection.includes(element.section) && edit.push(element);
+    }
+  }
+
+  add.length > 0 && mixinEngineAdminAdd(req, add);
+  edit.length > 0 && mixinEngineAdminEdit(req, edit);
+}
+
 async function statusEngine(req, array) {
   const status = [];
   //Sort All the actions and send to different mixins
@@ -1430,6 +1463,37 @@ async function statusEngine(req, array) {
     }
   }
   status.length > 0 && mixinEngineStatus(req, status);
+}
+/**
+ * @desc   Mixin Admin Add
+ * @model  {
+      "section":"sectionName",
+      "action":"add",
+      "data":{}
+   }
+ */
+async function mixinEngineAdminAdd(req, array) {
+  const updates = array.map((item) => {
+    const { _id, ...rest } = item.data;
+    let update;
+    let query;
+    query = {
+      user: req?.query?.admin,
+    };
+    update = {
+      $push: {
+        [`${item?.section}.${item?.section}s`]: rest,
+      },
+    };
+    return { query, update };
+  });
+  Promise.all(
+    updates.map(({ query, update }) => Profile.updateOne(query, update))
+  )
+    .then((results) => {
+      console.log(`${results.length} items added.`);
+    })
+    .catch((error) => console.error(error));
 }
 
 /**
@@ -1654,6 +1718,37 @@ function mixinEngineEdit(req, array) {
     }
     console.log(query);
     console.log(update);
+    return { query, update };
+  });
+  Promise.all(
+    updates.map(({ query, update }) => Profile.updateOne(query, update))
+  )
+    .then((results) => {
+      console.log(`${results.length} items updated.`);
+    })
+    .catch((error) => console.error(error));
+}
+/**
+ * @desc   Mixin Admin Edit
+ * @model  {
+      "section":"sectionName",
+      "action":"edit",
+      "data":{}
+   }
+ */
+
+function mixinEngineAdminEdit(req, array) {
+  const updates = array.map((item) => {
+    const { _id, ...rest } = item.data;
+    let update;
+    let query;
+    query = {
+      user: req?.query?.admin,
+      [`${item?.section}.${item?.section}s._id`]: item.data?._id,
+    };
+    update = {
+      $set: { [`${item?.section}.${item?.section}s.$`]: item.data },
+    };
     return { query, update };
   });
   Promise.all(
