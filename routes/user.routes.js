@@ -67,8 +67,31 @@ userRouter
     upload.single("file"),
     userController.updateAdminUserProfile
   );
+userRouter
+  .route("/updateUserContact")
+  .post(
+    protect,
+    authorize("user"),
+    upload.single("file"),
+    userController.updateUserContact
+  );
 //Super Admin Routes
 
+userRouter
+  .route("/upateSuperAdmin")
+  .post(
+    protect,
+    authorize("super"),
+    userController.updateSuperAdminUserProfile
+  );
+userRouter
+  .route("/enableDisableUser")
+  .post(
+    protect,
+    authorize("super"),
+    upload.single('file'),
+    userController.enableDisableUser
+  );
 userRouter
   .route("/admin")
   .get(protect, authorize("super"), userController.getAllAdmin);

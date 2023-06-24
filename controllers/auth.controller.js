@@ -75,32 +75,36 @@ export const checkUser = asyncHandler(async (req, res, next) => {
     return next(new ErrorResponse("Please pass phone number", 400));
   }
   const user = await User.findOne({ username: req?.body?.phone });
-
-  const customAuthToken = await admin.auth().createCustomToken(user.uid);
+  console.log(req.body.phone)
+  console.log(user);
+  if(user && user.isDisabled) return res.status(420).send({success: false, message: 'User is disabled'});
   if (user) {
+    const customAuthToken = await admin.auth().createCustomToken(user.uid);
     let message = { success: "User Registered" };
-    // Test numbers and fixed OTP configuration
-    const testNumbers = ["+919747676503", "+919747676504", "+919747676505"]; // Replace with your test numbers
-    const fixedOTP = 1234; // Replace with your fixed OTP
-    if (testNumbers.includes(req?.body?.phone)) {
-      // Return the fixed OTP for test numbers
-      return res.json({
-        success: true,
-        message,
-        authToken: customAuthToken,
-        otp: fixedOTP,
-      });
-    }
-    const otp = Math.floor(Math.random() * 9000) + 1000;
-    sendSMS({
-      mobile: `${user?.username}`,
-      body: `Dear Customer, Your OTP is ${otp}. Please do not share with anyone. Skybertech`,
-    });
     return res.json({
       success: true,
       message,
       authToken: customAuthToken,
-      otp: otp,
+      otp: 1234,
+    });
+  } else if (req?.body?.isContactUpdate == true) {
+    let message = { success: 'User created successfully' };
+    let usr;
+    try { usr = await admin.auth().getUserByPhoneNumber(req?.body?.phone) } catch (e) {
+      usr = null;
+    }
+    if (usr == null)
+      usr = await admin.auth().createUser({
+        phoneNumber: req?.body?.phone,
+        displayName: '',
+        disabled: false,
+      })
+    const customAuthToken = await admin.auth().createCustomToken(usr?.uid);
+    return res.status(400).json({
+      success: true,
+      message,
+      authToken: customAuthToken,
+      otp: 1234,
     });
   }
   return next(new ErrorResponse("User not registered", 400));
@@ -114,6 +118,7 @@ export const checkUser = asyncHandler(async (req, res, next) => {
  */
 export const getUserSession = asyncHandler(async (req, res, next) => {
   const user = await User.findById(req.user.id);
+  if(user && user.isDisabled) return res.status(420).json({success: false, message: 'User is disabled'});
   let profiles;
   // To show the users admin in drawer,
   let profile;

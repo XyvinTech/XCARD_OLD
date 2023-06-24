@@ -23,6 +23,7 @@ import { Types } from "mongoose";
 import Group from "../models/Group.js";
 import Setting from "../models/Setting.js";
 import Nodemailer from "nodemailer";
+import { query } from "express";
 
 /**
  * @desc    Create new user profile
@@ -377,6 +378,7 @@ export const createAdminUserProfile = asyncHandler(async (req, res, next) => {
   await uploadFiles(req?.files, "profiles")
     .then(async (images) => {
       const { phone, profile, contact } = form;
+
       admin
         .auth()
         .createUser({
@@ -1175,6 +1177,153 @@ export const updateUserProfile = asyncHandler(async (req, res, next) => {
  * @schema  Private
  */
 export const updateAdminUserProfile = asyncHandler(async (req, res, next) => {
+  let image;
+
+  try {
+    if (req?.file)
+      image = await uploadFile(req?.file, "profiles", getRandomFileName("profile-"));
+    function isObject(value) {
+      return typeof value === "object" && value !== null;
+    }
+    //TODO: Delete old profile picture from Firebase Storage
+    const updateArray = JSON?.parse(req?.body?.update) ?? [];
+    if (Array?.isArray(updateArray) && updateArray?.length > 0) {
+      mixinEngine(req, updateArray);
+    }
+    //UPDATE USER COLLECTION
+    if (req?.body?.uid) {
+      const user = await User.findOneAndUpdate(
+        { _id: req?.query?.admin ? req?.query?.admin : req?.user?.id },
+        {
+          $set: {
+            username: req?.body?.phone,
+            uid: req?.body.uid,
+            'providerData.0.uid': req?.body?.phone,
+            'providerData.0.phoneNumber': req?.body?.phone
+          }
+        },
+        { new: true });
+      await Profile.updateMany(
+        { user: req?.query?.admin ? req?.query?.admin : req?.user?.id },
+        {
+          $set: {
+            'contact.contacts.0.value': req?.body?.phone
+          }
+        }
+      );
+
+    }
+    //UPDATE USER ENDED
+
+    if (image !== undefined) {
+      await Profile.updateMany(
+        { user: req?.query?.admin ? req?.query?.admin : req?.user?.id },
+        {
+          $set: {
+            profile: {
+              ...req?.body,
+              name: req?.body?.companyName,
+              companyName: req?.body?.companyName,
+              profilePicture: image,
+
+            },
+          },
+        },
+        { new: true }
+      );
+      const profile = await Profile.findOne({ user: req?.query?.admin ? req?.query?.admin : req?.user?.id })
+      let message = { success: "Admin User Profile Updated" };
+      return res.status(200).send({ success: true, message, data: profile });
+    } else {
+      let phone;
+      if (req?.body?.phone) phone = req?.body.phone;
+      await Profile.updateMany(
+        { user: req?.query?.admin ? req?.query?.admin : req?.user?.id },
+        {
+          $set: {
+            "profile.name": req?.body?.companyName,
+            "profile.companyName": req?.body?.companyName,
+            "profile.bio": req?.body?.bio,
+          },
+        },
+        { new: true }
+      );
+      let message = { success: "Admin User Profile Updated" };
+      const profile = await Profile.findOne({ user: req?.query?.admin ? req?.query?.admin : req?.user?.id })
+      return res.status(200).send({ success: true, message, data: profile });
+    }
+  }
+  catch (err) {
+    console.log(err);
+    return next(new ErrorResponse(`File upload failed ${err}`, 400));
+  };
+});
+/**
+ * @desc    Update user contact in user collection
+ * @route   POST /api/v1/user/updateUserContact
+ * @access  Private/Admin
+ * @schema  Private
+ */
+export const updateUserContact = asyncHandler(async (req, res, next) => {
+  try {
+    //UPDATE USER COLLECTION
+    let phone = req?.body?.phone;
+    const user = await User.findOneAndUpdate(
+      { _id: req?.user?.id },
+      {
+        $set: {
+          username: phone,
+          uid: req?.body?.uid,
+          'providerData.0.uid': phone,
+          'providerData.0.phoneNumber': phone
+        }
+      },
+      { new: true });
+    let message = { success: 'Successfully updated user contact' }
+    //UPDATE USER ENDED
+    return res.status(200).send({ success: true, message, user });
+  }
+  catch (err) {
+    console.log(err);
+    return next(new ErrorResponse(`${err}`, 400));
+  };
+});
+/**
+ * @desc    Update user contact in user collection
+ * @route   POST /api/v1/user/updateUserContact
+ * @access  Private/Admin
+ * @schema  Private
+ */
+export const enableDisableUser = asyncHandler(async (req, res, next) => {
+  try {
+    //UPDATE USER COLLECTION
+    let phone = req.body.phone;
+    if(!phone) return res.status(400).send({success: false, message: 'Please enter phone number'});
+    const user = await User.findOneAndUpdate(
+      { username: phone },
+      {
+        $set: {
+          isDisabled: req?.body?.isDisabled,
+        }
+      },
+      { new: true });
+    let message = { success: 'Successfully updated user contact' }
+    //UPDATE USER ENDED
+    return res.status(200).send({ success: true, message, user });
+  }
+  catch (err) {
+    console.log(err);
+    return next(new ErrorResponse(`${err}`, 400));
+  };
+});
+
+/**
+ * @desc    Update Admin Profile
+ * @route   POST /api/v1/user/updateSuperAdmin
+ * @access  Private/Admin
+ * @schema  Private
+ */
+export const updateSuperAdminUserProfile = asyncHandler(async (req, res, next) => {
   await uploadFile(req?.file, "profiles", getRandomFileName("profile-"))
     .then(async (image) => {
       function isObject(value) {
@@ -1223,6 +1372,8 @@ export const updateAdminUserProfile = asyncHandler(async (req, res, next) => {
     });
 });
 
+
+
 async function mixinEngine(req, array) {
   const validAddSection = [
     "social",
@@ -1255,7 +1406,7 @@ async function mixinEngine(req, array) {
     }
     if (element.action === "edit") {
       validEditSection.includes(element.section) &&
-      element.section === "product"
+        element.section === "product"
         ? editProduct.push(element)
         : edit.push(element);
     }
@@ -1462,6 +1613,7 @@ function mixinEngineEdit(req, array) {
       item?.section == "bank" ||
       item?.section == "enquiry"
     ) {
+
       query = {
         user: req?.query?.user ?? req?.user?.id,
         _id: req?.query?.profile,
@@ -1469,11 +1621,11 @@ function mixinEngineEdit(req, array) {
       update =
         item?.section == "video"
           ? {
-              $set: { [`${item?.section}.link`]: item.data },
-            }
+            $set: { [`${item?.section}.link`]: item.data },
+          }
           : item?.section == "enquiry"
-          ? { $set: { [`${item?.section}.email`]: rest } }
-          : { $set: { [`${item?.section}.bankDetails`]: rest } };
+            ? { $set: { [`${item?.section}.email`]: rest } }
+            : { $set: { [`${item?.section}.bankDetails`]: rest } };
     } else if (item?.section == "social") {
       const getSocial = getSocialMedia(rest?.value);
       const socialmedia = {
@@ -1494,8 +1646,9 @@ function mixinEngineEdit(req, array) {
         },
       };
     } else {
+      console.log(req.body.admin)
       query = {
-        user: req?.query?.user ?? req?.user?.id,
+        user: req?.query?.admin ?? req?.body?.admin ?? req?.query?.user ?? req?.user?.id,
         _id: req?.query?.profile,
         [`${item?.section}.${item?.section}s._id`]: item.data?._id,
       };
@@ -1503,6 +1656,8 @@ function mixinEngineEdit(req, array) {
         $set: { [`${item?.section}.${item?.section}s.$`]: item.data },
       };
     }
+    console.log(query);
+    console.log(update);
     return { query, update };
   });
   Promise.all(
