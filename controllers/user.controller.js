@@ -1768,28 +1768,28 @@ function mixinEngineAdminEdit(req, array) {
    }
  */
 
-function mixinEngineAdminEdit(req, array) {
-  const updates = array.map((item) => {
-    const { _id, ...rest } = item.data;
-    let update;
-    let query;
-    query = {
-      user: req?.query?.admin,
-      [`${item?.section}.${item?.section}s._id`]: item.data?._id,
-    };
-    update = {
-      $set: { [`${item?.section}.${item?.section}s.$`]: item.data },
-    };
-    return { query, update };
-  });
-  Promise.all(
-    updates.map(({ query, update }) => Profile.updateOne(query, update))
-  )
-    .then((results) => {
-      console.log(`${results.length} items updated.`);
-    })
-    .catch((error) => console.error(error));
-}
+// function mixinEngineAdminEdit(req, array) {
+//   const updates = array.map((item) => {
+//     const { _id, ...rest } = item.data;
+//     let update;
+//     let query;
+//     query = {
+//       user: req?.query?.admin,
+//       [`${item?.section}.${item?.section}s._id`]: item.data?._id,
+//     };
+//     update = {
+//       $set: { [`${item?.section}.${item?.section}s.$`]: item.data },
+//     };
+//     return { query, update };
+//   });
+//   Promise.all(
+//     updates.map(({ query, update }) => Profile.updateOne(query, update))
+//   )
+//     .then((results) => {
+//       console.log(`${results.length} items updated.`);
+//     })
+//     .catch((error) => console.error(error));
+// }
 
 /**
  * @desc   Mixin Status
