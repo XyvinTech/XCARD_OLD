@@ -33,6 +33,7 @@ import { query } from "express";
  */
 export const createUserProfile = asyncHandler(async (req, res, next) => {
   const { phone, update } = req?.body;
+  console.log(phone);
   const all = JSON.parse(update);
   const {
     profile,
@@ -216,8 +217,21 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
         })
         .catch(async (error) => {
           //If User already exisits create second or third profile
+
           if (error?.errorInfo?.code === "auth/phone-number-already-exists") {
-            const user = await User.findOne({ username: phone });
+            let user = await User.findOne({ username: phone });
+
+            if (user == null) {
+              const userRecord = await admin.auth().getUserByPhoneNumber(phone);
+              console.log(userRecord);
+              user = await User.create({
+                username: phone,
+                uid: userRecord?.uid,
+                role: "user",
+                providerData: userRecord?.providerData,
+              });
+            }
+            console.log(user);
             const options = {
               scale: 34,
               color: {
@@ -1294,7 +1308,7 @@ export const enableDisableUser = asyncHandler(async (req, res, next) => {
   try {
     //UPDATE USER COLLECTION
     let phone = req.body.phone;
-    if(!phone) return res.status(400).send({success: false, message: 'Please enter phone number'});
+    if (!phone) return res.status(400).send({ success: false, message: 'Please enter phone number' });
     const user = await User.findOneAndUpdate(
       { username: phone },
       {
