@@ -184,7 +184,7 @@ const ProfileSchema = new mongoose.Schema(
             default: new mongoose.Types.ObjectId(),
           },
           name: String,
-          accnumber: Number,
+          accnumber: String,
           bank: String,
           branch: String,
           ifsc: String,
