@@ -140,17 +140,27 @@ const ProfileSchema = new mongoose.Schema(
     },
     service: {
       status: { type: Boolean, default: false },
-      services: { type: [{ label: String, value: String }], default: [] },
+      services: {
+        type: [
+          {
+            label: String,
+            image: Object,
+            value: String,
+          }
+        ],
+        default: [],
+      },
     },
     video: {
       status: { type: Boolean, default: false },
-      link: {
-        link: { type: String, default: "" },
-        _id: {
-          type: mongoose.Schema.ObjectId,
-          default: new mongoose.Types.ObjectId(),
-        },
-      },
+      videos: { type: [{ link: String, }], default: [] },
+      // link: {
+      //   link: { type: String, default: "" },
+      //   _id: {
+      //     type: mongoose.Schema.ObjectId,
+      //     default: new mongoose.Types.ObjectId(),
+      //   },
+      // },
     },
     product: {
       status: { type: Boolean, default: false },
@@ -159,6 +169,7 @@ const ProfileSchema = new mongoose.Schema(
           {
             name: String,
             link: String,
+            description: String,
             image: Object,
             price: Number,
             offerPrice: Number,

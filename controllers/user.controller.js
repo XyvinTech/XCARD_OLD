@@ -265,6 +265,17 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
                 return { ...all, image: upload };
               })
             );
+            const modifiedService = await Promise.all(
+              service?.services?.map(async (item) => {
+                const { _id, ...all } = item;
+                const upload = await uploadBufferFile(
+                  { ...all.image, buffer: item?.image?.base64 },
+                  "services",
+                  getRandomFileName("service-")
+                );
+                return { ...all, image: upload };
+              })
+            );
             await Profile.create({
               user: user?.id,
               group: req?.query?.group,
@@ -311,16 +322,21 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
                   return filteredObj;
                 }),
               },
+              // service: {
+              //   ...service,
+              //   status: service?.services?.length > 0 ? true : false,
+              //   services: service?.services.map((obj) => {
+              //     const filteredObj = Object.fromEntries(
+              //       Object.entries(obj).filter(([key, value]) => value !== null)
+              //     );
+              //     delete filteredObj["_id"]; // remove the _id key from the filtered object
+              //     return filteredObj;
+              //   }),
+              // },
               service: {
-                ...service,
-                status: service?.services?.length > 0 ? true : false,
-                services: service?.services.map((obj) => {
-                  const filteredObj = Object.fromEntries(
-                    Object.entries(obj).filter(([key, value]) => value !== null)
-                  );
-                  delete filteredObj["_id"]; // remove the _id key from the filtered object
-                  return filteredObj;
-                }),
+                ...product,
+                status: modifiedService.length > 0 ? true : false,
+                services: modifiedService,
               },
               award: {
                 ...award,
@@ -354,10 +370,21 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
                 status: bank?.bankDetails?.accnumber ? true : false,
                 bankDetails: bank?.bankDetails,
               },
+              // video: {
+              //   ...video,
+              //   status: video?.link?.link ? true : false,
+              //   link: video?.link,
+              // },
               video: {
                 ...video,
-                status: video?.link?.link ? true : false,
-                link: video?.link,
+                status: video?.videos?.length > 0 ? true : false,
+                videos: video?.videos.map((obj) => {
+                  const filteredObj = Object.fromEntries(
+                    Object.entries(obj).filter(([key, value]) => value !== null)
+                  );
+                  delete filteredObj["_id"]; // remove the _id key from the filtered object
+                  return filteredObj;
+                }),
               },
               enquiry: {
                 ...enquiry,
