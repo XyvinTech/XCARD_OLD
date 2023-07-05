@@ -1427,7 +1427,7 @@ async function mixinEngine(req, array) {
     "video",
     "enquiry",
   ];
-  const validDeleteSection = [...validAddSection];
+  const validDeleteSection = [...validAddSection,"video"];
   const add = [];
   const addProduct = [];
   const editProduct = [];
