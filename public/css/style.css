@@ -111,13 +111,13 @@ body {
 #award-cards {
   display: flex;
   justify-content: space-evenly;
-  align-items: flex-start;
+  align-items: center;
   flex-direction: row;
   margin: 5%;
   flex-wrap: wrap;
 }
 
-.award-card {
+.award_card {
   border: 0.6px solid var(--awdBor);
   padding: 3% 8%;
   border-radius: 14px;
@@ -125,20 +125,19 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  min-width: 100px;
   margin: 2%;
   background-color: var(--awdBg);
-  width: 240px;
+  width: 240px; /* Change here */
   min-height: 64px;
 }
-.award-card > h3 {
+.award_card > h3 {
   color: var(--bodyContent);
   font-size: 14px;
   font-weight: 600;
   padding: 0px;
   margin: 0px;
 }
-.award-card > p {
+.award_card > p {
   color: var(--lightAc);
   padding: 0px;
   margin: 0px;
@@ -216,7 +215,7 @@ input[name="subject"]::placeholder {
 .bank-row {
   display: flex;
   justify-content: space-evenly;
-  align-items: flex-start;
+  align-items: center;
   flex-direction: row;
   gap: 10px;
   width: 100%;
@@ -246,15 +245,13 @@ input[name="subject"]::placeholder {
   line-height: 21px;
   word-wrap: break-word;
   color: var(--subText);
-  text-align: start;
-  /* overflow-x: hidden; */
 }
 
 .head {
   color: var(--lightAc);
   font-size: 14px;
   font-weight: 600;
-  padding: 30px 0px 0px 0px;
+  padding: 10% 0px 0px 0px;
   margin: 0px;
   align-self: center;
 }
@@ -305,25 +302,15 @@ input[name="subject"]::placeholder {
   margin: 0;
 }
 
-.card-subtitle {
-  font-family: "Poppins";
-  font-style: normal;
-  font-weight: 400;
-  font-size: 10px;
-  line-height: 15px;
-  color: var(--lightAc);
-  margin: 0;
-}
-
 .card-button {
-  background-color: var(--btnBg);
+  background-color: #7c56fe;
   border-radius: 10px;
   width: 95%;
   height: 37px;
   margin-top: 8px;
   border-width: 1px;
   border: none;
-  color: var(--frameCardButton);
+  color: #fff;
   font-size: 14px;
   font-weight: bold;
   text-align: center;
@@ -342,9 +329,9 @@ input[name="subject"]::placeholder {
 .products-icons {
   display: flex;
   justify-content: space-evenly;
-  flex-wrap: wrap;
-  align-items: left;
+  align-items: center;
   flex-direction: row;
+  flex-wrap: wrap;
   margin: 0px;
   width: 100%;
 }
@@ -418,9 +405,8 @@ input[name="subject"]::placeholder {
   align-items: center;
   flex-direction: column;
   color: var(--lightAc);
-  width: 85%;
+  width: 100%;
   height: auto;
-  margin: 6%;
   min-height: 171px;
 }
 
@@ -438,6 +424,7 @@ iframe {
   width: 100%;
   min-height: 171px;
   height: auto;
+  margin-bottom: 5vh;
 }
 
 .websites-icons {
@@ -497,7 +484,6 @@ iframe {
   column-gap: 25px;
   flex-wrap: wrap;
   text-decoration: none;
-  margin-top: 10px;
 }
 
 .discription {
@@ -511,11 +497,10 @@ iframe {
 
 .image-container img[alt="Image"] {
   width: 100%;
-  background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2));
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), #000000;
   border: 0.5px solid rgba(43, 175, 164, 0.5);
   border-radius: 0px 0px 24px 24px;
-  height: 100%;
-  margin-top: 25px;
+  height: 60vw;
 }
 
 .button-overlay {
@@ -573,18 +558,15 @@ iframe {
 
 .discription {
   height: fit-content;
-  text-align: center;
   line-height: 1vh;
   width: 60%;
+  text-align: center;
 }
 
 .main-section {
   width: auto;
   height: auto;
-  margin-left: 30px;
-  margin-top: 30px;
-  margin-right: 30px;
-  margin-bottom: 0px;
+  margin: 3rem;
   padding: 2rem;
   text-align: left;
   border: 1px solid var(--border);
@@ -593,13 +575,23 @@ iframe {
 }
 
 .details {
-  color: var();
+  overflow-wrap: break-word;
 }
 
-.model_container {
+.model_container,
+.popup__container {
   display: none;
   opacity: 0;
   transition: 0.5s;
+}
+.popup__container {
+  display: none;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
 }
 .model {
   width: 90%;
@@ -617,7 +609,6 @@ iframe {
 .demo {
   flex: 1;
   width: 100%;
-  height: 200px;
 }
 .model > h1 {
   font-family: "Poppins";
@@ -659,7 +650,20 @@ iframe {
 .input_section > input:focus {
   outline: none;
 }
-
+.show_popup {
+  display: block;
+  width: 100%;
+  height: 100vh;
+  background-color: none;
+  position: fixed;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #0000007c;
+  opacity: 1;
+}
 .show {
   display: block;
   width: 100%;
@@ -674,9 +678,6 @@ iframe {
   background-color: #0000007c;
   opacity: 1;
 }
-/* .model_animation {
-
-} */
 
 .certif-section {
   display: flex;
@@ -716,11 +717,7 @@ iframe {
   font-weight: 600;
 }
 
-#bio {
-  margin: 0px;
-  text-align: justify;
-}
-
+#bio,
 #company {
   margin: 0px;
 }
@@ -883,10 +880,84 @@ main {
 .bank-name {
   max-width: 100%;
 }
-
 @media (min-width: 426px) {
   .award_card {
     width: 280px;
     padding: 3% 6%;
   }
+}
+
+.popup {
+  max-width: 400px;
+  margin: 7%;
+  height: auto;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+  background-color: var(--bg);
+  color: var(--fg);
+  border-radius: 14px;
+  margin-top: 0px;
+  position: relative;
+  overflow: hidden;
+  padding-bottom: 0.25rem;
+}
+#popupImage {
+  width: 100%;
+  height: min();
+  margin: 0px;
+  top: 0px;
+}
+
+#popupTitle {
+  color: var(--fg);
+  text-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  font-family: "Poppins";
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  align-self: flex-start;
+  margin: 0.8rem;
+}
+
+#popupDescription {
+  color: var(--fg);
+  font-family: "Poppins";
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  align-self: flex-start;
+  margin: 0.8rem;
+}
+
+.price {
+  align-self: flex-start;
+  margin: 1rem;
+  margin-top: 0px;
+}
+
+#oldPrice {
+  color: var(--gray-3, #828282);
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+#newPrice {
+  background-color: var(--linkBg);
+  padding: 0.25rem 0.75rem;
+  margin-left: 0.5rem;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  font-style: normal;
+}
+
+.video-container{
+  padding: 10%;
+  padding-bottom: 0px;
 }
