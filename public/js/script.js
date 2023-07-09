@@ -1335,7 +1335,7 @@ awards.forEach((award) => {
 
 function createAwardCard(award) {
   const card = document.createElement("div");
-  card.classList.add("award-card");
+  card.classList.add("award_card");
 
   const name = document.createElement("h3");
   name.textContent = award.label;
