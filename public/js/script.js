@@ -1180,16 +1180,25 @@ products.forEach((product) => {
     price: null
   }
   cardButtonElem.addEventListener("click", (e) => {
-    openPopup(
-      product?.image?.public,
-      product?.name,
-      product?.description,
-      product?.link,
-      {
-        oldPrice: product?.price,
-        newPrice: product?.offerPrice,
-      }
-    );
+    if (product?.price && product?.offerPrice) {
+      openPopup(
+        product?.image?.public,
+        product?.name,
+        product?.description,
+        product?.link,
+        {
+          oldPrice: product?.price,
+          newPrice: product?.offerPrice,
+        }
+      );
+    } else {
+      openPopup(
+        product?.image?.public,
+        product?.name,
+        product?.description,
+        product?.link
+      );
+    }
   });
 
   productsIcons.appendChild(cardElem);
