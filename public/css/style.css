@@ -496,11 +496,15 @@ iframe {
 }
 
 .image-container img[alt="Image"] {
+  
   width: 100%;
   background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), #000000;
   border: 0.5px solid rgba(43, 175, 164, 0.5);
   border-radius: 0px 0px 24px 24px;
   height: 60vw;
+  object-fit: cover;
+  object-position: center;
+  
 }
 
 .button-overlay {
