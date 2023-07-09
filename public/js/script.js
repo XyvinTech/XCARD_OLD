@@ -886,7 +886,7 @@ for (const social of socialMedia.socials) {
         iconClass = "fa-brands fa-medium";
         break;
       case "youtube":
-        iconClass = "fa-brands fa-youtube-play";
+        iconClass = "fa-brands fa-youtube";
         break;
       case "github":
         iconClass = "fa-brands fa-github";
