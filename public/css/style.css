@@ -926,6 +926,7 @@ main {
   line-height: normal;
   align-self: flex-start;
   margin: 0.8rem;
+  word-wrap: break-word;
 }
 
 #popupDescription {
@@ -937,6 +938,7 @@ main {
   line-height: normal;
   align-self: flex-start;
   margin: 0.8rem;
+  word-wrap: break-word;
 }
 
 .price {
