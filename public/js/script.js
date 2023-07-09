@@ -307,11 +307,11 @@
 //     <div class="link-card">
 //       <p class="link">${linkData?.link}</p>
 //       <button class="image" onclick="window.open('${link}', '_blank')">
-      
+
 //       <svg class='arrow' width="14" height="14" viewBox="0 0 14 14" fill="var(--btnTxt)" xmlns="http://www.w3.org/2000/svg">
 //       <path d="M2.10691 13.2783L0.758644 11.93L10.0039 2.68471H1.72169V0.758606H13.2783V12.3152H11.3522V4.03298L2.10691 13.2783Z" fill="var(--btnTxt)"/>
 //       </svg>
-      
+
 //       </button>
 //     </div>
 //   `;
@@ -1170,6 +1170,15 @@ products.forEach((product) => {
   cardButtonElem.classList.add("card-button");
   cardButtonElem.textContent = "View More";
   cardContentElem.appendChild(cardButtonElem);
+  let price;
+  if (product?.price && product?.offerPrice) {
+    price = {
+      oldPrice: product?.price,
+      newPrice: product?.offerPrice,
+    }
+  } else {
+    price: null
+  }
   cardButtonElem.addEventListener("click", (e) => {
     openPopup(
       product?.image?.public,
@@ -1235,61 +1244,55 @@ function renderBankDetails() {
   bankDetailsHTML += `
   <div class="bank-row">
   <div class="bank-col">
-    ${
-      !isStringEmpty(bankDetails.accountNumber)
-        ? `<p class="dtl-head">Account Number</p>
+    ${!isStringEmpty(bankDetails.accountNumber)
+      ? `<p class="dtl-head">Account Number</p>
     <p class="dtl">${bankDetails.accountNumber}</p>`
-        : ""
+      : ""
     }
 
   </div>
   <div class="bank-col">
-  ${
-    !isStringEmpty(bankDetails.bankName)
+  ${!isStringEmpty(bankDetails.bankName)
       ? `<p class="dtl-head">Bank Name</p>
   <p class="dtl">${bankDetails.bankName}</p>`
       : ""
-  }
+    }
   </div>
 </div>
                       `;
   bankDetailsHTML += `
   <div class="bank-row">
   <div class="bank-col">
-  ${
-    !isStringEmpty(bankDetails.branch)
+  ${!isStringEmpty(bankDetails.branch)
       ? `<p class="dtl-head">Branch</p>
   <p class="dtl">${bankDetails.branch}</p>`
       : ""
-  }
+    }
   </div>
   <div class="bank-col">
-  ${
-    !isStringEmpty(bankDetails.ifscCode)
+  ${!isStringEmpty(bankDetails.ifscCode)
       ? `<p class="dtl-head">IFSC Code</p>
   <p class="dtl">${bankDetails.ifscCode}</p>`
       : ""
-  }
+    }
   </div>
 </div>
   `;
   bankDetailsHTML += `
   <div class="bank-row">
   <div class="bank-col">
-  ${
-    !isStringEmpty(bankDetails.swiftCode)
+  ${!isStringEmpty(bankDetails.swiftCode)
       ? `<p class="dtl-head">Swift Code</p>
   <p class="dtl">${bankDetails.swiftCode}</p>`
       : ""
-  }
+    }
   </div>
   <div class="bank-col">
-  ${
-    !isStringEmpty(bankDetails.vatNumber)
+  ${!isStringEmpty(bankDetails.vatNumber)
       ? `<p class="dtl-head">VAT Number</p>
   <p class="dtl">${bankDetails.vatNumber}</p>`
       : ""
-  }
+    }
   </div>
 </div>
   `;
