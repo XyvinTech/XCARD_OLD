@@ -199,7 +199,7 @@ input[name="subject"]::placeholder {
 
 .bank-section {
   padding: 12px;
-  align-items: flex-start;
+  
 }
 
 .bank-icons {
@@ -346,7 +346,7 @@ input[name="subject"]::placeholder {
 }
 
 .section {
-  text-align: center;
+  text-align: left;
   display: flex;
   justify-content: center;
   align-items: center;
