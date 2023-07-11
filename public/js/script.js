@@ -1254,7 +1254,7 @@ function renderBankDetails() {
   <div class="bank-row">
   <div class="bank-col">
     ${!isStringEmpty(bankDetails.accountNumber)
-      ? `<p class="dtl-head">Account Number</p>
+      ? `<p class="dtl-head" style="text-align:left">Account Number</p>
     <p class="dtl">${bankDetails.accountNumber}</p>`
       : ""
     }
