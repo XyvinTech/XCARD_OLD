@@ -199,6 +199,7 @@ input[name="subject"]::placeholder {
 
 .bank-section {
   padding: 12px;
+  align-items: flex-start;
 }
 
 .bank-icons {
