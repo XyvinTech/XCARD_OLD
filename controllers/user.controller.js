@@ -1714,7 +1714,6 @@ function mixinEngineEdit(req, array) {
       item?.section == "bank" ||
       item?.section == "enquiry"
     ) {
-
       query = {
         user: req?.query?.user ?? req?.user?.id,
         _id: req?.query?.profile,
