@@ -1710,7 +1710,7 @@ function mixinEngineEdit(req, array) {
     let query;
     // Create Add Query For Bank and Video
     if (
-      item?.section == "video" ||
+      // item?.section == "video" ||
       item?.section == "bank" ||
       item?.section == "enquiry"
     ) {
