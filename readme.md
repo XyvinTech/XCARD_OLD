@@ -32,3 +32,15 @@ uid: aiCZ4j3pYpZDYS4qGQfoCNaYiJj2
 user
 +919809359344
 ```
+
+
+```
+Google Playstore Credentials
+User ID : sureshkumark0777@gmail.com
+Password : suresh@123#$
+
+
+Apple App Store Credentials
+sureshit@icloud.com
+z8o3L973
+```
