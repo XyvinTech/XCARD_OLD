@@ -864,7 +864,7 @@ export const exportAdminData = asyncHandler(async (req, res, next) => {
     // Compose the email
     const mailOptions = {
       from: process.env.NODE_MAILER_USER,
-      to: "withniyaz@gmail.com",
+      to: superadminEmail,
       subject: `${admin?.profile?.name} Exported Data`,
       text: "Please find attached excel file.",
       attachments: [
