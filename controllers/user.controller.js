@@ -795,7 +795,8 @@ export const exportAdminData = asyncHandler(async (req, res, next) => {
         Created: item.createdAt,
       };
     });
-    const extractedData = profiles.map((item) => {
+    const extractedData = profiles?.map((item) => {
+      let bank;
       const phone = item?.contact?.contacts?.filter(
         (item) => item.type === "phone"
       )[0]?.value;
@@ -815,23 +816,25 @@ export const exportAdminData = asyncHandler(async (req, res, next) => {
         })
         .join(", ");
       const skippedField = "_id";
-      const bank = Object.entries(item?.bank?.bankDetails)
-        .map(function ([key, value]) {
-          if (value == null || value == "") return;
-          else return key === skippedField ? "" : `${key}: ${value}`;
-        })
-        .filter(Boolean)
-        .join(", ");
+      if (item?.bank) {
+        bank = Object?.entries(item?.bank?.bankDetails)
+          ?.map(function ([key, value]) {
+            if (value == null || value == "" || value == undefined) return;
+            else return key === skippedField ? "" : `${key}: ${value}`;
+          })
+          ?.filter(Boolean)
+          ?.join(", ");
+      }
       return {
-        Name: item.profile?.name,
+        Name: item?.profile?.name,
         Group: item?.group?.name,
-        Company: item.profile?.companyName,
-        Designation: item.profile?.designation,
+        Company: item?.profile?.companyName,
+        Designation: item?.profile?.designation,
         Phone: phone,
         Email: email,
         Social: social,
         Website: website,
-        Bank: bank,
+        Bank: bank ?? "",
         Created: item.createdAt,
       };
     });
@@ -861,7 +864,7 @@ export const exportAdminData = asyncHandler(async (req, res, next) => {
     // Compose the email
     const mailOptions = {
       from: process.env.NODE_MAILER_USER,
-      to: superadminEmail,
+      to: "withniyaz@gmail.com",
       subject: `${admin?.profile?.name} Exported Data`,
       text: "Please find attached excel file.",
       attachments: [
@@ -1218,7 +1221,11 @@ export const updateAdminUserProfile = asyncHandler(async (req, res, next) => {
 
   try {
     if (req?.file)
-      image = await uploadFile(req?.file, "profiles", getRandomFileName("profile-"));
+      image = await uploadFile(
+        req?.file,
+        "profiles",
+        getRandomFileName("profile-")
+      );
     function isObject(value) {
       return typeof value === "object" && value !== null;
     }
@@ -1235,20 +1242,20 @@ export const updateAdminUserProfile = asyncHandler(async (req, res, next) => {
           $set: {
             username: req?.body?.phone,
             uid: req?.body.uid,
-            'providerData.0.uid': req?.body?.phone,
-            'providerData.0.phoneNumber': req?.body?.phone
-          }
+            "providerData.0.uid": req?.body?.phone,
+            "providerData.0.phoneNumber": req?.body?.phone,
+          },
         },
-        { new: true });
+        { new: true }
+      );
       await Profile.updateMany(
         { user: req?.query?.admin ? req?.query?.admin : req?.user?.id },
         {
           $set: {
-            'contact.contacts.0.value': req?.body?.phone
-          }
+            "contact.contacts.0.value": req?.body?.phone,
+          },
         }
       );
-
     }
     //UPDATE USER ENDED
 
@@ -1262,13 +1269,14 @@ export const updateAdminUserProfile = asyncHandler(async (req, res, next) => {
               name: req?.body?.companyName,
               companyName: req?.body?.companyName,
               profilePicture: image,
-
             },
           },
         },
         { new: true }
       );
-      const profile = await Profile.findOne({ user: req?.query?.admin ? req?.query?.admin : req?.user?.id })
+      const profile = await Profile.findOne({
+        user: req?.query?.admin ? req?.query?.admin : req?.user?.id,
+      });
       let message = { success: "Admin User Profile Updated" };
       return res.status(200).send({ success: true, message, data: profile });
     } else {
@@ -1286,14 +1294,15 @@ export const updateAdminUserProfile = asyncHandler(async (req, res, next) => {
         { new: true }
       );
       let message = { success: "Admin User Profile Updated" };
-      const profile = await Profile.findOne({ user: req?.query?.admin ? req?.query?.admin : req?.user?.id })
+      const profile = await Profile.findOne({
+        user: req?.query?.admin ? req?.query?.admin : req?.user?.id,
+      });
       return res.status(200).send({ success: true, message, data: profile });
     }
-  }
-  catch (err) {
+  } catch (err) {
     console.log(err);
     return next(new ErrorResponse(`File upload failed ${err}`, 400));
-  };
+  }
 });
 /**
  * @desc    Update user contact in user collection
@@ -1311,19 +1320,19 @@ export const updateUserContact = asyncHandler(async (req, res, next) => {
         $set: {
           username: phone,
           uid: req?.body?.uid,
-          'providerData.0.uid': phone,
-          'providerData.0.phoneNumber': phone
-        }
+          "providerData.0.uid": phone,
+          "providerData.0.phoneNumber": phone,
+        },
       },
-      { new: true });
-    let message = { success: 'Successfully updated user contact' }
+      { new: true }
+    );
+    let message = { success: "Successfully updated user contact" };
     //UPDATE USER ENDED
     return res.status(200).send({ success: true, message, user });
-  }
-  catch (err) {
+  } catch (err) {
     console.log(err);
     return next(new ErrorResponse(`${err}`, 400));
-  };
+  }
 });
 /**
  * @desc    Update user contact in user collection
@@ -1335,23 +1344,26 @@ export const enableDisableUser = asyncHandler(async (req, res, next) => {
   try {
     //UPDATE USER COLLECTION
     let phone = req.body.phone;
-    if (!phone) return res.status(400).send({ success: false, message: 'Please enter phone number' });
+    if (!phone)
+      return res
+        .status(400)
+        .send({ success: false, message: "Please enter phone number" });
     const user = await User.findOneAndUpdate(
       { username: phone },
       {
         $set: {
           isDisabled: req?.body?.isDisabled,
-        }
+        },
       },
-      { new: true });
-    let message = { success: 'Successfully updated user contact' }
+      { new: true }
+    );
+    let message = { success: "Successfully updated user contact" };
     //UPDATE USER ENDED
     return res.status(200).send({ success: true, message, user });
-  }
-  catch (err) {
+  } catch (err) {
     console.log(err);
     return next(new ErrorResponse(`${err}`, 400));
-  };
+  }
 });
 
 /**
@@ -1360,56 +1372,60 @@ export const enableDisableUser = asyncHandler(async (req, res, next) => {
  * @access  Private/Admin
  * @schema  Private
  */
-export const updateSuperAdminUserProfile = asyncHandler(async (req, res, next) => {
-  await uploadFile(req?.file, "profiles", getRandomFileName("profile-"))
-    .then(async (image) => {
-      function isObject(value) {
-        return typeof value === "object" && value !== null;
-      }
-      //TODO: Delete old profile picture from Firebase Storage
-      const updateArray = JSON?.parse(req?.body?.update) ?? [];
-      if (Array?.isArray(updateArray) && updateArray?.length > 0) {
-        mixinEngineAdmin(req, updateArray);
-      }
-      if (image !== undefined) {
-        const profile = await Profile.findOneAndUpdate(
-          { user: req?.query?.admin ? req?.query?.admin : req?.user?.id },
-          {
-            $set: {
-              profile: {
-                ...req?.body,
-                name: req?.body?.companyName,
-                companyName: req?.body?.companyName,
-                profilePicture: image,
+export const updateSuperAdminUserProfile = asyncHandler(
+  async (req, res, next) => {
+    await uploadFile(req?.file, "profiles", getRandomFileName("profile-"))
+      .then(async (image) => {
+        function isObject(value) {
+          return typeof value === "object" && value !== null;
+        }
+        //TODO: Delete old profile picture from Firebase Storage
+        const updateArray = JSON?.parse(req?.body?.update) ?? [];
+        if (Array?.isArray(updateArray) && updateArray?.length > 0) {
+          mixinEngineAdmin(req, updateArray);
+        }
+        if (image !== undefined) {
+          const profile = await Profile.findOneAndUpdate(
+            { user: req?.query?.admin ? req?.query?.admin : req?.user?.id },
+            {
+              $set: {
+                profile: {
+                  ...req?.body,
+                  name: req?.body?.companyName,
+                  companyName: req?.body?.companyName,
+                  profilePicture: image,
+                },
               },
             },
-          },
-          { new: true }
-        );
-        let message = { success: "Admin User Profile Updated" };
-        return res.status(200).send({ success: true, message, data: profile });
-      } else {
-        const profile = await Profile.findOneAndUpdate(
-          { user: req?.query?.admin ? req?.query?.admin : req?.user?.id },
-          {
-            $set: {
-              "profile.name": req?.body?.companyName,
-              "profile.companyName": req?.body?.companyName,
-              "profile.bio": req?.body?.bio,
+            { new: true }
+          );
+          let message = { success: "Admin User Profile Updated" };
+          return res
+            .status(200)
+            .send({ success: true, message, data: profile });
+        } else {
+          const profile = await Profile.findOneAndUpdate(
+            { user: req?.query?.admin ? req?.query?.admin : req?.user?.id },
+            {
+              $set: {
+                "profile.name": req?.body?.companyName,
+                "profile.companyName": req?.body?.companyName,
+                "profile.bio": req?.body?.bio,
+              },
             },
-          },
-          { new: true }
-        );
-        let message = { success: "Admin User Profile Updated" };
-        return res.status(200).send({ success: true, message, data: profile });
-      }
-    })
-    .catch((err) => {
-      return next(new ErrorResponse(`File upload failed ${err}`, 400));
-    });
-});
-
-
+            { new: true }
+          );
+          let message = { success: "Admin User Profile Updated" };
+          return res
+            .status(200)
+            .send({ success: true, message, data: profile });
+        }
+      })
+      .catch((err) => {
+        return next(new ErrorResponse(`File upload failed ${err}`, 400));
+      });
+  }
+);
 
 async function mixinEngine(req, array) {
   const validAddSection = [
@@ -1427,7 +1443,7 @@ async function mixinEngine(req, array) {
     "video",
     "enquiry",
   ];
-  const validDeleteSection = [...validAddSection,"video"];
+  const validDeleteSection = [...validAddSection, "video"];
   const add = [];
   const addProduct = [];
   const editProduct = [];
@@ -1443,7 +1459,7 @@ async function mixinEngine(req, array) {
     }
     if (element.action === "edit") {
       validEditSection.includes(element.section) &&
-        element.section === "product"
+      element.section === "product"
         ? editProduct.push(element)
         : edit.push(element);
     }
@@ -1721,11 +1737,11 @@ function mixinEngineEdit(req, array) {
       update =
         item?.section == "video"
           ? {
-            $set: { [`${item?.section}.link`]: item.data },
-          }
+              $set: { [`${item?.section}.link`]: item.data },
+            }
           : item?.section == "enquiry"
-            ? { $set: { [`${item?.section}.email`]: rest } }
-            : { $set: { [`${item?.section}.bankDetails`]: rest } };
+          ? { $set: { [`${item?.section}.email`]: rest } }
+          : { $set: { [`${item?.section}.bankDetails`]: rest } };
     } else if (item?.section == "social") {
       const getSocial = getSocialMedia(rest?.value);
       const socialmedia = {
@@ -1746,9 +1762,13 @@ function mixinEngineEdit(req, array) {
         },
       };
     } else {
-      console.log(req.body.admin)
+      console.log(req.body.admin);
       query = {
-        user: req?.query?.admin ?? req?.body?.admin ?? req?.query?.user ?? req?.user?.id,
+        user:
+          req?.query?.admin ??
+          req?.body?.admin ??
+          req?.query?.user ??
+          req?.user?.id,
         _id: req?.query?.profile,
         [`${item?.section}.${item?.section}s._id`]: item.data?._id,
       };
