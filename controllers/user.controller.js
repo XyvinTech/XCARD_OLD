@@ -1488,7 +1488,7 @@ async function mixinEngineAdmin(req, array) {
   ];
   const validEditSection = [
     ...validAddSection,
-    "contact",
+    // "contact",
     "bank",
     "video",
     "enquiry",
@@ -1750,7 +1750,7 @@ function mixinEngineEdit(req, array) {
       };
       query = {
         user: req?.query?.user ?? req?.user?.id,
-        _id: req?.query?.profile,
+       _id: req?.query?.profile,
         [`${item?.section}.${item?.section}s._id`]: item.data?._id,
       };
       update = {
@@ -1762,14 +1762,15 @@ function mixinEngineEdit(req, array) {
         },
       };
     } else {
-      console.log(req.body.admin);
+      console.log(`$`);
       query = {
         user:
           req?.query?.admin ??
           req?.body?.admin ??
           req?.query?.user ??
           req?.user?.id,
-        _id: req?.query?.profile,
+        // _id: req?.query?.profile,
+        ...(req?.query?.profile && { _id: req.query.profile }),
         [`${item?.section}.${item?.section}s._id`]: item.data?._id,
       };
       update = {
@@ -1780,6 +1781,8 @@ function mixinEngineEdit(req, array) {
     console.log(update);
     return { query, update };
   });
+  console.log(updates[0]);
+
   Promise.all(
     updates.map(({ query, update }) => Profile.updateOne(query, update))
   )
