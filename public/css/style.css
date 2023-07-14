@@ -267,7 +267,7 @@ input[name="subject"]::placeholder {
 .card {
   box-sizing: border-box;
   width: 100%;
-  max-width: 135px;
+  max-width: 125px;
   height: 200px;
   border: 1px solid var(--cardBorder);
   background-color: var(--bg);
@@ -275,6 +275,14 @@ input[name="subject"]::placeholder {
   position: relative;
   margin: 2%;
 }
+
+@media (max-width: 360px) {
+  .card {
+
+  max-width: 125px;
+
+}}
+
 
 .card-image {
   box-sizing: border-box;
@@ -504,7 +512,7 @@ iframe {
   background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), #000000;
   border: 0.5px solid rgba(43, 175, 164, 0.5);
   border-radius: 0px 0px 24px 24px;
-  height: 60vw;
+  height: 260px;
   object-fit: cover;
   object-position: center;
   

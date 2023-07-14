@@ -812,8 +812,12 @@ const personData = {
     .value,
 };
 
+const socialMedia = data?.social;
+
+
 const createVcard = () => {
   const websites = personData.websites;
+
   const nameParts = personData.name.split(" ");
   const firstName = nameParts[0];
   const lastName = nameParts.slice(1).join(" ");
@@ -829,6 +833,7 @@ const createVcard = () => {
     `TEL;TYPE=CELL:${personData.phone}`,
     ...websites.map((website) => `URL:${website.link}`),
     `X-SOCIALPROFILE;TYPE=whatsapp:${personData.whatsapp}`,
+    ...socialMedia?.socials.map((social) => `X-SOCIALPROFILE;TYPE=${social.type}:${social.value}`),    
     "END:VCARD",
   ].join("\n");
 
@@ -855,7 +860,6 @@ saveContactBtn.addEventListener("click", () => {
 // ----
 // Check if social media data is available
 
-const socialMedia = data?.social;
 
 // Create an empty HTML string
 let socialMediaHTML = "";
@@ -1048,7 +1052,12 @@ services.forEach((service) => {
 
   const cardImageElem = document.createElement("div");
   cardImageElem.classList.add("card-image");
-  cardImageElem.style.backgroundImage = `url(${service?.image?.public})`;
+  if(service?.image){
+  cardImageElem.style.backgroundImage = `url(${service?.image})`;
+  }  else{
+    cardImageElem.style.backgroundImage = `public/images/image.png`;
+
+  }
   cardElem.appendChild(cardImageElem);
 
   const cardContentElem = document.createElement("div");
@@ -1423,10 +1432,8 @@ window.addEventListener("scroll", handleScroll);
 
 function openPopup(image, title, description, link, price = null) {
   var popup = document.querySelector(".popup__container");
-  // popup.style.display = "block";
   popup.classList.add("show_popup");
 
-  // Set the content of the popup dynamically
   var popupImage = document.getElementById("popupImage");
   popupImage.src = image;
 
@@ -1438,9 +1445,15 @@ function openPopup(image, title, description, link, price = null) {
     prices.style.display = "block";
 
     var oldPrice = document.getElementById("oldPrice");
-    oldPrice.innerHTML = "INR " + price.oldPrice;
     var newPrice = document.getElementById("newPrice");
-    newPrice.innerHTML = "INR " + price.newPrice;
+
+    if (price.newPrice) {
+      oldPrice.innerHTML = "INR " + price.oldPrice;
+      newPrice.innerHTML = "INR " + price.newPrice;
+    } else {
+      oldPrice.innerHTML = "INR " + price;
+      newPrice.style.display = "none";
+    }
   } else {
     var prices = document.getElementById("price");
     prices.style.display = "none";
