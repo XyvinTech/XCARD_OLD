@@ -1055,7 +1055,7 @@ services.forEach((service) => {
   if(service?.image){
   cardImageElem.style.backgroundImage = `url(${service?.image})`;
   }  else{
-    cardImageElem.style.backgroundImage = `public/images/image.png`;
+    cardImageElem.style.backgroundImage = `profile/public/images/image.png`;
 
   }
   cardElem.appendChild(cardImageElem);
@@ -1318,7 +1318,6 @@ function renderBankDetails() {
   // Set the bank details container HTML to the dynamically generated HTML
   bankDetailsContainer.innerHTML = bankDetailsHTML;
   const bankArr = document.getElementsByClassName("bank-col");
-  console.log(bankArr);
   for (let i = 0; i < bankArr.length; i++) {
     if (bankArr[i].children.length === 0) {
       bankArr[i].style.display = "none";
