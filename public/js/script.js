@@ -1203,10 +1203,11 @@ products.forEach((product) => {
         product?.name,
         product?.description,
         product?.link,
-        {
-          oldPrice: product?.price,
-          newPrice: product?.offerPrice,
-        }
+        price
+        // {
+        //   oldPrice: product?.price,
+        //   newPrice: product?.offerPrice,
+        // }
       );
     } else {
       openPopup(
@@ -1458,7 +1459,7 @@ function openPopup(image, title, description, link, price = null) {
       oldPrice.innerHTML = "INR " + price.oldPrice;
       newPrice.innerHTML = "INR " + price.newPrice;
     } else {
-      newPrice.innerHTML = "INR " + price;
+      newPrice.innerHTML = "INR " + price.oldPrice;
       oldPrice.style.display = "none";
     }
   } else {
