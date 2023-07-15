@@ -1052,8 +1052,8 @@ services.forEach((service) => {
 
   const cardImageElem = document.createElement("div");
   cardImageElem.classList.add("card-image");
-  if(service?.image){
-  cardImageElem.style.backgroundImage = `url(${service?.image})`;
+  if(service?.image?.public){
+  cardImageElem.style.backgroundImage = `url(${service?.image?.public})`;
   }  else{
     cardImageElem.style.backgroundImage = `profile/public/images/image.png`;
 
