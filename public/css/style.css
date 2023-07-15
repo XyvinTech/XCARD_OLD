@@ -906,7 +906,6 @@ main {
   width: 80%;
   height: 50%;
   margin: 7%;
-  height: auto;
   display: flex;
   justify-content: flex-start;
   align-items: center;
