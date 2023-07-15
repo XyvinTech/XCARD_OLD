@@ -1454,7 +1454,7 @@ function openPopup(image, title, description, link, price = null) {
 
     var oldPrice = document.getElementById("oldPrice");
     var newPrice = document.getElementById("newPrice");
-    oldPrice.style.display = "block";
+    oldPrice.style.display = "inline-block";
     if (price.newPrice && price.newPrice != '') {
       oldPrice.innerHTML = "INR " + price.oldPrice;
       newPrice.innerHTML = "INR " + price.newPrice;
