@@ -1055,7 +1055,7 @@ services.forEach((service) => {
   if(service?.image?.public){
   cardImageElem.style.backgroundImage = `url(${service?.image?.public})`;
   }  else{
-    cardImageElem.style.backgroundImage = `profile/public/images/image.png`;
+    cardImageElem.style.backgroundImage = `public/images/image.png`;
 
   }
   cardElem.appendChild(cardImageElem);
