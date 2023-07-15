@@ -1188,7 +1188,7 @@ products.forEach((product) => {
     else print both
   }
   */
-  if (product?.price) {
+  if(product?.price) {
     price = {
       oldPrice: product?.price,
       newPrice: product?.offerPrice,
@@ -1197,7 +1197,7 @@ products.forEach((product) => {
     price: null
   }
   cardButtonElem.addEventListener("click", (e) => {
-    if (product?.price && product?.offerPrice) {
+    if (product?.price) {
       openPopup(
         product?.image?.public,
         product?.name,
