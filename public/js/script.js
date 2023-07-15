@@ -833,7 +833,7 @@ const createVcard = () => {
     `TEL;TYPE=CELL:${personData.phone}`,
     ...websites.map((website) => `URL:${website.link}`),
     `X-SOCIALPROFILE;TYPE=whatsapp:${personData.whatsapp}`,
-    ...socialMedia?.socials.map((social) => `X-SOCIALPROFILE;TYPE=${social.type}:${social.value}`),    
+    ...socialMedia?.socials.map((social) => `URL:${social.value}`),    
     "END:VCARD",
   ].join("\n");
 
