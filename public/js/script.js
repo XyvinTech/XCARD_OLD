@@ -1460,6 +1460,7 @@ function openPopup(image, title, description, link, price = null) {
       newPrice.innerHTML = "INR " + price.newPrice;
     } else {
       newPrice.innerHTML = "INR " + price.oldPrice;
+      newPrice.style.margin = 0;
       oldPrice.style.display = "none";
     }
   } else {
