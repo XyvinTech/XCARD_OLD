@@ -1180,7 +1180,15 @@ products.forEach((product) => {
   cardButtonElem.textContent = "View More";
   cardContentElem.appendChild(cardButtonElem);
   let price;
-  if (product?.price && product?.offerPrice) {
+  /*
+  price offerprice
+  
+  if(price != null && price.isNotEmtpy){
+    if(offerprice == null) only show price without break
+    else print both
+  }
+  */
+  if (product?.price) {
     price = {
       oldPrice: product?.price,
       newPrice: product?.offerPrice,
@@ -1446,12 +1454,12 @@ function openPopup(image, title, description, link, price = null) {
     var oldPrice = document.getElementById("oldPrice");
     var newPrice = document.getElementById("newPrice");
 
-    if (price.newPrice) {
+    if (price.newPrice && price.newPrice != '') {
       oldPrice.innerHTML = "INR " + price.oldPrice;
       newPrice.innerHTML = "INR " + price.newPrice;
     } else {
-      oldPrice.innerHTML = "INR " + price;
-      newPrice.style.display = "none";
+      newPrice.innerHTML = "INR " + price;
+      oldPrice.style.display = "none";
     }
   } else {
     var prices = document.getElementById("price");
