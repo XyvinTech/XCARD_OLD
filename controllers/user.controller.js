@@ -33,7 +33,6 @@ import { query } from "express";
  */
 export const createUserProfile = asyncHandler(async (req, res, next) => {
   const { phone, update } = req?.body;
-  console.log(phone);
   const all = JSON.parse(update);
   const {
     profile,
@@ -240,7 +239,6 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
 
             if (user == null) {
               const userRecord = await admin.auth().getUserByPhoneNumber(phone);
-              console.log(userRecord);
               user = await User.create({
                 username: phone,
                 uid: userRecord?.uid,
@@ -248,7 +246,6 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
                 providerData: userRecord?.providerData,
               });
             }
-            console.log(user);
             const options = {
               scale: 34,
               color: {
@@ -1445,7 +1442,7 @@ export const updateSuperAdminUserProfile = asyncHandler(
 );
 
 async function mixinEngine(req, array) {
-  console.log('entered into mixing')
+
   const validAddSection = [
     "social",
     "website",
@@ -1473,8 +1470,6 @@ async function mixinEngine(req, array) {
   for (let index = 0; index < array.length; index++) {
 
     const element = array[index];    
-    console.log(element.section);
-    // console.log(element)
     if (element.action === "add") {
       if (validAddSection.includes(element.section) && element.section === "product") { addProduct.push(element); }
       else if (validAddSection.includes(element.section) && element.section === "service") { addService.push(element); }
@@ -1501,13 +1496,6 @@ async function mixinEngine(req, array) {
   //Only for service
   addService.length > 0 && mixinEngineAddService(req, addService);
   editService.length > 0 && mixinEngineEditService(req, editService);
-  console.log(add.length);
-  console.log(edit.length);
-  console.log(del.length);
-  console.log(addProduct.length);
-  console.log(editProduct.length);
-  console.log(addService.length);
-  console.log(editService.length);
 }
 
 async function mixinEngineAdmin(req, array) {
@@ -1674,12 +1662,10 @@ async function mixinEngineAddService(req, array) {
    }
  */
 async function mixinEngineEditService(req, array) {
-  console.log('entered into service mixin');
   array.map(async (item) => {
     const { _id, ...all } = item?.data;
     // Check if the edit has change for new image
     if (item?.data?.image?.base64) {
-      console.log('old image replace');
       // TODO: Delete Old Image File From Bucket
       const file = { ...item?.data?.image, buffer: item?.data?.image?.base64 };
       await uploadBufferFile(
@@ -1699,7 +1685,6 @@ async function mixinEngineEditService(req, array) {
         });
       });
     } else {
-      console.log('no image');
       const query = {
         user: req?.query?.user ?? req?.user?.id,
         _id: req?.query?.profile,
@@ -1871,7 +1856,6 @@ function mixinEngineEdit(req, array) {
         },
       };
     } else {
-      console.log(`$`);
       query = {
         user:
           req?.query?.admin ??
@@ -1886,11 +1870,8 @@ function mixinEngineEdit(req, array) {
         $set: { [`${item?.section}.${item?.section}s.$`]: item.data },
       };
     }
-    console.log(query);
-    console.log(update);
     return { query, update };
   });
-  console.log(updates[0]);
 
   Promise.all(
     updates.map(({ query, update }) => Profile.updateOne(query, update))
