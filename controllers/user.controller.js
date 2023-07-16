@@ -180,7 +180,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
             //     return filteredObj;
             //   }),
             // },
-             service: {
+            service: {
               ...service,
               status: modifiedService.length > 0 ? true : false,
               services: modifiedService,
@@ -1445,6 +1445,7 @@ export const updateSuperAdminUserProfile = asyncHandler(
 );
 
 async function mixinEngine(req, array) {
+  console.log('entered into mixing')
   const validAddSection = [
     "social",
     "website",
@@ -1470,17 +1471,18 @@ async function mixinEngine(req, array) {
   const del = [];
   //Sort All the actions and send to different mixins
   for (let index = 0; index < array.length; index++) {
-    const element = array[index];
+
+    const element = array[index];    
+    console.log(element.section);
+    // console.log(element)
     if (element.action === "add") {
       if (validAddSection.includes(element.section) && element.section === "product") { addProduct.push(element); }
       else if (validAddSection.includes(element.section) && element.section === "service") { addService.push(element); }
       else add.push(element);
     }
     if (element.action === "edit") {
-      if (validEditSection.includes(element.section) &&
-        element.section === "product") { editProduct.push(element); }
-      else if (validEditSection.includes(element.section) &&
-        element.section === "service") { editService.push(element); }
+      if (validEditSection.includes(element.section) && element.section === "product") { editProduct.push(element); }
+      else if (validEditSection.includes(element.section) && element.section === "service") { editService.push(element); }
       else edit.push(element);
     }
     if (element.action === "delete") {
@@ -1497,8 +1499,15 @@ async function mixinEngine(req, array) {
   editProduct.length > 0 && mixinEngineEditProduct(req, editProduct);
 
   //Only for service
-  addService.length > 0 && mixinEngineAddService(req,addService);
-  editProduct.length > 0 && mixinEngineEditService(req,editService);
+  addService.length > 0 && mixinEngineAddService(req, addService);
+  editService.length > 0 && mixinEngineEditService(req, editService);
+  console.log(add.length);
+  console.log(edit.length);
+  console.log(del.length);
+  console.log(addProduct.length);
+  console.log(editProduct.length);
+  console.log(addService.length);
+  console.log(editService.length);
 }
 
 async function mixinEngineAdmin(req, array) {
@@ -1635,27 +1644,27 @@ async function mixinEngineAdd(req, array) {
       "data":{}
    }
  */
-   async function mixinEngineAddService(req, array) {
-    array.map(async (item) => {
-      const { _id, ...all } = item?.data;
-      const query = {
-        user: req?.query?.user ?? req?.user?.id,
-        _id: req?.query?.profile,
-      };
-      const file = { ...item?.data?.image, buffer: item?.data?.image?.base64 };
-      await uploadBufferFile(
-        file,
-        "services",
-        getRandomFileName("service-")
-      ).then(async (image) => {
-        await Profile.updateOne(query, {
-          $push: {
-            [`${item?.section}.${item?.section}s`]: { ...all, image },
-          },
-        });
+async function mixinEngineAddService(req, array) {
+  array.map(async (item) => {
+    const { _id, ...all } = item?.data;
+    const query = {
+      user: req?.query?.user ?? req?.user?.id,
+      _id: req?.query?.profile,
+    };
+    const file = { ...item?.data?.image, buffer: item?.data?.image?.base64 };
+    await uploadBufferFile(
+      file,
+      "services",
+      getRandomFileName("service-")
+    ).then(async (image) => {
+      await Profile.updateOne(query, {
+        $push: {
+          [`${item?.section}.${item?.section}s`]: { ...all, image },
+        },
       });
     });
-  }
+  });
+}
 /**
  * @desc   Mixin Edit Service
  * @model  {
@@ -1664,41 +1673,44 @@ async function mixinEngineAdd(req, array) {
       "data":{}
    }
  */
-   async function mixinEngineEditService(req, array) {
-    array.map(async (item) => {
-      const { _id, ...all } = item?.data;
-      // Check if the edit has change for new image
-      if (item?.data?.image?.base64) {
-        // TODO: Delete Old Image File From Bucket
-        const file = { ...item?.data?.image, buffer: item?.data?.image?.base64 };
-        await uploadBufferFile(
-          file,
-          "services",
-          getRandomFileName("service-")
-        ).then(async (image) => {
-          const query = {
-            user: req?.query?.user ?? req?.user?.id,
-            _id: req?.query?.profile,
-            [`${item?.section}.${item?.section}s._id`]: item.data?._id,
-          };
-          await Profile.updateOne(query, {
-            $set: {
-              [`${item?.section}.${item?.section}s.$`]: { ...all, image },
-            },
-          });
-        });
-      } else {
+async function mixinEngineEditService(req, array) {
+  console.log('entered into service mixin');
+  array.map(async (item) => {
+    const { _id, ...all } = item?.data;
+    // Check if the edit has change for new image
+    if (item?.data?.image?.base64) {
+      console.log('old image replace');
+      // TODO: Delete Old Image File From Bucket
+      const file = { ...item?.data?.image, buffer: item?.data?.image?.base64 };
+      await uploadBufferFile(
+        file,
+        "services",
+        getRandomFileName("service-")
+      ).then(async (image) => {
         const query = {
           user: req?.query?.user ?? req?.user?.id,
           _id: req?.query?.profile,
           [`${item?.section}.${item?.section}s._id`]: item.data?._id,
         };
         await Profile.updateOne(query, {
-          $set: { [`${item?.section}.${item?.section}s.$`]: item.data },
+          $set: {
+            [`${item?.section}.${item?.section}s.$`]: { ...all, image },
+          },
         });
-      }
-    });
-  }
+      });
+    } else {
+      console.log('no image');
+      const query = {
+        user: req?.query?.user ?? req?.user?.id,
+        _id: req?.query?.profile,
+        [`${item?.section}.${item?.section}s._id`]: item.data?._id,
+      };
+      await Profile.updateOne(query, {
+        $set: { [`${item?.section}.${item?.section}s.$`]: item.data },
+      });
+    }
+  });
+}
 
 
 /**

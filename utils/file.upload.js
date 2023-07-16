@@ -48,6 +48,7 @@ async function uploadBufferFile(file, directory, fileName) {
     expires: "01-01-2099",
   });
   const link = `${process.env.BUCKET_PATH_URL}/${process.env.BUCKET_NAME}${fullPath}`;
+  console.log(url);
   return {
     key: fullPath,
     fileName: `${fileName}${extension(file)}`,
