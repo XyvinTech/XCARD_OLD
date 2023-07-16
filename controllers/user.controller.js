@@ -102,6 +102,18 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
               return { ...all, image: upload };
             })
           );
+          // Upload Service Images
+          const modifiedService = await Promise.all(
+            service?.services?.map(async (item) => {
+              const { _id, ...all } = item;
+              const upload = await uploadBufferFile(
+                { ...all.image, buffer: item?.image?.base64 },
+                "services",
+                getRandomFileName("service-")
+              );
+              return { ...all, image: upload };
+            })
+          );
           await Profile.create({
             user: user?.id,
             group: req?.query?.group,
@@ -157,16 +169,21 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
                 return filteredObj;
               }),
             },
-            service: {
+            // service: {
+            //   ...service,
+            //   status: service?.services?.length > 0 ? true : false,
+            //   services: service?.services.map((obj) => {
+            //     const filteredObj = Object.fromEntries(
+            //       Object.entries(obj).filter(([key, value]) => value !== null)
+            //     );
+            //     delete filteredObj["_id"]; // remove the _id key from the filtered object
+            //     return filteredObj;
+            //   }),
+            // },
+             service: {
               ...service,
-              status: service?.services?.length > 0 ? true : false,
-              services: service?.services.map((obj) => {
-                const filteredObj = Object.fromEntries(
-                  Object.entries(obj).filter(([key, value]) => value !== null)
-                );
-                delete filteredObj["_id"]; // remove the _id key from the filtered object
-                return filteredObj;
-              }),
+              status: modifiedService.length > 0 ? true : false,
+              services: modifiedService,
             },
             award: {
               ...award,
@@ -334,7 +351,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
               //   }),
               // },
               service: {
-                ...product,
+                ...service,
                 status: modifiedService.length > 0 ? true : false,
                 services: modifiedService,
               },
