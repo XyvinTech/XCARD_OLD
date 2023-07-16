@@ -1447,21 +1447,24 @@ async function mixinEngine(req, array) {
   const add = [];
   const addProduct = [];
   const editProduct = [];
+  const addService = [];
+  const editService = [];
   const edit = [];
   const del = [];
   //Sort All the actions and send to different mixins
   for (let index = 0; index < array.length; index++) {
     const element = array[index];
     if (element.action === "add") {
-      validAddSection.includes(element.section) && element.section === "product"
-        ? addProduct.push(element)
-        : add.push(element);
+      if (validAddSection.includes(element.section) && element.section === "product") { addProduct.push(element); }
+      else if (validAddSection.includes(element.section) && element.section === "service") { addService.push(element); }
+      else add.push(element);
     }
     if (element.action === "edit") {
-      validEditSection.includes(element.section) &&
-      element.section === "product"
-        ? editProduct.push(element)
-        : edit.push(element);
+      if (validEditSection.includes(element.section) &&
+        element.section === "product") { editProduct.push(element); }
+      else if (validEditSection.includes(element.section) &&
+        element.section === "service") { editService.push(element); }
+      else edit.push(element);
     }
     if (element.action === "delete") {
       validDeleteSection.includes(element.section) && del.push(element);
@@ -1475,6 +1478,10 @@ async function mixinEngine(req, array) {
   // Only for product
   addProduct.length > 0 && mixinEngineAddProduct(req, addProduct);
   editProduct.length > 0 && mixinEngineEditProduct(req, editProduct);
+
+  //Only for service
+  addService.length > 0 && mixinEngineAddService(req,addService);
+  editProduct.length > 0 && mixinEngineEditService(req,editService);
 }
 
 async function mixinEngineAdmin(req, array) {
@@ -1603,6 +1610,79 @@ async function mixinEngineAdd(req, array) {
     })
     .catch((error) => console.error(error));
 }
+/**
+ * @desc   Mixin Add Service
+ * @model  {
+      "section":"sectionName",
+      "action":"add",
+      "data":{}
+   }
+ */
+   async function mixinEngineAddService(req, array) {
+    array.map(async (item) => {
+      const { _id, ...all } = item?.data;
+      const query = {
+        user: req?.query?.user ?? req?.user?.id,
+        _id: req?.query?.profile,
+      };
+      const file = { ...item?.data?.image, buffer: item?.data?.image?.base64 };
+      await uploadBufferFile(
+        file,
+        "services",
+        getRandomFileName("service-")
+      ).then(async (image) => {
+        await Profile.updateOne(query, {
+          $push: {
+            [`${item?.section}.${item?.section}s`]: { ...all, image },
+          },
+        });
+      });
+    });
+  }
+/**
+ * @desc   Mixin Edit Service
+ * @model  {
+      "section":"sectionName",
+      "action":"edit",
+      "data":{}
+   }
+ */
+   async function mixinEngineEditService(req, array) {
+    array.map(async (item) => {
+      const { _id, ...all } = item?.data;
+      // Check if the edit has change for new image
+      if (item?.data?.image?.base64) {
+        // TODO: Delete Old Image File From Bucket
+        const file = { ...item?.data?.image, buffer: item?.data?.image?.base64 };
+        await uploadBufferFile(
+          file,
+          "services",
+          getRandomFileName("service-")
+        ).then(async (image) => {
+          const query = {
+            user: req?.query?.user ?? req?.user?.id,
+            _id: req?.query?.profile,
+            [`${item?.section}.${item?.section}s._id`]: item.data?._id,
+          };
+          await Profile.updateOne(query, {
+            $set: {
+              [`${item?.section}.${item?.section}s.$`]: { ...all, image },
+            },
+          });
+        });
+      } else {
+        const query = {
+          user: req?.query?.user ?? req?.user?.id,
+          _id: req?.query?.profile,
+          [`${item?.section}.${item?.section}s._id`]: item.data?._id,
+        };
+        await Profile.updateOne(query, {
+          $set: { [`${item?.section}.${item?.section}s.$`]: item.data },
+        });
+      }
+    });
+  }
+
 
 /**
  * @desc   Mixin Add Product
@@ -1737,11 +1817,11 @@ function mixinEngineEdit(req, array) {
       update =
         item?.section == "video"
           ? {
-              $set: { [`${item?.section}.link`]: item.data },
-            }
+            $set: { [`${item?.section}.link`]: item.data },
+          }
           : item?.section == "enquiry"
-          ? { $set: { [`${item?.section}.email`]: rest } }
-          : { $set: { [`${item?.section}.bankDetails`]: rest } };
+            ? { $set: { [`${item?.section}.email`]: rest } }
+            : { $set: { [`${item?.section}.bankDetails`]: rest } };
     } else if (item?.section == "social") {
       const getSocial = getSocialMedia(rest?.value);
       const socialmedia = {
@@ -1750,7 +1830,7 @@ function mixinEngineEdit(req, array) {
       };
       query = {
         user: req?.query?.user ?? req?.user?.id,
-       _id: req?.query?.profile,
+        _id: req?.query?.profile,
         [`${item?.section}.${item?.section}s._id`]: item.data?._id,
       };
       update = {
