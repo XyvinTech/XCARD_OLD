@@ -1856,6 +1856,7 @@ function mixinEngineEdit(req, array) {
         },
       };
     } else {
+      console.log(item.data)
       query = {
         user:
           req?.query?.admin ??
@@ -1872,11 +1873,12 @@ function mixinEngineEdit(req, array) {
     }
     return { query, update };
   });
-
+ console.log(updates)
   Promise.all(
     updates.map(({ query, update }) => Profile.updateOne(query, update))
   )
     .then((results) => {
+     
       console.log(`${results.length} items updated.`);
     })
     .catch((error) => console.error(error));

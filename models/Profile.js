@@ -136,7 +136,7 @@ const ProfileSchema = new mongoose.Schema(
     },
     website: {
       status: { type: Boolean, default: false },
-      websites: { type: [{ link: String }], default: [] },
+      websites: { type: [{ link: String, name: String }], default: [] },
     },
     service: {
       status: { type: Boolean, default: false },
