@@ -48,7 +48,6 @@ async function uploadBufferFile(file, directory, fileName) {
     expires: "01-01-2099",
   });
   const link = `${process.env.BUCKET_PATH_URL}/${process.env.BUCKET_NAME}${fullPath}`;
-  console.log(url);
   return {
     key: fullPath,
     fileName: `${fileName}${extension(file)}`,
@@ -56,6 +55,15 @@ async function uploadBufferFile(file, directory, fileName) {
     public: url,
     link: link,
   };
+}
+async function deleteBufferFile(filePath) {
+  const bucket = admin.storage().bucket(process.env.BUCKET_URL);
+  try {
+    await bucket.file(filePath).delete();
+    console.log(`File "${filePath}" deleted successfully.`);
+  } catch (error) {
+    console.error(`Error deleting file "${filePath}":`, error);
+  }
 }
 
 async function uploadBufferFiles(files, directory) {
@@ -162,4 +170,5 @@ export {
   uploadBufferFiles,
   uploadFiles,
   deleteFile,
+  deleteBufferFile
 };

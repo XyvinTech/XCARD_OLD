@@ -86,6 +86,10 @@ export const deleteProfile = asyncHandler(async (req, res, next) => {
  * @schema  Public
  */
 export const viewProfile = asyncHandler(async (req, res, next) => {
-  const profile = await Profile.findOne({ "card.cardId": req?.params?.id });
+  console.log('viewProfile called');
+  const profile = await Profile.findOneAndUpdate(
+      { "card.cardId": req?.params?.id }, 
+      { $inc: { visitCount: 1 } },
+    );
   res.render("index", { data: profile });
 });

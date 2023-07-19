@@ -6,6 +6,7 @@ import ErrorResponse from "../utils/error.response.js";
 import {
   uploadBufferFile,
   uploadBufferFiles,
+  deleteBufferFile,
   uploadFile,
   uploadFiles,
 } from "../utils/file.upload.js";
@@ -113,6 +114,30 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
               return { ...all, image: upload };
             })
           );
+          // Upload Award Images
+          const modifiedAward = await Promise.all(
+            award?.awards?.map(async (item) => {
+              const { _id, ...all } = item;
+              const upload = await uploadBufferFile(
+                { ...all.image, buffer: item?.image?.base64 },
+                "awards",
+                getRandomFileName("award-")
+              );
+              return { ...all, image: upload };
+            })
+          );
+          // Upload Certificate Images
+          const modifiedCertificate = await Promise.all(
+            certificate?.certificates?.map(async (item) => {
+              const { _id, ...all } = item;
+              const upload = await uploadBufferFile(
+                { ...all.image, buffer: item?.image?.base64 },
+                "certificates",
+                getRandomFileName("certificate-")
+              );
+              return { ...all, image: upload };
+            })
+          );
           await Profile.create({
             user: user?.id,
             group: req?.query?.group,
@@ -186,26 +211,36 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
             },
             award: {
               ...award,
-              status: award?.awards?.length > 0 ? true : false,
-              awards: award?.awards.map((obj) => {
-                const filteredObj = Object.fromEntries(
-                  Object.entries(obj).filter(([key, value]) => value !== null)
-                );
-                delete filteredObj["_id"]; // remove the _id key from the filtered object
-                return filteredObj;
-              }),
+              status: modifiedAward.length > 0 ? true : false,
+              awards: modifiedAward,
             },
             certificate: {
               ...certificate,
-              status: certificate?.certificates?.length > 0 ? true : false,
-              certificates: certificate?.certificates.map((obj) => {
-                const filteredObj = Object.fromEntries(
-                  Object.entries(obj).filter(([key, value]) => value !== null)
-                );
-                delete filteredObj["_id"]; // remove the _id key from the filtered object
-                return filteredObj;
-              }),
+              status: modifiedCertificate.length > 0 ? true : false,
+              certificates: modifiedCertificate,
             },
+            // award: {
+            //   ...award,
+            //   status: award?.awards?.length > 0 ? true : false,
+            //   awards: award?.awards.map((obj) => {
+            //     const filteredObj = Object.fromEntries(
+            //       Object.entries(obj).filter(([key, value]) => value !== null)
+            //     );
+            //     delete filteredObj["_id"]; // remove the _id key from the filtered object
+            //     return filteredObj;
+            //   }),
+            // },
+            // certificate: {
+            //   ...certificate,
+            //   status: certificate?.certificates?.length > 0 ? true : false,
+            //   certificates: certificate?.certificates.map((obj) => {
+            //     const filteredObj = Object.fromEntries(
+            //       Object.entries(obj).filter(([key, value]) => value !== null)
+            //     );
+            //     delete filteredObj["_id"]; // remove the _id key from the filtered object
+            //     return filteredObj;
+            //   }),
+            // },
             product: {
               ...product,
               status: modifiedProduct.length > 0 ? true : false,
@@ -279,6 +314,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
                 return { ...all, image: upload };
               })
             );
+            // Upload Service Images
             const modifiedService = await Promise.all(
               service?.services?.map(async (item) => {
                 const { _id, ...all } = item;
@@ -286,6 +322,30 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
                   { ...all.image, buffer: item?.image?.base64 },
                   "services",
                   getRandomFileName("service-")
+                );
+                return { ...all, image: upload };
+              })
+            );
+            // Upload Award Images
+            const modifiedAward = await Promise.all(
+              award?.awards?.map(async (item) => {
+                const { _id, ...all } = item;
+                const upload = await uploadBufferFile(
+                  { ...all.image, buffer: item?.image?.base64 },
+                  "awards",
+                  getRandomFileName("award-")
+                );
+                return { ...all, image: upload };
+              })
+            );
+            // Upload Certificate Images
+            const modifiedCertificate = await Promise.all(
+              certificate?.certificates?.map(async (item) => {
+                const { _id, ...all } = item;
+                const upload = await uploadBufferFile(
+                  { ...all.image, buffer: item?.image?.base64 },
+                  "certificates",
+                  getRandomFileName("certificate-")
                 );
                 return { ...all, image: upload };
               })
@@ -354,26 +414,36 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
               },
               award: {
                 ...award,
-                status: award?.awards?.length > 0 ? true : false,
-                awards: award?.awards.map((obj) => {
-                  const filteredObj = Object.fromEntries(
-                    Object.entries(obj).filter(([key, value]) => value !== null)
-                  );
-                  delete filteredObj["_id"]; // remove the _id key from the filtered object
-                  return filteredObj;
-                }),
+                status: modifiedAward.length > 0 ? true : false,
+                awards: modifiedAward,
               },
               certificate: {
                 ...certificate,
-                status: certificate?.certificates?.length > 0 ? true : false,
-                certificates: certificate?.certificates.map((obj) => {
-                  const filteredObj = Object.fromEntries(
-                    Object.entries(obj).filter(([key, value]) => value !== null)
-                  );
-                  delete filteredObj["_id"]; // remove the _id key from the filtered object
-                  return filteredObj;
-                }),
+                status: modifiedCertificate.length > 0 ? true : false,
+                certificates: modifiedCertificate,
               },
+              // award: {
+              //   ...award,
+              //   status: award?.awards?.length > 0 ? true : false,
+              //   awards: award?.awards.map((obj) => {
+              //     const filteredObj = Object.fromEntries(
+              //       Object.entries(obj).filter(([key, value]) => value !== null)
+              //     );
+              //     delete filteredObj["_id"]; // remove the _id key from the filtered object
+              //     return filteredObj;
+              //   }),
+              // },
+              // certificate: {
+              //   ...certificate,
+              //   status: certificate?.certificates?.length > 0 ? true : false,
+              //   certificates: certificate?.certificates.map((obj) => {
+              //     const filteredObj = Object.fromEntries(
+              //       Object.entries(obj).filter(([key, value]) => value !== null)
+              //     );
+              //     delete filteredObj["_id"]; // remove the _id key from the filtered object
+              //     return filteredObj;
+              //   }),
+              // },
               product: {
                 ...product,
                 status: modifiedProduct.length > 0 ? true : false,
@@ -1495,20 +1565,28 @@ async function mixinEngine(req, array) {
   const editProduct = [];
   const addService = [];
   const editService = [];
+  const addAward = [];
+  const editAward = [];
+  const addCertificate = [];
+  const editCertificate = [];
   const edit = [];
   const del = [];
   //Sort All the actions and send to different mixins
   for (let index = 0; index < array.length; index++) {
 
-    const element = array[index];    
+    const element = array[index];
     if (element.action === "add") {
       if (validAddSection.includes(element.section) && element.section === "product") { addProduct.push(element); }
       else if (validAddSection.includes(element.section) && element.section === "service") { addService.push(element); }
+      else if (validAddSection.includes(element.section) && element.section === "award") { addAward.push(element); }
+      else if (validAddSection.includes(element.section) && element.section === "certificate") { addCertificate.push(element); }
       else add.push(element);
     }
     if (element.action === "edit") {
       if (validEditSection.includes(element.section) && element.section === "product") { editProduct.push(element); }
       else if (validEditSection.includes(element.section) && element.section === "service") { editService.push(element); }
+      else if (validEditSection.includes(element.section) && element.section === "award") { editAward.push(element); }
+      else if (validEditSection.includes(element.section) && element.section === "certificate") { editCertificate.push(element); }
       else edit.push(element);
     }
     if (element.action === "delete") {
@@ -1519,14 +1597,21 @@ async function mixinEngine(req, array) {
   add.length > 0 && mixinEngineAdd(req, add);
   del.length > 0 && mixinEngineDelete(req, del);
   edit.length > 0 && mixinEngineEdit(req, edit);
-
   // Only for product
   addProduct.length > 0 && mixinEngineAddProduct(req, addProduct);
   editProduct.length > 0 && mixinEngineEditProduct(req, editProduct);
 
   //Only for service
-  addService.length > 0 && mixinEngineAddService(req, addService);
-  editService.length > 0 && mixinEngineEditService(req, editService);
+  addService.length > 0 && mixinEngineAddService(req, addService, 'service');
+  editService.length > 0 && mixinEngineEditService(req, editService, 'service');
+
+  //Only for award
+  addAward.length > 0 && mixinEngineAddService(req, addAward, 'award');
+  editAward.length > 0 && mixinEngineEditService(req, editAward, 'award');
+
+  //Only for certificate
+  addCertificate.length > 0 && mixinEngineAddService(req, addCertificate, 'certificate');
+  editCertificate.length > 0 && mixinEngineEditService(req, editCertificate, 'certificate');
 }
 
 async function mixinEngineAdmin(req, array) {
@@ -1663,7 +1748,7 @@ async function mixinEngineAdd(req, array) {
       "data":{}
    }
  */
-async function mixinEngineAddService(req, array) {
+async function mixinEngineAddService(req, array, name) {
   array.map(async (item) => {
     const { _id, ...all } = item?.data;
     const query = {
@@ -1673,8 +1758,8 @@ async function mixinEngineAddService(req, array) {
     const file = { ...item?.data?.image, buffer: item?.data?.image?.base64 };
     await uploadBufferFile(
       file,
-      "services",
-      getRandomFileName("service-")
+      `${name}s`,
+      getRandomFileName(`${name}-`)
     ).then(async (image) => {
       await Profile.updateOne(query, {
         $push: {
@@ -1692,17 +1777,20 @@ async function mixinEngineAddService(req, array) {
       "data":{}
    }
  */
-async function mixinEngineEditService(req, array) {
+async function mixinEngineEditService(req, array, name) {
   array.map(async (item) => {
     const { _id, ...all } = item?.data;
     // Check if the edit has change for new image
     if (item?.data?.image?.base64) {
       // TODO: Delete Old Image File From Bucket
+
       const file = { ...item?.data?.image, buffer: item?.data?.image?.base64 };
+      console.log(item);
+      if(item?.data.image?.key) await deleteBufferFile(item?.data?.image?.key);
       await uploadBufferFile(
         file,
-        "services",
-        getRandomFileName("service-")
+        `${name}s`,
+        getRandomFileName(`${name}-`)
       ).then(async (image) => {
         const query = {
           user: req?.query?.user ?? req?.user?.id,
@@ -1774,6 +1862,7 @@ async function mixinEngineEditProduct(req, array) {
     if (item?.data?.image?.base64) {
       // TODO: Delete Old Image File From Bucket
       const file = { ...item?.data?.image, buffer: item?.data?.image?.base64 };
+      if(item?.data.image?.key) await deleteBufferFile(item?.data?.image?.key);
       await uploadBufferFile(
         file,
         "products",
@@ -1887,7 +1976,6 @@ function mixinEngineEdit(req, array) {
         },
       };
     } else {
-      console.log(item.data)
       query = {
         user:
           req?.query?.admin ??
@@ -1904,12 +1992,11 @@ function mixinEngineEdit(req, array) {
     }
     return { query, update };
   });
- console.log(updates)
   Promise.all(
     updates.map(({ query, update }) => Profile.updateOne(query, update))
   )
     .then((results) => {
-     
+
       console.log(`${results.length} items updated.`);
     })
     .catch((error) => console.error(error));

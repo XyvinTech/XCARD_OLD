@@ -9,6 +9,7 @@ const ProfileSchema = new mongoose.Schema(
     },
     visible: { type: Boolean, default: false },
     isDisabled: { type: Boolean, default: false },
+    visitCount: { type: Number, default: 0 },
     group: {
       type: mongoose.Schema.ObjectId,
       ref: "Group",
@@ -180,13 +181,39 @@ const ProfileSchema = new mongoose.Schema(
         default: [],
       },
     },
+    // award: {
+    //   status: { type: Boolean, default: false },
+    //   awards: { type: [{ label: String, value: String }], default: [] },
+    // },
+    // certificate: {
+    //   status: { type: Boolean, default: false },
+    //   certificates: { type: [{ label: String, value: String }], default: [] },
+    // },
     award: {
       status: { type: Boolean, default: false },
-      awards: { type: [{ label: String, value: String }], default: [] },
+      awards: {
+        type: [
+          {
+            label: String,
+            image: Object,
+            value: String,
+          }
+        ],
+        default: [],
+      },
     },
     certificate: {
       status: { type: Boolean, default: false },
-      certificates: { type: [{ label: String, value: String }], default: [] },
+      certificates: {
+        type: [
+          {
+            label: String,
+            image: Object,
+            value: String,
+          }
+        ],
+        default: [],
+      },
     },
     bank: {
       status: { type: Boolean, default: false },
