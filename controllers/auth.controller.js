@@ -125,7 +125,7 @@ export const getUserSession = asyncHandler(async (req, res, next) => {
   if (user?.role == "admin" || user?.role == "super") {
     profiles = await Profile.findOne({ user: user.id });
   } else {
-    profiles = await Profile.find({ user: user.id }).populate({
+    profiles = await Profile.find({ user: user.id,isDisabled: false }).populate({
       path: "group",
     });
     const adminUser = await User.findById(profiles[0].group?.groupAdmin);
