@@ -15,7 +15,8 @@ const UserSchema = new mongoose.Schema(
     },
     providerData: Array,
     uid: String,
-    isDisabled: Boolean,
+    // isDisabled: Boolean,
+    isDisabled: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

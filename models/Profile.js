@@ -2,11 +2,13 @@ import mongoose from "mongoose";
 import User from "./User.js";
 const ProfileSchema = new mongoose.Schema(
   {
+    
     user: {
       type: mongoose.Schema.ObjectId,
       ref: "User",
     },
     visible: { type: Boolean, default: false },
+    isDisabled: { type: Boolean, default: false },
     group: {
       type: mongoose.Schema.ObjectId,
       ref: "Group",

@@ -1349,7 +1349,7 @@ export const updateUserContact = asyncHandler(async (req, res, next) => {
   }
 });
 /**
- * @desc    Update user contact in user collection
+ * @desc    Enable disable admin users or any. only super admin can access this
  * @route   POST /api/v1/user/updateUserContact
  * @access  Private/Admin
  * @schema  Private
@@ -1372,6 +1372,37 @@ export const enableDisableUser = asyncHandler(async (req, res, next) => {
       { new: true }
     );
     let message = { success: "Successfully updated user contact" };
+    //UPDATE USER ENDED
+    return res.status(200).send({ success: true, message, user });
+  } catch (err) {
+    console.log(err);
+    return next(new ErrorResponse(`${err}`, 400));
+  }
+});
+/**
+ * @desc    Update user contact in user collection
+ * @route   POST /api/v1/user/updateUserContact
+ * @access  Private/Admin
+ * @schema  Private
+ */
+export const enableDisableProfile = asyncHandler(async (req, res, next) => {
+  try {
+    //UPDATE USER COLLECTION
+    let id = req.body.id;
+    if (!id)
+      return res
+        .status(400)
+        .send({ success: false, message: `Profile not found with id: ${id}` });
+    const user = await Profile.updateOne(
+      { _id: id },
+      {
+        $set: {
+          isDisabled: req?.body?.isDisabled,
+        },
+      },
+      { new: true }
+    );
+    let message = { success: "Successfully updated profile" };
     //UPDATE USER ENDED
     return res.status(200).send({ success: true, message, user });
   } catch (err) {
