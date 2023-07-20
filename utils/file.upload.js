@@ -32,10 +32,42 @@ async function uploadFile(file, directory, fileName) {
   }
   return null;
 }
-
-async function uploadBufferFile(file, directory, fileName) {
+async function uploadSingleDocumentFile(file, directory, fileName) {
+  if (file == undefined) {
+    return;
+  }
   const bucket = admin.storage().bucket(process.env.BUCKET_URL);
-  const fullPath = `${directory}/${fileName}$${extension(file)}`;
+  const fullPath = `${directory}/${fileName}${extension(file)}`;
+  const bucketFile = bucket.file(fullPath);
+
+  if (file != undefined) {
+    await bucketFile.save(file.buffer, {
+      contentType: file?.mimetype,
+      public: false,
+      gzip: true,
+    });
+    const [url] = await bucketFile.getSignedUrl({
+      action: "read",
+      expires: "01-01-2099",
+    });
+    const link = `${process.env.BUCKET_PATH_URL}/${process.env.BUCKET_NAME}${fullPath}`;
+
+    return {
+      key: fullPath,
+      fileName: `${fileName}${extension(file)}`,
+      contentType: file?.mimetype,
+      public: url,
+      link: link,
+    };
+  }
+  return null;
+}
+
+async function uploadBufferFile(file, directory, fileName, section) {
+  const bucket = admin.storage().bucket(process.env.BUCKET_URL);
+  const fullPath = `${directory}/${fileName}$${section == 'document'?'':extension(file)}`;
+  console.log(fullPath);
+  console.log(section);
   const imageBuffer = Buffer.from(file?.buffer, "base64");
   const bucketFile = bucket.file(fullPath);
   await bucketFile.save(imageBuffer, {
@@ -48,9 +80,10 @@ async function uploadBufferFile(file, directory, fileName) {
     expires: "01-01-2099",
   });
   const link = `${process.env.BUCKET_PATH_URL}/${process.env.BUCKET_NAME}${fullPath}`;
+  console.log(fullPath);
   return {
     key: fullPath,
-    fileName: `${fileName}${extension(file)}`,
+    fileName: `${fileName}${section == 'document'?'':extension(file)}`,
     contentType: file.mimeType,
     public: url,
     link: link,

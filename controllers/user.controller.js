@@ -42,6 +42,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
     website,
     video,
     service,
+    document,
     certificate,
     award,
     bank,
@@ -110,6 +111,18 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
                 { ...all.image, buffer: item?.image?.base64 },
                 "services",
                 getRandomFileName("service-")
+              );
+              return { ...all, image: upload };
+            })
+          );
+          // Upload Documents
+          const modifiedDocument = await Promise.all(
+            document?.documents?.map(async (item) => {
+              const { _id, ...all } = item;
+              const upload = await uploadBufferFile(
+                { ...all.image, buffer: item?.image?.base64 },
+                "documents",
+                getRandomFileName("document-")
               );
               return { ...all, image: upload };
             })
@@ -208,6 +221,11 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
               ...service,
               status: modifiedService.length > 0 ? true : false,
               services: modifiedService,
+            },
+            document: {
+              ...document,
+              status: modifiedDocument.length > 0 ? true : false,
+              documents: modifiedDocument,
             },
             award: {
               ...award,
@@ -326,6 +344,18 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
                 return { ...all, image: upload };
               })
             );
+            // Upload documents
+            const modifiedDocument = await Promise.all(
+              document?.documents?.map(async (item) => {
+                const { _id, ...all } = item;
+                const upload = await uploadBufferFile(
+                  { ...all.image, buffer: item?.image?.base64 },
+                  "documents",
+                  getRandomFileName("document-")
+                );
+                return { ...all, image: upload };
+              })
+            );
             // Upload Award Images
             const modifiedAward = await Promise.all(
               award?.awards?.map(async (item) => {
@@ -411,6 +441,11 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
                 ...service,
                 status: modifiedService.length > 0 ? true : false,
                 services: modifiedService,
+              },
+              document: {
+                ...document,
+                status: modifiedDocument.length > 0 ? true : false,
+                documents: modifiedDocument,
               },
               award: {
                 ...award,
@@ -1351,7 +1386,7 @@ export const updateAdminUserProfile = asyncHandler(async (req, res, next) => {
     //TODO: Delete old profile picture from Firebase Storage
     const updateArray = JSON?.parse(req?.body?.update) ?? [];
     if (Array?.isArray(updateArray) && updateArray?.length > 0) {
-      mixinEngine(req, updateArray);
+     await mixinEngine(req, updateArray);
     }
     //UPDATE USER COLLECTION
     if (req?.body?.uid) {
@@ -1583,6 +1618,7 @@ async function mixinEngine(req, array) {
     "social",
     "website",
     "service",
+    "document",
     "award",
     "certificate",
     "product",
@@ -1604,6 +1640,8 @@ async function mixinEngine(req, array) {
   const editAward = [];
   const addCertificate = [];
   const editCertificate = [];
+  const addDocument = [];
+  const editDocument = [];
   const edit = [];
   const del = [];
   //Sort All the actions and send to different mixins
@@ -1613,6 +1651,7 @@ async function mixinEngine(req, array) {
     if (element.action === "add") {
       if (validAddSection.includes(element.section) && element.section === "product") { addProduct.push(element); }
       else if (validAddSection.includes(element.section) && element.section === "service") { addService.push(element); }
+      else if (validAddSection.includes(element.section) && element.section === "document") { addDocument.push(element); }
       else if (validAddSection.includes(element.section) && element.section === "award") { addAward.push(element); }
       else if (validAddSection.includes(element.section) && element.section === "certificate") { addCertificate.push(element); }
       else add.push(element);
@@ -1620,33 +1659,39 @@ async function mixinEngine(req, array) {
     if (element.action === "edit") {
       if (validEditSection.includes(element.section) && element.section === "product") { editProduct.push(element); }
       else if (validEditSection.includes(element.section) && element.section === "service") { editService.push(element); }
+      else if (validEditSection.includes(element.section) && element.section === "document") { editDocument.push(element); }
       else if (validEditSection.includes(element.section) && element.section === "award") { editAward.push(element); }
       else if (validEditSection.includes(element.section) && element.section === "certificate") { editCertificate.push(element); }
       else edit.push(element);
     }
     if (element.action === "delete") {
       validDeleteSection.includes(element.section) && del.push(element);
-    }
+    } console.log(element.section);
   }
+  console.log(add);
 
-  add.length > 0 && mixinEngineAdd(req, add);
-  del.length > 0 && mixinEngineDelete(req, del);
-  edit.length > 0 && mixinEngineEdit(req, edit);
+  add.length > 0 &&  mixinEngineAdd(req, add);
+  del.length > 0 &&  mixinEngineDelete(req, del);
+  edit.length > 0 &&mixinEngineEdit(req, edit);
   // Only for product
-  addProduct.length > 0 && mixinEngineAddProduct(req, addProduct);
-  editProduct.length > 0 && mixinEngineEditProduct(req, editProduct);
+  addProduct.length > 0 && await  mixinEngineAddProduct(req, addProduct);
+  editProduct.length > 0 && await  mixinEngineEditProduct(req, editProduct);
 
   //Only for service
-  addService.length > 0 && mixinEngineAddService(req, addService, 'service');
-  editService.length > 0 && mixinEngineEditService(req, editService, 'service');
+  addService.length > 0 && await  mixinEngineAddService(req, addService, 'service');
+  editService.length > 0 && await  mixinEngineEditService(req, editService, 'service');
+
+  //Only for document
+  addDocument.length > 0 && await  mixinEngineAddService(req, addDocument, 'document');
+  editDocument.length > 0 && await  mixinEngineEditService(req, editDocument, 'document');
 
   //Only for award
-  addAward.length > 0 && mixinEngineAddService(req, addAward, 'award');
-  editAward.length > 0 && mixinEngineEditService(req, editAward, 'award');
+  addAward.length > 0 &&  await mixinEngineAddService(req, addAward, 'award');
+  editAward.length > 0 && await  mixinEngineEditService(req, editAward, 'award');
 
   //Only for certificate
-  addCertificate.length > 0 && mixinEngineAddService(req, addCertificate, 'certificate');
-  editCertificate.length > 0 && mixinEngineEditService(req, editCertificate, 'certificate');
+  addCertificate.length > 0 &&  await mixinEngineAddService(req, addCertificate, 'certificate');
+  editCertificate.length > 0 && await mixinEngineEditService(req, editCertificate, 'certificate');
 }
 
 async function mixinEngineAdmin(req, array) {
@@ -1794,7 +1839,8 @@ async function mixinEngineAddService(req, array, name) {
     await uploadBufferFile(
       file,
       `${name}s`,
-      getRandomFileName(`${name}-`)
+      `${getRandomFileName(`${name}-`)}_${name =='document'? `${item?.data?.image?.fileName}`:''}`,
+      name,
     ).then(async (image) => {
       await Profile.updateOne(query, {
         $push: {
@@ -1825,7 +1871,8 @@ async function mixinEngineEditService(req, array, name) {
       await uploadBufferFile(
         file,
         `${name}s`,
-        getRandomFileName(`${name}-`)
+        `${getRandomFileName(`${name}-`)}_${name =='document'? `${item?.data?.image?.fileName}`:''}`,
+        name,
       ).then(async (image) => {
         const query = {
           user: req?.query?.user ?? req?.user?.id,

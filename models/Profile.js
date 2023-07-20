@@ -154,6 +154,19 @@ const ProfileSchema = new mongoose.Schema(
         default: [],
       },
     },
+    document: {
+      status: { type: Boolean, default: false },
+      documents: {
+        type: [
+          {
+            label: String,
+            image: Object,
+            value: String,
+          }
+        ],
+        default: [],
+      },
+    },
     video: {
       status: { type: Boolean, default: false },
       videos: { type: [{ link: String, }], default: [] },
