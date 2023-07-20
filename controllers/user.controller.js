@@ -543,6 +543,41 @@ export const createAdminUserProfile = asyncHandler(async (req, res, next) => {
           return res.status(201).send({ success: true, message, data: user });
         })
         .catch(async (error) => {
+          if (error?.errorInfo?.code === "auth/phone-number-already-exists") {
+            let user = await User.findOne({ username: phone });
+            console.log(user);
+            if (!user) {
+              const userRecord = await admin.auth().getUserByPhoneNumber(phone);
+              const user = await User.create({
+                username: phone,
+                uid: userRecord?.uid,
+                role: "admin",
+                providerData: userRecord?.providerData,
+              });
+              await Profile.create({
+                user: user?.id,
+                profile: {
+                  ...profile,
+                  companyName: profile?.name,
+                  profilePicture: images[0],
+                },
+                contact: {
+                  ...contact,
+                  status: true,
+                  contacts: contact?.contacts.map((obj) => {
+                    const filteredObj = Object.fromEntries(
+                      Object.entries(obj).filter(([key, value]) => value !== null)
+                    );
+                    delete filteredObj["_id"]; // remove the _id key from the filtered object
+                    return filteredObj;
+                  }),
+                },
+              });
+
+              let message = { success: "Admin User Profile Created" };
+              return res.status(201).send({ success: true, message, data: user });
+            }
+          }
           return next(
             new ErrorResponse(`Error: ${error?.errorInfo?.message}`, 400)
           );
@@ -1786,7 +1821,7 @@ async function mixinEngineEditService(req, array, name) {
 
       const file = { ...item?.data?.image, buffer: item?.data?.image?.base64 };
       console.log(item);
-      if(item?.data.image?.key) await deleteBufferFile(item?.data?.image?.key);
+      if (item?.data.image?.key) await deleteBufferFile(item?.data?.image?.key);
       await uploadBufferFile(
         file,
         `${name}s`,
@@ -1862,7 +1897,7 @@ async function mixinEngineEditProduct(req, array) {
     if (item?.data?.image?.base64) {
       // TODO: Delete Old Image File From Bucket
       const file = { ...item?.data?.image, buffer: item?.data?.image?.base64 };
-      if(item?.data.image?.key) await deleteBufferFile(item?.data?.image?.key);
+      if (item?.data.image?.key) await deleteBufferFile(item?.data?.image?.key);
       await uploadBufferFile(
         file,
         "products",
