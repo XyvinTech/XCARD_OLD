@@ -9,5 +9,6 @@ import * as profileController from "../controllers/profile.controller.js";
 const publicRouter = express.Router({ mergeParams: true });
 
 publicRouter.route("/:id").get(profileController.viewProfile);
+publicRouter.route("/submitForm").post(profileController.submitForm);
 
 export default publicRouter;

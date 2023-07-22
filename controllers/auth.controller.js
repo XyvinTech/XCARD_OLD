@@ -22,9 +22,15 @@ export const loginUser = asyncHandler(async (req, res, next) => {
     .then(async function (decodedToken) {
       // Token is valid, create a custom token for the user
       const uid = decodedToken.uid;
-      const user = await User.findOne({
+      const user = await User.findOneAndUpdate({
         uid: uid,
-      });
+      },
+        {
+          $addToSet: {
+            fcm_token: req.body.fcm_token,
+          }
+        }
+      );
       let profiles;
       // To show the users admin in drawer,
       let profile;
@@ -75,9 +81,7 @@ export const checkUser = asyncHandler(async (req, res, next) => {
     return next(new ErrorResponse("Please pass phone number", 400));
   }
   const user = await User.findOne({ username: req?.body?.phone });
-  console.log(req.body.phone)
-  console.log(user);
-  if(user && user.isDisabled) return res.status(420).send({success: false, message: 'User is disabled'});
+  if (user && user.isDisabled) return res.status(420).send({ success: false, message: 'User is disabled' });
   if (user) {
     const customAuthToken = await admin.auth().createCustomToken(user.uid);
     let message = { success: "User Registered" };
@@ -118,14 +122,14 @@ export const checkUser = asyncHandler(async (req, res, next) => {
  */
 export const getUserSession = asyncHandler(async (req, res, next) => {
   const user = await User.findById(req.user.id);
-  if(user && user.isDisabled) return res.status(420).json({success: false, message: 'User is disabled'});
+  if (user && user.isDisabled) return res.status(420).json({ success: false, message: 'User is disabled' });
   let profiles;
   // To show the users admin in drawer,
   let profile;
   if (user?.role == "admin" || user?.role == "super") {
     profiles = await Profile.findOne({ user: user.id });
   } else {
-    profiles = await Profile.find({ user: user.id,isDisabled: false }).populate({
+    profiles = await Profile.find({ user: user.id, isDisabled: false }).populate({
       path: "group",
     });
     const adminUser = await User.findById(profiles[0].group?.groupAdmin);
@@ -139,4 +143,23 @@ export const getUserSession = asyncHandler(async (req, res, next) => {
     data: { user, profiles, profile },
     role: user?.role,
   });
+});
+
+
+
+/**
+ * @desc    logout
+ * @route   POST /api/v1/auth/logout
+ * @access  Private/User
+ * @schema  Private
+ */
+
+export const logoutUser = asyncHandler(async (req, res, next) => {
+  try{
+    await User.updateOne({ _id: req.body.id }, { $pull: { fcm_token: req.body.fcm_token } });
+    res.status(200).json({message: 'Successfully logged out'});
+  }catch(e){
+    console.log(e);
+    res.status(500).json({message: e});
+  }
 });

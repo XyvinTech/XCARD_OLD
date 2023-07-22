@@ -1,6 +1,7 @@
 import asyncHandler from "../middlewares/async.middleware.js";
 import admin from "firebase-admin";
 import User from "../models/User.js";
+import axios from "axios";
 import Profile from "../models/Profile.js";
 import ErrorResponse from "../utils/error.response.js";
 import { uploadFiles } from "../utils/file.upload.js";
@@ -88,8 +89,67 @@ export const deleteProfile = asyncHandler(async (req, res, next) => {
 export const viewProfile = asyncHandler(async (req, res, next) => {
   console.log('viewProfile called');
   const profile = await Profile.findOneAndUpdate(
-      { "card.cardId": req?.params?.id }, 
-      { $inc: { visitCount: 1 } },
-    );
+    { "card.cardId": req?.params?.id },
+    { $inc: { visitCount: 1 } },
+  );
   res.render("index", { data: profile });
+});
+/**
+ * @desc    Public User EJS
+ * @route   GET /api/v1/profile/view/:id
+ * @access  Public
+ * @schema  Public
+ */
+export const submitForm = asyncHandler(async (req, res, next) => {
+  console.log('submit form')
+  try {
+    const { id, name, phone, email, message } = req.body;
+    const profile = await Profile.findByIdAndUpdate({ _id: id }, {
+      $push: { "form.forms": { name: name, phone: phone, email: email, message: message } },
+      $inc: { "form.status": 1 }
+    }).populate('user', 'fcm_token');
+    if (!profile || !profile.user) {
+      throw new Error('Profile not found or user reference not available.');
+    }
+
+    let payload = {};
+    const tokens = profile.user.fcm_token;
+    const messaging = admin.messaging();
+
+
+  await tokens.forEach(async (element) => {
+      console.log(element)
+      payload = {
+        token: element,
+        notification: {
+          title: name,
+          body: `${email}\nPhone: ${phone}\n${message}`,
+        },
+        data: {
+          ...req.body
+        },
+        android: {
+          "priority": "high"
+        },
+        apns: {
+          payload: {
+            aps: {
+              "content-available": true
+            }
+          },
+          fcm_options: {
+          }
+        }
+      };
+      await messaging.send(payload).then((message)=>{
+        console.log('message sent');
+      });
+    })
+    res.status(200).json({ message: 'Form submission successful' });
+
+
+  } catch (e) {
+    console.log(e)
+    res.status(500).json({ e });
+  }
 });

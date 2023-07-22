@@ -215,6 +215,7 @@ const ProfileSchema = new mongoose.Schema(
         default: [],
       },
     },
+
     certificate: {
       status: { type: Boolean, default: false },
       certificates: {
@@ -223,6 +224,20 @@ const ProfileSchema = new mongoose.Schema(
             label: String,
             image: Object,
             value: String,
+          }
+        ],
+        default: [],
+      },
+    },
+    form: {
+      status: { type: Number, default: 0 },
+      forms: {
+        type: [
+          {
+            name: String,
+            phone: String,
+            email: String,
+            message: String,
           }
         ],
         default: [],

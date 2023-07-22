@@ -17,6 +17,10 @@ const UserSchema = new mongoose.Schema(
     uid: String,
     // isDisabled: Boolean,
     isDisabled: { type: Boolean, default: false },
+    fcm_token: {
+      type: [String],
+      unique: true,
+    },
   },
   { timestamps: true }
 );
