@@ -41,6 +41,13 @@ userRouter
     upload.array("file"),
     userController.createUserProfile
   );
+userRouter
+  .route("/getNotifications")
+  .get(
+    protect,
+    authorize("user"),
+    userController.getNotifications
+  );
 
 userRouter
   .route("/createAdmin")

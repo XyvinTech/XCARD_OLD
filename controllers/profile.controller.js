@@ -101,24 +101,21 @@ export const viewProfile = asyncHandler(async (req, res, next) => {
  * @schema  Public
  */
 export const submitForm = asyncHandler(async (req, res, next) => {
-  console.log('submit form')
   try {
     const { id, name, phone, email, message } = req.body;
     const profile = await Profile.findByIdAndUpdate({ _id: id }, {
       $push: { "form.forms": { name: name, phone: phone, email: email, message: message } },
       $inc: { "form.status": 1 }
-    }).populate('user', 'fcm_token');
+    },{new: true}).populate('user', 'fcm_token');
     if (!profile || !profile.user) {
       throw new Error('Profile not found or user reference not available.');
     }
-
     let payload = {};
     const tokens = profile.user.fcm_token;
     const messaging = admin.messaging();
-
-
+    const notificationStatus = profile.form.status == null? 0: profile.form.status;
+    console.log(notificationStatus);
   await tokens.forEach(async (element) => {
-      console.log(element)
       payload = {
         token: element,
         notification: {
@@ -126,6 +123,7 @@ export const submitForm = asyncHandler(async (req, res, next) => {
           body: `${email}\nPhone: ${phone}\n${message}`,
         },
         data: {
+          status: `${notificationStatus}`,
           ...req.body
         },
         android: {
@@ -153,3 +151,6 @@ export const submitForm = asyncHandler(async (req, res, next) => {
     res.status(500).json({ e });
   }
 });
+
+
+

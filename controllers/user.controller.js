@@ -2488,3 +2488,16 @@ async function imageFileToBase64(filePath) {
   const base64EncodedImage = await streamToBase64(readable);
   return base64EncodedImage;
 }
+
+
+
+export const getNotifications = asyncHandler(async (req, res, next) => {
+  try{
+    const {id} = req.query;
+    const form = await Profile.findByIdAndUpdate({_id: id},{ $set: {'form.status': 0}},{new: true}).select('form');
+    res.status(200).json(form);
+  } catch(e){
+    console.log(e);
+    res.status(500).json({Error: e});
+  }
+});
