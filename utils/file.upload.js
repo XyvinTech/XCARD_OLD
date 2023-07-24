@@ -1,6 +1,7 @@
 import admin from "firebase-admin";
 import getRandomFileName from "../helpers/filename.helper.js";
 import { Buffer } from "node:buffer";
+import urlParse from 'url-parse';
 
 async function uploadFile(file, directory, fileName) {
   if (file == undefined) {
@@ -65,8 +66,8 @@ async function uploadSingleDocumentFile(file, directory, fileName) {
 
 async function uploadBufferFile(file, directory, fileName, section) {
   const bucket = admin.storage().bucket(process.env.BUCKET_URL);
-  const fullPath = `${directory}/${fileName}$${section == 'document'?'':extension(file)}`;
-  console.log('fullpath: '+  fullPath);
+  const fullPath = `${directory}/${fileName}$${section == 'document' ? '' : extension(file)}`;
+  console.log('fullpath: ' + fullPath);
   console.log(section);
   const imageBuffer = Buffer.from(file?.buffer, "base64");
   const bucketFile = bucket.file(fullPath);
@@ -83,7 +84,7 @@ async function uploadBufferFile(file, directory, fileName, section) {
   console.log(fullPath);
   return {
     key: fullPath,
-    fileName: `${fileName}${section == 'document'?'':extension(file)}`,
+    fileName: `${fileName}${section == 'document' ? '' : extension(file)}`,
     contentType: file.mimeType,
     public: url,
     link: link,
@@ -180,6 +181,28 @@ async function deleteFile(key) {
     });
 }
 
+async function deleteFileByUrl(fileUrl,section = 'all') {
+  try {
+    // Parse the file URL to get the bucket and file path
+    const bucket = admin.storage().bucket(process.env.BUCKET_URL);
+    const parsedUrl = urlParse(fileUrl);
+    // const bucketName = parsedUrl.hostname.split('.')[0];
+    const filePath = parsedUrl.pathname.slice(1).replace(/%24/g, '').replace(/%2F/g,'/');
+    // Split the path string by '/'
+    const pathParts = filePath.split('/');
+    // Take the part before the last element (2nd last element)
+    const secondLastPart = pathParts.slice(pathParts.length - 2, pathParts.length).join('/');
+    // Delete the file from Firebase Storage
+    const part = secondLastPart.split('.');
+    const dollarLink = `${part.slice(0,part.length-1).join('.')}$.${part[part.length-1]}`;
+    
+    await bucket.file(section == 'document'? secondLastPart : dollarLink).delete();
+    console.log('File deleted successfully');
+  } catch (error) {
+    console.error('Error deleting file:', error);
+  }
+}
+
 const extension = (file) => {
   switch (file.mimetype) {
     case "application/pdf":
@@ -203,5 +226,6 @@ export {
   uploadBufferFiles,
   uploadFiles,
   deleteFile,
-  deleteBufferFile
+  deleteBufferFile,
+  deleteFileByUrl,
 };

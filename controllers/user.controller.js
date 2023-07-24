@@ -5,10 +5,10 @@ import Profile from "../models/Profile.js";
 import ErrorResponse from "../utils/error.response.js";
 import {
   uploadBufferFile,
-  uploadBufferFiles,
   deleteBufferFile,
   uploadFile,
   uploadFiles,
+  deleteFileByUrl
 } from "../utils/file.upload.js";
 import { nanoid, customAlphabet } from "nanoid";
 const randomId = customAlphabet("0123456789ABCDEFGHIJKLMNOP", 8);
@@ -119,18 +119,18 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
             })
           );
           // Upload Documents
-          const modifiedDocument = await Promise.all(
-            document?.documents?.map(async (item) => {
-              const { _id, ...all } = item;
-              const upload = await uploadBufferFile(
-                { ...all.image, buffer: item?.image?.base64 },
-                "documents",
-                getRandomFileName("document-"),
-                'document'
-              );
-              return { ...all, image: upload };
-            })
-          );
+          // const modifiedDocument = await Promise.all(
+          //   document?.documents?.map(async (item) => {
+          //     const { _id, ...all } = item;
+          //     const upload = await uploadBufferFile(
+          //       { ...all.image, buffer: item?.image?.base64 },
+          //       "documents",
+          //       getRandomFileName("document-"),
+          //       'document'
+          //     );
+          //     return { ...all, image: upload };
+          //   })
+          // );
           // Upload Award Images
           const modifiedAward = await Promise.all(
             award?.awards?.map(async (item) => {
@@ -217,10 +217,21 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
               status: modifiedService.length > 0 ? true : false,
               services: modifiedService,
             },
+            // document: {
+            //   ...document,
+            //   status: modifiedDocument.length > 0 ? true : false,
+            //   documents: modifiedDocument,
+            // },
             document: {
               ...document,
-              status: modifiedDocument.length > 0 ? true : false,
-              documents: modifiedDocument,
+              status: document?.documents?.length > 0 ? true : false,
+              documents: document?.documents.map((obj) => {
+                const filteredObj = Object.fromEntries(
+                  Object.entries(obj).filter(([key, value]) => value !== null)
+                );
+                delete filteredObj["_id"]; // remove the _id key from the filtered object
+                return filteredObj;
+              }),
             },
             award: {
               ...award,
@@ -323,18 +334,18 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
             );
 
             // Upload documents
-            const modifiedDocument = await Promise.all(
-              document?.documents?.map(async (item) => {
-                const { _id, ...all } = item;
-                const upload =item.image == null?null: await uploadBufferFile(
-                  { ...all.image, buffer: item?.image?.base64 },
-                  "documents",
-                  getRandomFileName("document-"),
-                  'document'
-                );
-                return { ...all, image: upload };
-              })
-            );
+            // const modifiedDocument = await Promise.all(
+            //   document?.documents?.map(async (item) => {
+            //     const { _id, ...all } = item;
+            //     const upload =item.image == null?null: await uploadBufferFile(
+            //       { ...all.image, buffer: item?.image?.base64 },
+            //       "documents",
+            //       getRandomFileName("document-"),
+            //       'document'
+            //     );
+            //     return { ...all, image: upload };
+            //   })
+            // );
             // Upload Award Images
             const modifiedAward = await Promise.all(
               award?.awards?.map(async (item) => {
@@ -412,10 +423,21 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
                 status: modifiedService.length > 0 ? true : false,
                 services: modifiedService,
               },
+              // document: {
+              //   ...document,
+              //   status: modifiedDocument.length > 0 ? true : false,
+              //   documents: modifiedDocument,
+              // },
               document: {
                 ...document,
-                status: modifiedDocument.length > 0 ? true : false,
-                documents: modifiedDocument,
+                status: document?.documents?.length > 0 ? true : false,
+                documents: document?.documents.map((obj) => {
+                  const filteredObj = Object.fromEntries(
+                    Object.entries(obj).filter(([key, value]) => value !== null)
+                  );
+                  delete filteredObj["_id"]; // remove the _id key from the filtered object
+                  return filteredObj;
+                }),
               },
               award: {
                 ...award,
@@ -1265,9 +1287,11 @@ export const deleteFirebaseUser = asyncHandler(async (req, res, next) => {
  * @access  Private/Admin Private/User
  * @schema  Private
  */
-export const updateUserProfile = asyncHandler(async (req, res, next) => {
+export const updateUserProfile = asyncHandler(async (req, res, next) => { 
+  console.log('')
   await uploadFiles(req?.files, "profiles", getRandomFileName("profile-"))
     .then(async (images) => {
+     
       const { name, designation, companyName, bio } = req?.body;
       //TODO: Delete old profile picture from Firebase Storage
       const updateArray = JSON?.parse(req?.body?.update) ?? [];
@@ -1304,6 +1328,7 @@ export const updateUserProfile = asyncHandler(async (req, res, next) => {
       return res.status(200).send({ success: true, message, data: profile });
     })
     .catch((err) => {
+      console.log(err)
       return next(new ErrorResponse(`File upload failed ${err}`, 400));
     });
 });
@@ -1614,8 +1639,8 @@ async function mixinEngine(req, array) {
   }
 
   add.length > 0 &&  mixinEngineAdd(req, add);
-  del.length > 0 &&  mixinEngineDelete(req, del);
-  edit.length > 0 &&mixinEngineEdit(req, edit);
+  del.length > 0 &&  await mixinEngineDelete(req, del);
+  edit.length > 0 && mixinEngineEdit(req, edit);
   // Only for product
   addProduct.length > 0 && await  mixinEngineAddProduct(req, addProduct);
   editProduct.length > 0 && await  mixinEngineEditProduct(req, editProduct);
@@ -1779,7 +1804,9 @@ async function mixinEngineAddService(req, array, name) {
       _id: req?.query?.profile,
     };
     const file = { ...item?.data?.image, buffer: item?.data?.image?.base64 };
-    await uploadBufferFile(
+    if(file.buffer){
+      console.log('image available add');
+         await uploadBufferFile(
       file,
       `${name}s`,
       `${getRandomFileName(`${name}-`)}_${name =='document'? `${item?.data?.image?.fileName}`:''}`,
@@ -1790,7 +1817,16 @@ async function mixinEngineAddService(req, array, name) {
           [`${item?.section}.${item?.section}s`]: { ...all, image },
         },
       });
-    });
+    }); 
+    } else{
+      console.log('image not available add');
+      await Profile.updateOne(query, {
+        $push: {
+          [`${item?.section}.${item?.section}s`]: { ...all, image: item?.data?.image },
+        },
+      });
+      }
+
   });
 }
 /**
@@ -1807,7 +1843,7 @@ async function mixinEngineEditService(req, array, name) {
     // Check if the edit has change for new image
     if (item?.data?.image?.base64) {
       // TODO: Delete Old Image File From Bucket
-
+      console.log('image available');
       const file = { ...item?.data?.image, buffer: item?.data?.image?.base64 };
       if (item?.data.image?.key) await deleteBufferFile(item?.data?.image?.key);
       await uploadBufferFile(
@@ -1828,6 +1864,7 @@ async function mixinEngineEditService(req, array, name) {
         });
       });
     } else {
+      console.log('non image update');
       const query = {
         user: req?.query?.user ?? req?.user?.id,
         _id: req?.query?.profile,
@@ -1924,9 +1961,16 @@ async function mixinEngineEditProduct(req, array) {
       "data":{}
    }
  */
-function mixinEngineDelete(req, array) {
+async function mixinEngineDelete(req, array) {
   // TODO: Delete Image Key If The Delete Section is Products
+  const validImageDeletion = ['product','service','award','certificate','document'];
+
   const updates = array.map((item) => {
+    if(validImageDeletion.includes(item?.section)){
+      if(item?.data?.image){
+        deleteFileByUrl(item?.data?.image?.public,item?.section);
+      }
+    }
     const query = {
       user: req?.query?.user ?? req?.user?.id,
       _id: req?.query?.profile,

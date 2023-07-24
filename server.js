@@ -7,6 +7,7 @@ import https from "https";
 import connectDB from "./configs/db.js";
 import routes from "./routes/index.js";
 import admin from "firebase-admin";
+import bodyParser from "body-parser";
 import errorMiddleware from "./middlewares/error.middleware.js";
 import { serviceAccount } from "./configs/dev-xcard-firebase.js";
 import * as fs from "fs";
@@ -51,8 +52,8 @@ if (process.env.NODE_ENV === "production") {
 }
 
 // Body parser
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(logger("dev"));
 
 // Route Files
