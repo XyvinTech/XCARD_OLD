@@ -52,6 +52,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
   delete bank?.bankDetails?._id;
   delete video?.link?._id;
   delete enquiry?.email?._id;
+  
   await uploadFiles(req?.files, "profiles")
     .then(async (images) => {
       const options = {
@@ -98,7 +99,8 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
               const upload = await uploadBufferFile(
                 { ...all.image, buffer: item?.image?.base64 },
                 "products",
-                getRandomFileName("product-")
+                getRandomFileName("product-"),
+                'product'
               );
               return { ...all, image: upload };
             })
@@ -107,10 +109,11 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
           const modifiedService = await Promise.all(
             service?.services?.map(async (item) => {
               const { _id, ...all } = item;
-              const upload = await uploadBufferFile(
+              const upload =item.image == null ? null: await uploadBufferFile(
                 { ...all.image, buffer: item?.image?.base64 },
                 "services",
-                getRandomFileName("service-")
+                getRandomFileName("service-"),
+                'service'
               );
               return { ...all, image: upload };
             })
@@ -122,7 +125,8 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
               const upload = await uploadBufferFile(
                 { ...all.image, buffer: item?.image?.base64 },
                 "documents",
-                getRandomFileName("document-")
+                getRandomFileName("document-"),
+                'document'
               );
               return { ...all, image: upload };
             })
@@ -131,10 +135,11 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
           const modifiedAward = await Promise.all(
             award?.awards?.map(async (item) => {
               const { _id, ...all } = item;
-              const upload = await uploadBufferFile(
+              const upload =item.image == null?null: await uploadBufferFile(
                 { ...all.image, buffer: item?.image?.base64 },
                 "awards",
-                getRandomFileName("award-")
+                getRandomFileName("award-"),
+                'award'
               );
               return { ...all, image: upload };
             })
@@ -143,10 +148,11 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
           const modifiedCertificate = await Promise.all(
             certificate?.certificates?.map(async (item) => {
               const { _id, ...all } = item;
-              const upload = await uploadBufferFile(
+              const upload =item.image == null?null: await uploadBufferFile(
                 { ...all.image, buffer: item?.image?.base64 },
                 "certificates",
-                getRandomFileName("certificate-")
+                getRandomFileName("certificate-"),
+                'certificate'
               );
               return { ...all, image: upload };
             })
@@ -206,17 +212,6 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
                 return filteredObj;
               }),
             },
-            // service: {
-            //   ...service,
-            //   status: service?.services?.length > 0 ? true : false,
-            //   services: service?.services.map((obj) => {
-            //     const filteredObj = Object.fromEntries(
-            //       Object.entries(obj).filter(([key, value]) => value !== null)
-            //     );
-            //     delete filteredObj["_id"]; // remove the _id key from the filtered object
-            //     return filteredObj;
-            //   }),
-            // },
             service: {
               ...service,
               status: modifiedService.length > 0 ? true : false,
@@ -237,28 +232,6 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
               status: modifiedCertificate.length > 0 ? true : false,
               certificates: modifiedCertificate,
             },
-            // award: {
-            //   ...award,
-            //   status: award?.awards?.length > 0 ? true : false,
-            //   awards: award?.awards.map((obj) => {
-            //     const filteredObj = Object.fromEntries(
-            //       Object.entries(obj).filter(([key, value]) => value !== null)
-            //     );
-            //     delete filteredObj["_id"]; // remove the _id key from the filtered object
-            //     return filteredObj;
-            //   }),
-            // },
-            // certificate: {
-            //   ...certificate,
-            //   status: certificate?.certificates?.length > 0 ? true : false,
-            //   certificates: certificate?.certificates.map((obj) => {
-            //     const filteredObj = Object.fromEntries(
-            //       Object.entries(obj).filter(([key, value]) => value !== null)
-            //     );
-            //     delete filteredObj["_id"]; // remove the _id key from the filtered object
-            //     return filteredObj;
-            //   }),
-            // },
             product: {
               ...product,
               status: modifiedProduct.length > 0 ? true : false,
@@ -286,8 +259,9 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
         })
         .catch(async (error) => {
           //If User already exisits create second or third profile
-
+        
           if (error?.errorInfo?.code === "auth/phone-number-already-exists") {
+            console.log('phone no already exist')
             let user = await User.findOne({ username: phone });
 
             if (user == null) {
@@ -324,10 +298,12 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
             const modifiedProduct = await Promise.all(
               product?.products?.map(async (item) => {
                 const { _id, ...all } = item;
+               
                 const upload = await uploadBufferFile(
                   { ...all.image, buffer: item?.image?.base64 },
                   "products",
-                  getRandomFileName("product-")
+                  getRandomFileName("product-"),
+                  'product'
                 );
                 return { ...all, image: upload };
               })
@@ -336,22 +312,25 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
             const modifiedService = await Promise.all(
               service?.services?.map(async (item) => {
                 const { _id, ...all } = item;
-                const upload = await uploadBufferFile(
+                const upload = item.image == null?null: await uploadBufferFile(
                   { ...all.image, buffer: item?.image?.base64 },
                   "services",
-                  getRandomFileName("service-")
+                  getRandomFileName("service-"),
+                  'service'
                 );
                 return { ...all, image: upload };
               })
             );
+
             // Upload documents
             const modifiedDocument = await Promise.all(
               document?.documents?.map(async (item) => {
                 const { _id, ...all } = item;
-                const upload = await uploadBufferFile(
+                const upload =item.image == null?null: await uploadBufferFile(
                   { ...all.image, buffer: item?.image?.base64 },
                   "documents",
-                  getRandomFileName("document-")
+                  getRandomFileName("document-"),
+                  'document'
                 );
                 return { ...all, image: upload };
               })
@@ -360,10 +339,11 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
             const modifiedAward = await Promise.all(
               award?.awards?.map(async (item) => {
                 const { _id, ...all } = item;
-                const upload = await uploadBufferFile(
+                const upload =item.image == null?null: await uploadBufferFile(
                   { ...all.image, buffer: item?.image?.base64 },
                   "awards",
-                  getRandomFileName("award-")
+                  getRandomFileName("award-"),
+                  'award'
                 );
                 return { ...all, image: upload };
               })
@@ -372,10 +352,11 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
             const modifiedCertificate = await Promise.all(
               certificate?.certificates?.map(async (item) => {
                 const { _id, ...all } = item;
-                const upload = await uploadBufferFile(
+                const upload =item.image == null ? null: await uploadBufferFile(
                   { ...all.image, buffer: item?.image?.base64 },
                   "certificates",
-                  getRandomFileName("certificate-")
+                  getRandomFileName("certificate-"),
+                  'certificate'
                 );
                 return { ...all, image: upload };
               })
@@ -426,17 +407,6 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
                   return filteredObj;
                 }),
               },
-              // service: {
-              //   ...service,
-              //   status: service?.services?.length > 0 ? true : false,
-              //   services: service?.services.map((obj) => {
-              //     const filteredObj = Object.fromEntries(
-              //       Object.entries(obj).filter(([key, value]) => value !== null)
-              //     );
-              //     delete filteredObj["_id"]; // remove the _id key from the filtered object
-              //     return filteredObj;
-              //   }),
-              // },
               service: {
                 ...service,
                 status: modifiedService.length > 0 ? true : false,
@@ -457,28 +427,6 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
                 status: modifiedCertificate.length > 0 ? true : false,
                 certificates: modifiedCertificate,
               },
-              // award: {
-              //   ...award,
-              //   status: award?.awards?.length > 0 ? true : false,
-              //   awards: award?.awards.map((obj) => {
-              //     const filteredObj = Object.fromEntries(
-              //       Object.entries(obj).filter(([key, value]) => value !== null)
-              //     );
-              //     delete filteredObj["_id"]; // remove the _id key from the filtered object
-              //     return filteredObj;
-              //   }),
-              // },
-              // certificate: {
-              //   ...certificate,
-              //   status: certificate?.certificates?.length > 0 ? true : false,
-              //   certificates: certificate?.certificates.map((obj) => {
-              //     const filteredObj = Object.fromEntries(
-              //       Object.entries(obj).filter(([key, value]) => value !== null)
-              //     );
-              //     delete filteredObj["_id"]; // remove the _id key from the filtered object
-              //     return filteredObj;
-              //   }),
-              // },
               product: {
                 ...product,
                 status: modifiedProduct.length > 0 ? true : false,
@@ -489,11 +437,6 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
                 status: bank?.bankDetails?.accnumber ? true : false,
                 bankDetails: bank?.bankDetails,
               },
-              // video: {
-              //   ...video,
-              //   status: video?.link?.link ? true : false,
-              //   link: video?.link,
-              // },
               video: {
                 ...video,
                 status: video?.videos?.length > 0 ? true : false,
@@ -514,6 +457,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
             let message = { success: "User Profile Created" };
             return res.status(201).send({ success: true, message, data: user });
           }
+         
           return next(
             new ErrorResponse(
               `Something went wrong ${error?.errorInfo?.code ?? error}`,
@@ -521,6 +465,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
             )
           );
         });
+      
     })
     .catch((err) => {
       return next(new ErrorResponse(`File upload failed ${err}`, 400));
@@ -580,7 +525,6 @@ export const createAdminUserProfile = asyncHandler(async (req, res, next) => {
         .catch(async (error) => {
           if (error?.errorInfo?.code === "auth/phone-number-already-exists") {
             let user = await User.findOne({ username: phone });
-            console.log(user);
             if (!user) {
               const userRecord = await admin.auth().getUserByPhoneNumber(phone);
               const user = await User.create({
@@ -1666,9 +1610,8 @@ async function mixinEngine(req, array) {
     }
     if (element.action === "delete") {
       validDeleteSection.includes(element.section) && del.push(element);
-    } console.log(element.section);
+    } 
   }
-  console.log(add);
 
   add.length > 0 &&  mixinEngineAdd(req, add);
   del.length > 0 &&  mixinEngineDelete(req, del);
@@ -1866,7 +1809,6 @@ async function mixinEngineEditService(req, array, name) {
       // TODO: Delete Old Image File From Bucket
 
       const file = { ...item?.data?.image, buffer: item?.data?.image?.base64 };
-      console.log(item);
       if (item?.data.image?.key) await deleteBufferFile(item?.data?.image?.key);
       await uploadBufferFile(
         file,

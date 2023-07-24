@@ -66,7 +66,7 @@ async function uploadSingleDocumentFile(file, directory, fileName) {
 async function uploadBufferFile(file, directory, fileName, section) {
   const bucket = admin.storage().bucket(process.env.BUCKET_URL);
   const fullPath = `${directory}/${fileName}$${section == 'document'?'':extension(file)}`;
-  console.log(fullPath);
+  console.log('fullpath: '+  fullPath);
   console.log(section);
   const imageBuffer = Buffer.from(file?.buffer, "base64");
   const bucketFile = bucket.file(fullPath);
