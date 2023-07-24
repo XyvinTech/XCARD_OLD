@@ -52,7 +52,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
   delete bank?.bankDetails?._id;
   delete video?.link?._id;
   delete enquiry?.email?._id;
-  
+  console.log('inside create profile')
   await uploadFiles(req?.files, "profiles")
     .then(async (images) => {
       const options = {
