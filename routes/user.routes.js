@@ -100,6 +100,14 @@ userRouter
     userController.enableDisableUser
   );
 userRouter
+  .route("/enableDisableProfile")
+  .post(
+    protect,
+    authorize("admin","super"),
+    upload.single('file'),
+    userController.enableDisableProfile
+  );
+userRouter
   .route("/admin")
   .get(protect, authorize("super"), userController.getAllAdmin);
 userRouter
