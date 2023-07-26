@@ -140,7 +140,6 @@ export const getUserSession = asyncHandler(async (req, res, next) => {
     const adminUser = await User.findById(profiles[0].group?.groupAdmin);
     profile = await Profile.findOne({ user: adminUser._id });
   }
-
   let message = { success: "User Fetched" };
   return res.json({
     success: true,
