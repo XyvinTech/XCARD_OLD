@@ -37,11 +37,18 @@ export const loginUser = asyncHandler(async (req, res, next) => {
       if (user?.role == "admin" || user?.role == "super") {
         profiles = await Profile.findOne({ user: user.id });
       } else {
-        profiles = await Profile.find({ user: user.id }).populate({
+        profiles = await Profile.find({ user: user.id,
+          $or: [
+            { isDisabled: { $exists: false } }, // Check if the field doesn't exist
+            { isDisabled: false }, // Check if the field is explicitly set to false
+          ],
+        }).populate({
           path: "group",
         });
-        const adminUser = await User.findById(profiles[0].group?.groupAdmin);
-        profile = await Profile.findOne({ user: adminUser._id });
+        // const adminUser = await User.findById(profiles[0].group?.groupAdmin);
+        // profile = await Profile.findOne({ user: adminUser._id });
+        profile = await Profile.findOne({ user: user.id });
+
       }
 
       const token = user.getSignedJwtToken();
@@ -129,6 +136,7 @@ export const getUserSession = asyncHandler(async (req, res, next) => {
   if (user?.role == "admin" || user?.role == "super") {
     profiles = await Profile.findOne({ user: user.id });
   } else {
+    console.log(user)
     profiles = await Profile.find({ user: user.id, 
       $or: [
         { isDisabled: { $exists: false } }, // Check if the field doesn't exist
@@ -137,9 +145,16 @@ export const getUserSession = asyncHandler(async (req, res, next) => {
      }).populate({
       path: "group",
     });
-    const adminUser = await User.findById(profiles[0].group?.groupAdmin);
-    profile = await Profile.findOne({ user: adminUser._id });
+    // if(profiles.isNotEmpty){
+    
+    // const adminUser = await User.findById(profiles[0].group?.groupAdmin);
+    // profile = await Profile.findOne({ user: adminUser._id });
+    profile = await Profile.findOne({ user: user.id });
+    console.log(profile)
+    // }
+
   }
+
   let message = { success: "User Fetched" };
   return res.json({
     success: true,

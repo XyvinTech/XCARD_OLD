@@ -149,6 +149,7 @@ const ProfileSchema = new mongoose.Schema(
             label: String,
             image: Object,
             value: String,
+            description: String,
           }
         ],
         default: [],
