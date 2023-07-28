@@ -147,6 +147,7 @@ input:not(#phone) {
   border-radius: 14px;
   padding: 10px;
   height: 58px;
+  width: 85vw;
   background-color: var(--linkBg);
   color: var(--bodyContent);
   border: none;
@@ -757,9 +758,9 @@ section {
 }
 
 #btn_hi {
-  height: max-content;
+  height: 45px;
   white-space: nowrap;
-  padding: 10px 22px 10px 22px;
+  /* padding: 10px 22px 10px 22px; */
   border-radius: 157px;
   border: none;
   font-size: 0.8rem;
@@ -769,7 +770,7 @@ section {
 }
 #btn_hi > img {
   margin-right: 10px;
-  width: 25%;
+  width: 15px;
 }
 
 .footer {

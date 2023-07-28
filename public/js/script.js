@@ -463,7 +463,7 @@ if (!serviceVisibility || services.length == 0) {
     if (service?.image) {
       cardImageElem.style.backgroundImage = `url(${service?.image?.public})`;
     } else {
-      cardImageElem.style.backgroundImage = `public/images/image.png`;
+      cardImageElem.style.backgroundImage = `/profile/public/images/image.png`;
     }
     cardElem.appendChild(cardImageElem);
 
@@ -821,7 +821,7 @@ awards?.forEach((award) => {
   if (award?.image) {
     cardImageElem.style.backgroundImage = `url(${award?.image?.public})`;
   } else {
-    cardImageElem.style.backgroundImage = `public/images/image.png`;
+    cardImageElem.style.backgroundImage = `/profile/public/images/image.png`;
   }
   card.appendChild(cardImageElem);
 
@@ -882,7 +882,7 @@ certif?.forEach((service) => {
   if (service?.image) {
     cardImageElem.style.backgroundImage = `url(${service?.image?.public})`;
   } else {
-    cardImageElem.style.backgroundImage = `public/images/image.png`;
+    cardImageElem.style.backgroundImage = `/profile/public/images/image.png`;
   }
   card.appendChild(cardImageElem);
 
@@ -978,7 +978,7 @@ function openPopup(
   if (isEmpty(image)) {
     popupImage.src = image;
   } else {
-    popupImage.src = `image.png`;
+    popupImage.src = `/profile/public/images/image.png`;
   }
   popupImage.style.display = "inline-block";
 
