@@ -7,7 +7,9 @@ h3 {
   margin: 0;
   padding: 0;
 }
-button{z-index:100;}
+button {
+  z-index: 100;
+}
 
 :root.light {
   --bg: #fff;
@@ -110,41 +112,6 @@ body {
   margin-top: 20px;
 } */
 
-#award-cards {
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-  flex-direction: row;
-  margin: 5%;
-  flex-wrap: wrap;
-}
-
-.award_card {
-  border: 0.6px solid var(--awdBor);
-  padding: 3% 8%;
-  border-radius: 14px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin: 2%;
-  background-color: var(--awdBg);
-  width: 240px; /* Change here */
-  min-height: 64px;
-}
-.award_card > h3 {
-  color: var(--bodyContent);
-  font-size: 14px;
-  font-weight: 600;
-  padding: 0px;
-  margin: 0px;
-}
-.award_card > p {
-  color: var(--lightAc);
-  padding: 0px;
-  margin: 0px;
-}
-
 .enq-section {
   display: flex;
   justify-content: center;
@@ -165,7 +132,7 @@ body {
   width: 100%;
 }
 
-input {
+input:not(#phone) {
   border-radius: 14px;
   padding: 10px;
   margin-top: 24px;
@@ -176,14 +143,38 @@ input {
   border: none;
 }
 
+#phone {
+  border-radius: 14px;
+  padding: 10px;
+  height: 58px;
+  background-color: var(--linkBg);
+  color: var(--bodyContent);
+  border: none;
+}
+.phone {
+  margin-top: 24px;
+  padding: 0px 1px 0px 1px;
+}
+
+#iti-0__country-listbox {
+  background-color: var(--linkBg);
+  color: var(--bodyContent);
+  border: #000 solid 1px;
+  border-radius: 14px;
+}
+
 input[type="submit"],
 #btn_hi {
-  background-color: #beff6c;
-  color: #000;
+  background-color: #beff6c !important;
+  color: #000 !important;
 }
 
 #butnLgt {
   display: none;
+}
+
+.iti__flag {
+  border-radius: 4px;
 }
 
 input[name="subject"] {
@@ -199,7 +190,6 @@ input[name="subject"]::placeholder {
 
 .bank-section {
   padding: 12px;
-  
 }
 
 .bank-icons {
@@ -278,17 +268,15 @@ input[name="subject"]::placeholder {
 
 @media (max-width: 360px) {
   .card {
-
-  max-width: 125px;
-
-}}
-
+    max-width: 125px;
+  }
+}
 
 .card-image {
   box-sizing: border-box;
   width: 100%;
   height: 104px;
-  background-image: url("../images/image.png");
+  background-image: url("image.png");
   background-size: cover;
   border-bottom: 1px solid var(--cardBorder);
   border-radius: 14px 14px 0 0;
@@ -339,7 +327,7 @@ input[name="subject"]::placeholder {
 
 .products-icons {
   display: flex;
-  justify-content: space-evenly;
+  justify-content: center;
   align-items: center;
   flex-direction: row;
   flex-wrap: wrap;
@@ -407,7 +395,7 @@ input[name="subject"]::placeholder {
 
 .submit_btn,
 #btn_hi {
-  width: 80%;
+  width: 85%;
 }
 
 .embedding {
@@ -507,15 +495,14 @@ iframe {
 }
 
 .image-container img[alt="Image"] {
-  
   width: 100%;
-  background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), #000000;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
+    #000000;
   border: 0.5px solid rgba(43, 175, 164, 0.5);
   border-radius: 0px 0px 24px 24px;
   height: 260px;
   object-fit: cover;
   object-position: center;
-  
 }
 
 .button-overlay {
@@ -694,37 +681,23 @@ iframe {
   opacity: 1;
 }
 
-.certif-section {
+.save-btn {
   display: flex;
+  align-items: center;
   justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  color: var(--linkBgDark);
-  width: auto;
-  margin-bottom: 0px;
-}
-
-.certif-icons {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  flex-direction: row;
-  margin: 0px;
-  width: 100%;
-  flex-wrap: wrap;
 }
 
 #save-contact {
-  margin-top: 30px;
-  width: 178px;
-  height: 51px;
+  width: max-content;
   border-radius: 157px;
   border: none;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: var(--btnBg);
-  color: var(--btnTxt);
+  background-color: var(--bankBorder);
+  color: var(--btnBg);
+  padding: 10px 22px 10px 22px;
+  height: 45px;
 }
 #save-contact > div > p {
   margin: 0px;
@@ -738,7 +711,13 @@ iframe {
 }
 
 .save {
-  margin: 0px;
+  margin: auto;
+  margin-top: 30px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 70%;
 }
 
 section {
@@ -778,28 +757,19 @@ section {
 }
 
 #btn_hi {
-  width: 95%;
   height: max-content;
-  padding: 5% 0px;
+  white-space: nowrap;
+  padding: 10px 22px 10px 22px;
   border-radius: 157px;
   border: none;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  font-size: 0.8rem;
+  font-weight: bold;
   background-color: var(--btnBg);
   color: var(--frameCardButton);
 }
 #btn_hi > img {
   margin-right: 10px;
-}
-
-.btm {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  padding: 5% 10%;
-  padding-bottom: 15%;
+  width: 25%;
 }
 
 .footer {
@@ -829,10 +799,6 @@ section {
 
 a {
   text-decoration: none;
-}
-
-form {
-  display: none;
 }
 
 @media (max-width: 475px) {
@@ -903,9 +869,9 @@ main {
 }
 
 .popup {
-  width: 80%;
-  height: 50%;
+  max-width: 400px;
   margin: 7%;
+  height: auto;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -920,8 +886,7 @@ main {
 }
 #popupImage {
   width: 100%;
-  height: 50%;
-  object-fit: cover;
+  height: min();
   margin: 0px;
   top: 0px;
 }
@@ -975,7 +940,60 @@ main {
   font-style: normal;
 }
 
-.video-container{
+.video-container {
   padding: 10%;
   padding-bottom: 0px;
+}
+
+#popupAuthID {
+  color: #beff6c;
+  font-weight: bolder;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+  align-self: flex-start;
+  margin-left: 0.8rem;
+  margin-right: 0.8rem;
+}
+
+.docs-icons {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  flex-direction: row;
+  margin: 0px;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.doc-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
+  background-color: var(--linkBg);
+  color: var(--darkAc);
+  width: 100%;
+  max-height: 58px;
+  margin: 3% 10% 3% 10%;
+  border-radius: 12px;
+}
+
+.doc-title {
+  margin: 0px;
+  padding: 4%;
+  color: var(--subText);
+}
+
+.download-button{
+  background: var(--linkBg);
+  color: #BEFF6C;
+  width: 50px;
+  height: 50px;
+  border: none;
+  border-radius: 12px;
+}
+.download-button i{
+  font-size: 1.2rem;
 }
