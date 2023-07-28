@@ -1063,17 +1063,15 @@ const isEmpty = (obj) => {
 
 
 
-
 const submitBtn = document.getElementById("form_submit");
 submitBtn.addEventListener("click", (e) => {
   e.preventDefault();
-  const currentURL = window.location.href;
   const postURL = "https://app.visitingcard.store/profile/";
   const id = data["_id"];
   const nameInput = document.getElementById("frm_name");
-  const emailInput = document.getElementById("frm_email");
-  const phoneInput = document.getElementById("frm_phone");
-  const messageInput = document.getElementById("frm_message");
+  const emailInput = document.getElementById("email");
+  const phoneInput = document.getElementById("phone");
+  const messageInput = document.getElementById("message");
   const name = nameInput.value;
   const email = emailInput.value;
   const phone = phoneInput.value;
