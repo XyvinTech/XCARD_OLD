@@ -870,9 +870,9 @@ main {
 }
 
 .popup {
-  max-width: 400px;
+  width: 80%;
+  height: 50%;
   margin: 7%;
-  height: auto;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -887,7 +887,8 @@ main {
 }
 #popupImage {
   width: 100%;
-  height: min();
+  height: 50%;
+  object-fit: cover;
   margin: 0px;
   top: 0px;
 }
