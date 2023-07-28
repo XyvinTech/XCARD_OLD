@@ -406,7 +406,7 @@ const linksData = data?.website?.websites;
 
 let linkStatus = data?.website?.status;
 
-if (!linkStatus || linksData.length == 0) {
+if (!linkStatus || linksData?.length == 0) {
   document.getElementsByClassName("websites-section")[0].style.display = "none";
 }
 
