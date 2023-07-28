@@ -1,6 +1,7 @@
 
 const data = JSON.parse(document.currentScript.getAttribute("data"));
 
+
 /*
 
 
@@ -1059,3 +1060,47 @@ const isEmpty = (obj) => {
 
   return false;
 };
+
+
+
+
+const submitBtn = document.getElementById("form_submit");
+submitBtn.addEventListener("click", (e) => {
+  e.preventDefault();
+  const currentURL = window.location.href;
+  const postURL = "https://app.visitingcard.store/profile/";
+  const id = data["_id"];
+  const nameInput = document.getElementById("frm_name");
+  const emailInput = document.getElementById("frm_email");
+  const phoneInput = document.getElementById("frm_phone");
+  const messageInput = document.getElementById("frm_message");
+  const name = nameInput.value;
+  const email = emailInput.value;
+  const phone = phoneInput.value;
+  const message = messageInput.value;
+
+  fetch(postURL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      id,
+      name,
+      email,
+      phone,
+      message,
+    }),
+  })
+    .then((response) => {
+      if (response.ok) {
+        console.log("POST request sent successfully!");
+        // Process the response if needed
+      } else {
+        console.error("Failed to send POST request.");
+      }
+    })
+    .catch((error) => {
+      console.error("Error sending POST request:", error);
+    });
+});

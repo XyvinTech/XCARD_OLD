@@ -31,7 +31,9 @@
       <div class="popup__container">
         <div onclick="closePopup()" class="demo"></div>
         <div id="popup" class="popup">
-          <img id="popupImage" src="" alt="Popup Image" />
+          <div class="popupImgContainer">
+            <img id="popupImage" src="" alt="Popup Image" />
+          </div>
           <h2 id="popupTitle"></h2>
           <div class="price" id="price">
             <span id="oldPrice" class="striked-price"></span>
@@ -155,7 +157,7 @@
             <input type="text" name="name" id="name" placeholder="Name" />
             <div class="phone">
 
-              <input type="text" name="phone" id="phone" placeholder="Phone" />
+              <input type="number" name="phone" id="phone" placeholder="Phone" />
             </div>
             <input type="text" name="email" id="email" placeholder="Email" />
 
@@ -166,7 +168,7 @@
               placeholder="Enter message"
             />
             
-            <input type="submit" class="submit_btn" value="Submit" />
+            <input id="form_submit" type="submit" class="submit_btn" value="Submit" />
           </div>
         </div>
       </form>
@@ -178,10 +180,10 @@
 
     <footer class="footer btm" id="footer">
       <div class="ftr-left">
-        <span class="pwrd"> Powered By </span>
-        <span class="name-brand"> Skybertech </span>
+        <span class="pwrd"> Powered by </span>
+        <span class="name-brand"> visitingcard.store </span>
       </div>
-      <a href="">
+      <a href="https://www.visitingcard.store" target="_blank">
         <div class="ftr-right">
           <span class="learn-more"> View more </span>
 
