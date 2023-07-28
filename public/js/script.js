@@ -1093,6 +1093,11 @@ submitBtn.addEventListener("click", (e) => {
     .then((response) => {
       if (response.ok) {
         console.log("POST request sent successfully!");
+        nameInput.value = '';
+        emailInput.value = '';
+        phoneInput.value = '';
+        messageInput.value = '';
+
         // Process the response if needed
       } else {
         console.error("Failed to send POST request.");
