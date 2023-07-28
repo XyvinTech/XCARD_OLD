@@ -99,17 +99,14 @@ const model = document.querySelector("#model");
 
 function toggleModel(name, link, copy = false) {
   model.innerHTML = "";
-  console.log("length", link.length);
   const h1 = document.createElement("h1");
   h1.classList.add("model_heading");
   h1.innerHTML = name;
 
   model.appendChild(h1);
-  console.log(link);
   link?.forEach((item) => {
     var datacard = inputCard(item, (copy = false));
     model.appendChild(datacard);
-    console.log(datacard);
   });
   model_container.classList.add("show");
 }
@@ -989,7 +986,6 @@ function openPopup(
   }
 
   if (isEmpty(price)) {
-    console.log(price);
     prices.style.display = "inline-block";
 
     if (!price.newPrice) {
@@ -1093,7 +1089,7 @@ submitBtn.addEventListener("click", (e) => {
     .then((response) => {
       if (response.ok) {
         console.log("POST request sent successfully!");
-        toggleModel("Thank you for your response" , ["We will get back to you soon"]);
+        toggleModel("Thank you for your response" , []);
         nameInput.value = '';
         emailInput.value = '';
         phoneInput.value = '';
