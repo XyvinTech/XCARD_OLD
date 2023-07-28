@@ -107,7 +107,7 @@ function toggleModel(name, link, copy = false) {
   model.appendChild(h1);
   console.log(link);
   link?.forEach((item) => {
-    var datacard = inputCard(item, (copy = true));
+    var datacard = inputCard(item, (copy = false));
     model.appendChild(datacard);
     console.log(datacard);
   });
@@ -1093,6 +1093,7 @@ submitBtn.addEventListener("click", (e) => {
     .then((response) => {
       if (response.ok) {
         console.log("POST request sent successfully!");
+        toggleModel("Thank you for your response" , ["We will get back to you soon"]);
         nameInput.value = '';
         emailInput.value = '';
         phoneInput.value = '';
