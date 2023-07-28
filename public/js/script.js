@@ -436,7 +436,7 @@ function generateLinkCard(linkData) {
 
 // generate link cards based on available data
 const websitesContainer = document.getElementById("websites-container");
-if (linksData.length > 0) {
+if (linksData?.length > 0) {
   const linkCardsHtml = linksData
     ?.filter((obj) => obj?.link !== null || obj?.link !== "")
     .map((linkData) => generateLinkCard(linkData))
