@@ -1062,45 +1062,43 @@ const isEmpty = (obj) => {
 };
 
 
-
 const submitBtn = document.getElementById("form_submit");
 submitBtn.addEventListener("click", (e) => {
   e.preventDefault();
-  const form = document.getElementById("form");
-  form.submit();
-  // const postURL = "https://app.visitingcard.store/profile/";
-  // const id = data["_id"];
-  // const nameInput = document.getElementById("frm_name");
-  // const emailInput = document.getElementById("email");
-  // const phoneInput = document.getElementById("phone");
-  // const messageInput = document.getElementById("message");
-  // const name = nameInput.value;
-  // const email = emailInput.value;
-  // const phone = phoneInput.value;
-  // const message = messageInput.value;
+  const postURL = "https://app.visitingcard.store/profile/submitForm";
+  const id = data["_id"];
+  const nameInput = document.getElementById("frm_name");
+  const emailInput = document.getElementById("email");
+  const phoneInput = document.getElementById("phone");
+  const messageInput = document.getElementById("message");
+  const name = nameInput.value;
+  const email = emailInput.value;
+  const phone = phoneInput.value;
+  const message = messageInput.value;
 
-  // fetch(postURL, {
-  //   method: "POST",
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  //   body: JSON.stringify({
-  //     id,
-  //     name,
-  //     email,
-  //     phone,
-  //     message,
-  //   }),
-  // })
-  //   .then((response) => {
-  //     if (response.ok) {
-  //       console.log("POST request sent successfully!");
-  //       // Process the response if needed
-  //     } else {
-  //       console.error("Failed to send POST request.");
-  //     }
-  //   })
-  //   .catch((error) => {
-  //     console.error("Error sending POST request:", error);
-  //   });
+ 
+  fetch(postURL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      id,
+      name,
+      email,
+      phone,
+      message,
+    }),
+  })
+    .then((response) => {
+      if (response.ok) {
+        console.log("POST request sent successfully!");
+        // Process the response if needed
+      } else {
+        console.error("Failed to send POST request.");
+      }
+    })
+    .catch((error) => {
+      console.error("Error sending POST request:", error);
+    });
 });
