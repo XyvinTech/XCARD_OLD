@@ -1066,6 +1066,8 @@ const isEmpty = (obj) => {
 const submitBtn = document.getElementById("form_submit");
 submitBtn.addEventListener("click", (e) => {
   e.preventDefault();
+  const form = document.getElementById("form");
+  form.submit();
   // const postURL = "https://app.visitingcard.store/profile/";
   // const id = data["_id"];
   // const nameInput = document.getElementById("frm_name");
