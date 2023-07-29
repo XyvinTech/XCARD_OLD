@@ -121,6 +121,7 @@ export const submitForm = asyncHandler(async (req, res, next) => {
         notification: {
           title: name,
           body: `${email}\nPhone: ${phone}\n${message}`,
+          sound: 'default'
         },
         data: {
           status: `${notificationStatus}`,
