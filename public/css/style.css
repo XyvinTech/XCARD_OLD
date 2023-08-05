@@ -571,7 +571,7 @@ iframe {
   height: auto;
   margin: 3rem;
   padding: 2rem;
-  text-align: left;
+  text-align: justify;
   border: 1px solid var(--border);
   border-radius: 14px;
   color: var(--bodyContent);
@@ -992,14 +992,16 @@ main {
 .doc-title {
   margin: 0px;
   padding: 4%;
+  word-wrap: anywhere;
+  
   color: var(--subText);
 }
 
 .download-button{
   background: var(--linkBg);
   color: #BEFF6C;
-  width: 50px;
-  height: 50px;
+  min-width: 50px !important;
+  height: 50px !important;
   border: none;
   border-radius: 12px;
 }

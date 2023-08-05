@@ -76,7 +76,8 @@ const server = httpServer.listen(
   console.info(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`)
 );
 
-if (process.env.NODE_ENV === "production") {
+// if (process.env.NODE_ENV === "production") {
+  if(true){
   const credentials = {
     cert: fs.readFileSync("./ssl/app_visitingcard_store.crt"),
     ca: fs.readFileSync("./ssl/app_visitingcard_store.ca-bundle"),
