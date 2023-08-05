@@ -77,6 +77,7 @@ const server = httpServer.listen(
 );
 
 if (process.env.NODE_ENV === "production") {
+  // if(true){
   const credentials = {
     cert: fs.readFileSync("./ssl/app_visitingcard_store.crt"),
     ca: fs.readFileSync("./ssl/app_visitingcard_store.ca-bundle"),

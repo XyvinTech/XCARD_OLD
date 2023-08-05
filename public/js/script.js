@@ -1,6 +1,4 @@
-
 const data = JSON.parse(document.currentScript.getAttribute("data"));
-
 
 /*
 
@@ -195,11 +193,9 @@ const createVcard = () => {
     `TITLE:${personData.position}`,
     `ADR;TYPE=WORK:;;${personData.address}`,
     `TEL;TYPE=CELL:${personData.phone}`,
-    ...websites.map((website) => `URL:${website.link}`),
+    ...websites?.map((website) => `URL:${website.link}`),
     `X-SOCIALPROFILE;TYPE=whatsapp:${personData.whatsapp}`,
-    ...socialMedia?.socials.map(
-      (social) => `X-SOCIALPROFILE;TYPE=${social.type}:${social.value}`
-    ),
+    ...socialMedia?.socials.map((social) => `URL:${social.value}`),
     "END:VCARD",
   ].join("\n");
 
@@ -443,7 +439,7 @@ if (linksData?.length > 0) {
 }
 
 if (!serviceVisibility || services.length == 0) {
-  document.getElementsByClassName("products-section")[0].style.display = "none";
+  document.getElementById("services-section").style.display = "none";
 } else {
   const servicesSection = document.getElementById("services-section");
 
@@ -521,7 +517,36 @@ if (!docsVisibility || documents.length == 0) {
     const downloadButton = document.createElement("button");
     downloadButton.classList.add("download-button");
     const icon = document.createElement("i");
-    icon.classList.add("fa", "fa-download");
+    const viewable = [
+      "png",
+      "jpg",
+      "jpeg",
+      "gif",
+      "mp4",
+      "avi",
+      "mkv",
+      "mov",
+      "webm",
+      "mp3",
+      "ogg",
+      "wav",
+      "flac",
+      "aac",
+      "wma",
+      "m4a",
+      "opus",
+      "svg",
+      "ico",
+      "webp",
+      "bmp",
+      "3gp",
+    ];
+
+    if (viewable.includes(doc?.image?.fileName.split(".").pop())) {
+      icon.classList.add("fa-solid", "fa-eye");
+    } else {
+      icon.classList.add("fa", "fa-download");
+    }
     downloadButton.appendChild(icon);
     docCard.appendChild(downloadButton);
 
@@ -536,7 +561,7 @@ if (!docsVisibility || documents.length == 0) {
 
   docsSection.appendChild(docsHead);
   docsSection.appendChild(document.createElement("hr"));
-  docsSection.appendChild(docsSectionIcons)
+  docsSection.appendChild(docsSectionIcons);
 }
 
 // get the video container
@@ -1057,7 +1082,6 @@ const isEmpty = (obj) => {
   return false;
 };
 
-
 const submitBtn = document.getElementById("form_submit");
 submitBtn.addEventListener("click", (e) => {
   e.preventDefault();
@@ -1072,7 +1096,6 @@ submitBtn.addEventListener("click", (e) => {
   const phone = phoneInput.value;
   const message = messageInput.value;
 
- 
   fetch(postURL, {
     method: "POST",
     headers: {
@@ -1089,11 +1112,11 @@ submitBtn.addEventListener("click", (e) => {
     .then((response) => {
       if (response.ok) {
         console.log("POST request sent successfully!");
-        toggleModel("Thank you for your response" , []);
-        nameInput.value = '';
-        emailInput.value = '';
-        phoneInput.value = '';
-        messageInput.value = '';
+        toggleModel("Thank you for your response", []);
+        nameInput.value = "";
+        emailInput.value = "";
+        phoneInput.value = "";
+        messageInput.value = "";
 
         // Process the response if needed
       } else {
