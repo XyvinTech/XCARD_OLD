@@ -984,7 +984,7 @@ main {
   background-color: var(--linkBg);
   color: var(--darkAc);
   width: 100%;
-  max-height: 58px;
+  max-height: none;
   margin: 3% 10% 3% 10%;
   border-radius: 12px;
 }
