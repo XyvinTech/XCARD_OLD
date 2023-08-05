@@ -457,7 +457,7 @@ if (!serviceVisibility || services.length == 0) {
     if (service?.image) {
       cardImageElem.style.backgroundImage = `url(${service?.image?.public})`;
     } else {
-      cardImageElem.style.backgroundImage = `/images/image.png`;
+      cardImageElem.style.backgroundImage = `/profile/public/images/image.png`;
     }
     cardElem.appendChild(cardImageElem);
 
