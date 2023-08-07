@@ -553,13 +553,7 @@ if (!docsVisibility || documents.length == 0) {
 
     // Add click event listener to the download button
     downloadButton.addEventListener("click", () => {
-      downloadLink = document.createElement("a");
-      downloadLink.href = doc?.image?.public;
-      downloadLink.download = doc?.image?.fileName;
-      downloadLink.target = "_blank";
-      downloadLink.style.display = "none";
-      document.body.appendChild(downloadLink);
-      downloadLink.click();
+      window.location.href = doc?.image?.public;
     });
 
     // Append the document card to the container
