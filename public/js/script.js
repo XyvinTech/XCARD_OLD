@@ -517,7 +517,36 @@ if (!docsVisibility || documents.length == 0) {
     const downloadButton = document.createElement("button");
     downloadButton.classList.add("download-button");
     const icon = document.createElement("i");
-    icon.classList.add("fa", "fa-download");
+    const viewable = [
+      "png",
+      "jpg",
+      "jpeg",
+      "gif",
+      "mp4",
+      "avi",
+      "mkv",
+      "mov",
+      "webm",
+      "mp3",
+      "ogg",
+      "wav",
+      "flac",
+      "aac",
+      "wma",
+      "m4a",
+      "opus",
+      "svg",
+      "ico",
+      "webp",
+      "bmp",
+      "3gp",
+    ];
+
+    if (viewable.includes(doc?.image?.fileName.split(".").pop())) {
+      icon.classList.add("fa-solid", "fa-eye");
+    } else {
+      icon.classList.add("fa", "fa-download");
+    }
     
     downloadButton.appendChild(icon);
     docCard.appendChild(downloadButton);
