@@ -502,7 +502,7 @@ if (!docsVisibility || documents.length == 0) {
   docsSectionIcons.classList.add("docs-icons");
   const docsHead = document.createElement("h3");
   docsHead.classList.add("products-head", "head");
-  docsHead.textContent = "Documents";
+  docsHead.textContent = "Files";
 
   documents?.forEach((doc) => {
     const docCard = document.createElement("div");
