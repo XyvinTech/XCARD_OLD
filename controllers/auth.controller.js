@@ -31,7 +31,7 @@ export const loginUser = asyncHandler(async (req, res, next) => {
           }
         }
       );
-      let profiles;
+      let profiles,userProfile;
       // To show the users admin in drawer,
       let profile;
       if (user?.role == "admin" || user?.role == "super") {
@@ -47,12 +47,17 @@ export const loginUser = asyncHandler(async (req, res, next) => {
         });
         // const adminUser = await User.findById(profiles[0].group?.groupAdmin);
         // profile = await Profile.findOne({ user: adminUser._id });
-        profile = await Profile.findOne({ user: user.id });
+        // profile = await Profile.findOne({ user: user.id });
+        userProfile = await Profile.findOne({ user: user.id }).populate({
+          path: "group",
+        });   
+        const adminUser = await User.findById(userProfile.group?.groupAdmin);
+        profile = await Profile.findOne({ user: adminUser._id });
 
       }
 
       const token = user.getSignedJwtToken();
-      return { user: user, profiles, profile, token: token };
+      return { user: user, profiles,userProfile, profile, token: token };
     })
     .then(function (customToken) {
       const options = {
