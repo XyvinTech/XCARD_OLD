@@ -2188,9 +2188,10 @@ export const createUserProfileBulk = asyncHandler(async (req, res, next) => {
           );
         }
       });
-      if (!/^\+91[1-9]\d{9}$/.test(row.phone)) {
+      if (!/^\+[0-9]+/.test(row.phone)) {
         throw new Error(`Invalid phone in row ${rowIndex + 2}`);
       }
+    
     });
     const users = rows.map((row) => ({
       phone: row.phone,
@@ -2206,7 +2207,12 @@ export const createUserProfileBulk = asyncHandler(async (req, res, next) => {
     });
     const existingPhones = existingUsers.map((u) => u.username);
     const newUsers = users.filter((u) => !existingPhones.includes(u.username));
+
+    console.log(existingPhones);
+    console.log(newUsers);
+
     newUsers.map(async (idx, inx) => {
+      const { phone, profile } = idx;
       const options = {
         scale: 34,
         color: {
@@ -2228,7 +2234,7 @@ export const createUserProfileBulk = asyncHandler(async (req, res, next) => {
         "cards",
         getRandomFileName("card-")
       );
-      const { phone, profile } = idx;
+      // const { phone, profile } = idx;
       admin
         .auth()
         .createUser({
@@ -2237,6 +2243,7 @@ export const createUserProfileBulk = asyncHandler(async (req, res, next) => {
           disabled: false,
         })
         .then(async (userRecord) => {
+          console.log('firebase user created');
           const user = await User.create({
             username: phone,
             uid: userRecord?.uid,
@@ -2349,9 +2356,10 @@ export const createUserProfileCloudBulk = asyncHandler(
             );
           }
         });
-        if (!/^\+91[1-9]\d{9}$/.test(row.phone)) {
+        if (!/^\+[0-9]+/.test(row.phone)) {
           throw new Error(`Invalid phone in row ${rowIndex + 2}`);
         }
+      
       });
       const users = rows.map((row) => ({
         phone: row.phone,

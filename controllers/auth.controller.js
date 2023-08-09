@@ -130,13 +130,12 @@ export const checkUser = asyncHandler(async (req, res, next) => {
 export const getUserSession = asyncHandler(async (req, res, next) => {
   const user = await User.findById(req.user.id);
   if (user && user.isDisabled) return res.status(420).json({ success: false, message: 'User is disabled' });
-  let profiles;
+  let profiles, userProfile;
   // To show the users admin in drawer,
   let profile;
   if (user?.role == "admin" || user?.role == "super") {
     profiles = await Profile.findOne({ user: user.id });
   } else {
-    console.log(user)
     profiles = await Profile.find({ user: user.id, 
       $or: [
         { isDisabled: { $exists: false } }, // Check if the field doesn't exist
@@ -145,13 +144,13 @@ export const getUserSession = asyncHandler(async (req, res, next) => {
      }).populate({
       path: "group",
     });
-    // if(profiles.isNotEmpty){
-    
-    // const adminUser = await User.findById(profiles[0].group?.groupAdmin);
-    // profile = await Profile.findOne({ user: adminUser._id });
-    profile = await Profile.findOne({ user: user.id });
-    console.log(profile)
-    // }
+
+    userProfile = await Profile.findOne({ user: user.id }).populate({
+      path: "group",
+    });   
+    const adminUser = await User.findById(userProfile.group?.groupAdmin);
+    profile = await Profile.findOne({ user: adminUser._id });
+  
 
   }
 
@@ -159,7 +158,7 @@ export const getUserSession = asyncHandler(async (req, res, next) => {
   return res.json({
     success: true,
     message,
-    data: { user, profiles, profile },
+    data: { user, profiles, profile ,userProfile},
     role: user?.role,
   });
 });
