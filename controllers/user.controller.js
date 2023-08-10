@@ -109,7 +109,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
           const modifiedService = await Promise.all(
             service?.services?.map(async (item) => {
               const { _id, ...all } = item;
-              const upload =item.image == null ? null: await uploadBufferFile(
+              const upload = item.image == null ? null : await uploadBufferFile(
                 { ...all.image, buffer: item?.image?.base64 },
                 "services",
                 getRandomFileName("service-"),
@@ -135,7 +135,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
           const modifiedAward = await Promise.all(
             award?.awards?.map(async (item) => {
               const { _id, ...all } = item;
-              const upload =item.image == null?null: await uploadBufferFile(
+              const upload = item.image == null ? null : await uploadBufferFile(
                 { ...all.image, buffer: item?.image?.base64 },
                 "awards",
                 getRandomFileName("award-"),
@@ -148,7 +148,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
           const modifiedCertificate = await Promise.all(
             certificate?.certificates?.map(async (item) => {
               const { _id, ...all } = item;
-              const upload =item.image == null?null: await uploadBufferFile(
+              const upload = item.image == null ? null : await uploadBufferFile(
                 { ...all.image, buffer: item?.image?.base64 },
                 "certificates",
                 getRandomFileName("certificate-"),
@@ -270,7 +270,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
         })
         .catch(async (error) => {
           //If User already exisits create second or third profile
-        
+
           if (error?.errorInfo?.code === "auth/phone-number-already-exists") {
             console.log('phone no already exist')
             let user = await User.findOne({ username: phone });
@@ -309,7 +309,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
             const modifiedProduct = await Promise.all(
               product?.products?.map(async (item) => {
                 const { _id, ...all } = item;
-               
+
                 const upload = await uploadBufferFile(
                   { ...all.image, buffer: item?.image?.base64 },
                   "products",
@@ -323,7 +323,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
             const modifiedService = await Promise.all(
               service?.services?.map(async (item) => {
                 const { _id, ...all } = item;
-                const upload = item.image == null?null: await uploadBufferFile(
+                const upload = item.image == null ? null : await uploadBufferFile(
                   { ...all.image, buffer: item?.image?.base64 },
                   "services",
                   getRandomFileName("service-"),
@@ -350,7 +350,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
             const modifiedAward = await Promise.all(
               award?.awards?.map(async (item) => {
                 const { _id, ...all } = item;
-                const upload =item.image == null?null: await uploadBufferFile(
+                const upload = item.image == null ? null : await uploadBufferFile(
                   { ...all.image, buffer: item?.image?.base64 },
                   "awards",
                   getRandomFileName("award-"),
@@ -363,7 +363,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
             const modifiedCertificate = await Promise.all(
               certificate?.certificates?.map(async (item) => {
                 const { _id, ...all } = item;
-                const upload =item.image == null ? null: await uploadBufferFile(
+                const upload = item.image == null ? null : await uploadBufferFile(
                   { ...all.image, buffer: item?.image?.base64 },
                   "certificates",
                   getRandomFileName("certificate-"),
@@ -479,7 +479,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
             let message = { success: "User Profile Created" };
             return res.status(201).send({ success: true, message, data: user });
           }
-         
+
           return next(
             new ErrorResponse(
               `Something went wrong ${error?.errorInfo?.code ?? error}`,
@@ -487,7 +487,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
             )
           );
         });
-      
+
     })
     .catch((err) => {
       return next(new ErrorResponse(`File upload failed ${err}`, 400));
@@ -1287,11 +1287,11 @@ export const deleteFirebaseUser = asyncHandler(async (req, res, next) => {
  * @access  Private/Admin Private/User
  * @schema  Private
  */
-export const updateUserProfile = asyncHandler(async (req, res, next) => { 
+export const updateUserProfile = asyncHandler(async (req, res, next) => {
   console.log('')
   await uploadFiles(req?.files, "profiles", getRandomFileName("profile-"))
     .then(async (images) => {
-     
+
       const { name, designation, companyName, bio } = req?.body;
       //TODO: Delete old profile picture from Firebase Storage
       const updateArray = JSON?.parse(req?.body?.update) ?? [];
@@ -1355,7 +1355,7 @@ export const updateAdminUserProfile = asyncHandler(async (req, res, next) => {
     //TODO: Delete old profile picture from Firebase Storage
     const updateArray = JSON?.parse(req?.body?.update) ?? [];
     if (Array?.isArray(updateArray) && updateArray?.length > 0) {
-     await mixinEngine(req, updateArray);
+      await mixinEngine(req, updateArray);
     }
     //UPDATE USER COLLECTION
     if (req?.body?.uid) {
@@ -1635,30 +1635,30 @@ async function mixinEngine(req, array) {
     }
     if (element.action === "delete") {
       validDeleteSection.includes(element.section) && del.push(element);
-    } 
+    }
   }
 
-  add.length > 0 &&  mixinEngineAdd(req, add);
-  del.length > 0 &&  await mixinEngineDelete(req, del);
+  add.length > 0 && mixinEngineAdd(req, add);
+  del.length > 0 && await mixinEngineDelete(req, del);
   edit.length > 0 && mixinEngineEdit(req, edit);
   // Only for product
-  addProduct.length > 0 && await  mixinEngineAddProduct(req, addProduct);
-  editProduct.length > 0 && await  mixinEngineEditProduct(req, editProduct);
+  addProduct.length > 0 && await mixinEngineAddProduct(req, addProduct);
+  editProduct.length > 0 && await mixinEngineEditProduct(req, editProduct);
 
   //Only for service
-  addService.length > 0 && await  mixinEngineAddService(req, addService, 'service');
-  editService.length > 0 && await  mixinEngineEditService(req, editService, 'service');
+  addService.length > 0 && await mixinEngineAddService(req, addService, 'service');
+  editService.length > 0 && await mixinEngineEditService(req, editService, 'service');
 
   //Only for document
-  addDocument.length > 0 && await  mixinEngineAddService(req, addDocument, 'document');
-  editDocument.length > 0 && await  mixinEngineEditService(req, editDocument, 'document');
+  addDocument.length > 0 && await mixinEngineAddService(req, addDocument, 'document');
+  editDocument.length > 0 && await mixinEngineEditService(req, editDocument, 'document');
 
   //Only for award
-  addAward.length > 0 &&  await mixinEngineAddService(req, addAward, 'award');
-  editAward.length > 0 && await  mixinEngineEditService(req, editAward, 'award');
+  addAward.length > 0 && await mixinEngineAddService(req, addAward, 'award');
+  editAward.length > 0 && await mixinEngineEditService(req, editAward, 'award');
 
   //Only for certificate
-  addCertificate.length > 0 &&  await mixinEngineAddService(req, addCertificate, 'certificate');
+  addCertificate.length > 0 && await mixinEngineAddService(req, addCertificate, 'certificate');
   editCertificate.length > 0 && await mixinEngineEditService(req, editCertificate, 'certificate');
 }
 
@@ -1804,28 +1804,28 @@ async function mixinEngineAddService(req, array, name) {
       _id: req?.query?.profile,
     };
     const file = { ...item?.data?.image, buffer: item?.data?.image?.base64 };
-    if(file.buffer){
+    if (file.buffer) {
       console.log('image available add');
-         await uploadBufferFile(
-      file,
-      `${name}s`,
-      `${getRandomFileName(`${name}-`)}_${name =='document'? `${item?.data?.image?.fileName}`:''}`,
-      name,
-    ).then(async (image) => {
-      await Profile.updateOne(query, {
-        $push: {
-          [`${item?.section}.${item?.section}s`]: { ...all, image },
-        },
+      await uploadBufferFile(
+        file,
+        `${name}s`,
+        `${getRandomFileName(`${name}-`)}_${name == 'document' ? `${item?.data?.image?.fileName}` : ''}`,
+        name,
+      ).then(async (image) => {
+        await Profile.updateOne(query, {
+          $push: {
+            [`${item?.section}.${item?.section}s`]: { ...all, image },
+          },
+        });
       });
-    }); 
-    } else{
+    } else {
       console.log('image not available add');
       await Profile.updateOne(query, {
         $push: {
           [`${item?.section}.${item?.section}s`]: { ...all, image: item?.data?.image },
         },
       });
-      }
+    }
 
   });
 }
@@ -1849,7 +1849,7 @@ async function mixinEngineEditService(req, array, name) {
       await uploadBufferFile(
         file,
         `${name}s`,
-        `${getRandomFileName(`${name}-`)}_${name =='document'? `${item?.data?.image?.fileName}`:''}`,
+        `${getRandomFileName(`${name}-`)}_${name == 'document' ? `${item?.data?.image?.fileName}` : ''}`,
         name,
       ).then(async (image) => {
         const query = {
@@ -1963,12 +1963,12 @@ async function mixinEngineEditProduct(req, array) {
  */
 async function mixinEngineDelete(req, array) {
   // TODO: Delete Image Key If The Delete Section is Products
-  const validImageDeletion = ['product','service','award','certificate','document'];
+  const validImageDeletion = ['product', 'service', 'award', 'certificate', 'document'];
 
   const updates = array.map((item) => {
-    if(validImageDeletion.includes(item?.section)){
-      if(item?.data?.image){
-        deleteFileByUrl(item?.data?.image?.public,item?.section);
+    if (validImageDeletion.includes(item?.section)) {
+      if (item?.data?.image) {
+        deleteFileByUrl(item?.data?.image?.public, item?.section);
       }
     }
     const query = {
@@ -2205,14 +2205,12 @@ export const createUserProfileBulk = asyncHandler(async (req, res, next) => {
     const existingUsers = await User.find({
       username: { $in: users.map((u) => u.phone) },
     });
+
     const existingPhones = existingUsers.map((u) => u.username);
     const newUsers = users.filter((u) => !existingPhones.includes(u.username));
+    const oldUsers = users.filter((u) => existingPhones.includes(u.username));
 
-    console.log(existingPhones);
-    console.log(newUsers);
-
-    newUsers.map(async (idx, inx) => {
-      const { phone, profile } = idx;
+    users.map(async (idx, inx) => {
       const options = {
         scale: 34,
         color: {
@@ -2220,6 +2218,7 @@ export const createUserProfileBulk = asyncHandler(async (req, res, next) => {
           light: "#1C1C1E", // light color
         },
       };
+      const { phone, profile } = idx;
       const cardId =
         `${profile?.name.toLowerCase().split(" ").join("")}-` +
         randomId().toLowerCase();
@@ -2234,60 +2233,97 @@ export const createUserProfileBulk = asyncHandler(async (req, res, next) => {
         "cards",
         getRandomFileName("card-")
       );
-      // const { phone, profile } = idx;
-      admin
-        .auth()
-        .createUser({
-          phoneNumber: phone,
-          displayName: profile?.name,
-          disabled: false,
-        })
-        .then(async (userRecord) => {
-          console.log('firebase user created');
-          const user = await User.create({
-            username: phone,
-            uid: userRecord?.uid,
-            role: "user",
-            providerData: userRecord?.providerData,
-          });
-          await Profile.create({
-            user: user?.id,
-            group: req?.query?.group,
-            card: {
-              cardId,
-            },
-            profile: {
-              ...profile,
-              profileLink,
-              profileQR: qrImageUrl,
-            },
-            contact: {
-              status: true,
-              contacts: [
-                { label: "Phone Number", value: phone, type: "phone" },
-                { label: "Email", value: "", type: "email" },
-                { label: "Whatsapp Business", value: "", type: "wabusiness" },
-                {
-                  label: "Location",
-                  value: "",
-                  street: "",
-                  pincode: "",
-                  type: "location",
-                },
-                { label: "Whatsapp", value: "", type: "whatsapp" },
-              ],
-            },
-          });
-          let message = {
-            success: `Uploaded ${newUsers.length} new users. ${existingPhones.length} existing users were skipped.`,
-          };
-          return res.json({ success: true, message });
-        })
-        .catch(() => {
-          return next(
-            new Error(`${existingPhones.length} existing users were skipped.`)
-          );
+      
+      let user;
+      if (existingPhones.includes(phone)) {
+        user = oldUsers.find(user => user.username === phone);
+        await Profile.create({
+          user: user?.id,
+          group: req?.query?.group,
+          card: {
+            cardId,
+          },
+          profile: {
+            ...profile,
+            profileLink,
+            profileQR: qrImageUrl,
+          },
+          contact: {
+            status: true,
+            contacts: [
+              { label: "Phone Number", value: phone, type: "phone" },
+              { label: "Email", value: "", type: "email" },
+              { label: "Whatsapp Business", value: "", type: "wabusiness" },
+              {
+                label: "Location",
+                value: "",
+                street: "",
+                pincode: "",
+                type: "location",
+              },
+              { label: "Whatsapp", value: "", type: "whatsapp" },
+            ],
+          },
         });
+        let message = {
+          success: `Uploaded ${users.length} new profiles created.`,
+        };
+        return res.json({ success: true, message });
+      } else {
+        admin
+          .auth()
+          .createUser({
+            phoneNumber: phone,
+            displayName: profile?.name,
+            disabled: false,
+          })
+          .then(async (userRecord) => {
+            const user = await User.create({
+              username: phone,
+              uid: userRecord?.uid,
+              role: "user",
+              providerData: userRecord?.providerData,
+            });
+            await Profile.create({
+              user: user?.id,
+              group: req?.query?.group,
+              card: {
+                cardId,
+              },
+              profile: {
+                ...profile,
+                profileLink,
+                profileQR: qrImageUrl,
+              },
+              contact: {
+                status: true,
+                contacts: [
+                  { label: "Phone Number", value: phone, type: "phone" },
+                  { label: "Email", value: "", type: "email" },
+                  { label: "Whatsapp Business", value: "", type: "wabusiness" },
+                  {
+                    label: "Location",
+                    value: "",
+                    street: "",
+                    pincode: "",
+                    type: "location",
+                  },
+                  { label: "Whatsapp", value: "", type: "whatsapp" },
+                ],
+              },
+            });
+            let message = {
+              success: `Uploaded ${users.length} new profiles created.`,
+            };
+            return res.json({ success: true, message });
+          })
+          .catch(() => {
+            return next(
+              new Error(`${existingPhones.length} existing users were skipped.`)
+            );
+          });
+      }
+
     });
     fs.unlinkSync(req.file.path);
   } catch (error) {
@@ -2486,12 +2522,12 @@ async function imageFileToBase64(filePath) {
 
 
 export const getNotifications = asyncHandler(async (req, res, next) => {
-  try{
-    const {id} = req.query;
-    const form = await Profile.findByIdAndUpdate({_id: id},{ $set: {'form.status': 0}},{new: true}).select('form');
+  try {
+    const { id } = req.query;
+    const form = await Profile.findByIdAndUpdate({ _id: id }, { $set: { 'form.status': 0 } }, { new: true }).select('form');
     res.status(200).json(form);
-  } catch(e){
+  } catch (e) {
     console.log(e);
-    res.status(500).json({Error: e});
+    res.status(500).json({ Error: e });
   }
 });
