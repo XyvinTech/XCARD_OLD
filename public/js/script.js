@@ -60,14 +60,13 @@ function hideFullScreenSpinner() {
 
 window.addEventListener("load", () => {
   lightMode();
-  hideFullScreenSpinner();
-
-
+  
+  
   const videoContainer = document.querySelector(
     ".embedding .video .video-container"
   );
   const youtubeUrls = videos?.map((video) => video?.link);
-
+  
   function extractVideoId(link) {
     const patterns = [
       /(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|watch\?.+&amp;v=))([\w-]{11})/,
@@ -83,12 +82,12 @@ window.addEventListener("load", () => {
 
     return null;
   }
-
+  
   function getEmbeddedLink(youtubeLink) {
     const videoId = extractVideoId(youtubeLink);
-
+    
     const embeddedLink = `https://www.youtube.com/embed/${videoId}`;
-
+    
     return embeddedLink;
   }
 
@@ -101,10 +100,11 @@ window.addEventListener("load", () => {
       videoFrame.src = ytEmbed;
       videoFrame.frameborder = "0";
       videoFrame.allowfullscreen = true;
-
+      
       videoContainer.appendChild(videoFrame);
     });
   }
+  hideFullScreenSpinner();
 });
 
 const darkMode = () => {
