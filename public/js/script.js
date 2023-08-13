@@ -1,70 +1,14 @@
 const data = JSON.parse(document.currentScript.getAttribute("data"));
 
-/*
-
-
-Code Destructuring - Services
-
-service : Object 
-  status : Boolean
-  services: Array
-    0 : Object
-      image: Object
-        key: String
-        fileName : String
-        contentType : String
-        public: String
-        link: String
-      label: String
-      value: String
-      _id: Object
-
-*/
 const servicesData = data?.service;
 
 const serviceVisibility = servicesData?.status;
 const services = servicesData?.services;
 
-/*
-
-Code Destructuring - Products
-
-product : Object
-  status : Boolean
-  products : Array
-    0 : Object
-      image: Object
-        key: String
-        fileName : String
-        contentType : String
-        public: String
-        link: String
-      name: String
-      link: String
-      description: String
-      price: Number
-      offerPrice: Number
-      _id: Object
-
-*/
-
 const productsData = data?.product;
 
 const productVisibility = productsData?.status;
 const products = productsData?.products;
-
-/*
-
-  Code Destructuring - Youtube Videos
-
-  video : Object
-    status : Boolean
-    videos : Array
-      0 : Object
-        link: String
-        _id: Object
-
-*/
 
 const videosData = data?.video;
 
@@ -77,7 +21,52 @@ altBtn.style.display = "none";
 const darkBtn = document.getElementById("butnDrk");
 const lightBtn = document.getElementById("butnLgt");
 
-window.addEventListener("load", () => darkMode());
+window.addEventListener("load", () => {
+  lightMode();
+
+  const videoContainer = document.querySelector(
+    ".embedding .video .video-container"
+  );
+  const youtubeUrls = videos?.map((video) => video?.link);
+
+  function extractVideoId(link) {
+    const patterns = [
+      /(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|watch\?.+&amp;v=))([\w-]{11})/,
+      /^([\w-]{11})$/,
+    ];
+
+    for (const pattern of patterns) {
+      const match = link.match(pattern);
+      if (match) {
+        return match[1];
+      }
+    }
+
+    return null;
+  }
+
+  function getEmbeddedLink(youtubeLink) {
+    const videoId = extractVideoId(youtubeLink);
+
+    const embeddedLink = `https://www.youtube.com/embed/${videoId}`;
+
+    return embeddedLink;
+  }
+
+  if (!videoVisibility || youtubeUrls.length == 0) {
+    document.getElementsByClassName("embedding")[0].style.display = "none";
+  } else {
+    youtubeUrls?.forEach((ytLink) => {
+      const ytEmbed = getEmbeddedLink(ytLink);
+      const videoFrame = document.createElement("iframe");
+      videoFrame.src = ytEmbed;
+      videoFrame.frameborder = "0";
+      videoFrame.allowfullscreen = true;
+
+      videoContainer.appendChild(videoFrame);
+    });
+  }
+});
 
 const darkMode = () => {
   document.documentElement.classList.add("dark");
@@ -136,18 +125,13 @@ function inputCard(data, copy = false) {
     i.classList.add("fa", "fa-copy");
     div.appendChild(i);
   }
-  // Create an i element
-
-  // Append input and i elements to the div element
-
-  // Return the div element as an HTML string
   return div;
 }
 
 function copyToClipboard(text) {
   if (navigator.clipboard) {
     navigator.clipboard.writeText(text);
-    return; //codes below wont be executed
+    return;
   }
   const textArea = document.createElement("textarea");
   textArea.value = text;
@@ -218,10 +202,6 @@ saveContactBtn.addEventListener("click", () => {
   createVcard();
 });
 
-// setup dynamic data from backend
-
-// Assuming the HTML elements exist with the given IDs: name, email, phone, address, website, position, company, bio
-
 const nameElement = document.getElementById("name");
 const positionElement = document.getElementById("position");
 const companyElement = document.getElementById("company");
@@ -263,22 +243,14 @@ if (data?.profile?.profileBanner?.public) {
   bioElement.style.display = "none";
 }
 
-// ----
-// Check if social media data is available
-
 const socialMedia = data?.social;
 const socialMediaVisibility = data?.social?.status;
 
-// Create an empty HTML string
 let socialMediaHTML = "";
 
-// Check if socialMedia exists and if socials is an array
 if (socialMedia && Array.isArray(socialMedia.socials)) {
-  // Loop through each social media object in the list
   for (const social of socialMedia.socials) {
-    // Check if the social media value is available
     if (social.value !== "") {
-      // Build the social media link HTML
       let iconClass = "";
       switch (social.type) {
         case "instagram":
@@ -323,7 +295,6 @@ if (socialMedia && Array.isArray(socialMedia.socials)) {
   }
 }
 
-// Render the social media section
 const socialMediaSection = document.getElementById("social-media-section");
 socialMediaSection.innerHTML = socialMediaVisibility
   ? `
@@ -336,11 +307,6 @@ socialMediaSection.innerHTML = socialMediaVisibility
   </div>
 `
   : "";
-
-// // ---
-
-// ----
-// Check if social media data is available
 
 const contactsData = data?.contact?.contacts;
 
@@ -395,7 +361,6 @@ function createButton(type, value, all) {
 
   return button;
 }
-// example data, replace with your own
 const linksData = data?.website?.websites;
 
 let linkStatus = data?.website?.status;
@@ -411,7 +376,6 @@ function addHttpsToLinks(link) {
   return link;
 }
 
-// function to generate link card HTML for a single link
 function generateLinkCard(linkData) {
   const link = addHttpsToLinks(linkData?.link);
   return `
@@ -428,7 +392,6 @@ function generateLinkCard(linkData) {
   `;
 }
 
-// generate link cards based on available data
 const websitesContainer = document.getElementById("websites-container");
 if (linksData?.length > 0) {
   const linkCardsHtml = linksData
@@ -442,12 +405,9 @@ if (!serviceVisibility || services.length == 0) {
   document.getElementById("services-section").style.display = "none";
 } else {
   const servicesSection = document.getElementById("services-section");
-
-  // Create the products icons container element
   const servicesIcons = document.createElement("div");
   servicesIcons.classList.add("products-icons");
 
-  // Loop through the products array and dynamically create the card elements
   services?.forEach((service) => {
     const cardElem = document.createElement("div");
     cardElem.classList.add("card");
@@ -513,7 +473,6 @@ if (!docsVisibility || documents.length == 0) {
     docHead.textContent = doc?.image?.fileName;
     docCard.appendChild(docHead);
 
-    // Create the download button element
     const downloadButton = document.createElement("button");
     downloadButton.classList.add("download-button");
     const icon = document.createElement("i");
@@ -547,16 +506,14 @@ if (!docsVisibility || documents.length == 0) {
     } else {
       icon.classList.add("fa", "fa-download");
     }
-    
+
     downloadButton.appendChild(icon);
     docCard.appendChild(downloadButton);
 
-    // Add click event listener to the download button
     downloadButton.addEventListener("click", () => {
       window.location.href = doc?.image?.public;
     });
 
-    // Append the document card to the container
     docsSectionIcons.appendChild(docCard);
   });
 
@@ -565,77 +522,21 @@ if (!docsVisibility || documents.length == 0) {
   docsSection.appendChild(docsSectionIcons);
 }
 
-// get the video container
-const videoContainer = document.querySelector(
-  ".embedding .video .video-container"
-); // get the video container and iframe element
-const youtubeUrls = videos?.map((video) => video?.link);
-
-function extractVideoId(link) {
-  // Patterns to match different YouTube link formats
-  const patterns = [
-    /(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|watch\?.+&amp;v=))([\w-]{11})/,
-    /^([\w-]{11})$/,
-  ];
-
-  for (const pattern of patterns) {
-    const match = link.match(pattern);
-    if (match) {
-      return match[1];
-    }
-  }
-
-  // Return null if no video ID is found
-  return null;
-}
-
-function getEmbeddedLink(youtubeLink) {
-  // Extract the video ID from the YouTube link
-  const videoId = extractVideoId(youtubeLink);
-
-  // Generate the embedded link
-  const embeddedLink = `https://www.youtube.com/embed/${videoId}`;
-
-  return embeddedLink;
-}
-
-if (!videoVisibility || youtubeUrls.length == 0) {
-  document.getElementsByClassName("embedding")[0].style.display = "none";
-} else {
-  // loop through the youtubeUrls list
-  youtubeUrls?.forEach((ytLink) => {
-    const ytEmbed = getEmbeddedLink(ytLink);
-
-    // create iframe for each video
-    const videoFrame = document.createElement("iframe");
-    videoFrame.src = ytEmbed;
-    videoFrame.frameborder = "0";
-    videoFrame.allowfullscreen = true;
-
-    // append the iframe to the video container
-    videoContainer.appendChild(videoFrame);
-  });
-}
-
 // ---------
 
 if (!productVisibility || products.length == 0) {
   document.getElementsByClassName("products-section")[0].style.display = "none";
 }
 
-// Get the products section container
 const productsSection = document.getElementById("products-section");
 
-// Create the products heading element
 const productsHead = document.createElement("h3");
 productsHead.classList.add("products-head", "head");
 productsHead.textContent = "Products";
 
-// Create the products icons container element
 const productsIcons = document.createElement("div");
 productsIcons.classList.add("products-icons");
 
-// Loop through the products array and dynamically create the card elements
 products?.forEach((product) => {
   const cardElem = document.createElement("div");
   cardElem.classList.add("card");
@@ -686,137 +587,10 @@ products?.forEach((product) => {
   productsIcons.appendChild(cardElem);
 });
 
-// Add the elements to the products section container
 productsSection.appendChild(productsHead);
 productsSection.appendChild(document.createElement("hr"));
 productsSection.appendChild(productsIcons);
 
-// -------
-// Define the bank details data as an object
-
-// const bankDetails = {
-//   name: data?.bank?.bankDetails?.name,
-//   accountNumber: data?.bank?.bankDetails?.accnumber,
-//   bankName: data?.bank?.bankDetails?.bank,
-//   branch: data?.bank?.bankDetails?.branch,
-//   ifscCode: data?.bank?.bankDetails?.ifsc,
-//   swiftCode: data?.bank?.bankDetails?.swift,
-//   vatNumber: data?.bank?.bankDetails?.vat,
-// };
-
-// let bankVisibility = !data?.bank?.status;
-
-// if (bankVisibility) {
-//   document.getElementsByClassName("bank-section")[0].style.display = "none";
-// }
-
-// // Get the bank details container element
-// const bankDetailsContainer = document.getElementById("bank-details");
-
-// const isStringEmpty = (str) => {
-//   if (str === "") return true;
-//   else return false;
-// };
-
-// // Create a function to dynamically render the bank details
-// function renderBankDetails() {
-//   // Check if all bank details are empty
-//   const isEmpty = Object.values(bankDetails).every((val) => val === "");
-//   if (isEmpty || bankVisibility) {
-//     // If all bank details are empty, don't render anything
-//     bankDetailsContainer.innerHTML = "";
-//     return;
-//   }
-
-//   // Otherwise, create the bank details HTML dynamically
-//   let bankDetailsHTML = "";
-//   bankDetailsHTML += `<div class="bank-row"><div class="bank-col"><p class="dtl-head">Name</p><p class="dtl bank-name" style="text-align: left;">${bankDetails.name}</p>
-//   </div></div>`;
-//   bankDetailsHTML += `
-//   <div class="bank-row">
-//   <div class="bank-col">
-//     ${
-//       !isStringEmpty(bankDetails.accountNumber)
-//         ? `<p class="dtl-head">Account Number</p>
-//     <p class="dtl">${bankDetails.accountNumber}</p>`
-//         : ""
-//     }
-
-//   </div>
-//   <div class="bank-col">
-//   ${
-//     !isStringEmpty(bankDetails.bankName)
-//       ? `<p class="dtl-head">Bank Name</p>
-//   <p class="dtl">${bankDetails.bankName}</p>`
-//       : ""
-//   }
-//   </div>
-// </div>
-//                       `;
-//   bankDetailsHTML += `
-//   <div class="bank-row">
-//   <div class="bank-col">
-//   ${
-//     !isStringEmpty(bankDetails.branch)
-//       ? `<p class="dtl-head">Branch</p>
-//   <p class="dtl">${bankDetails.branch}</p>`
-//       : ""
-//   }
-//   </div>
-//   <div class="bank-col">
-//   ${
-//     !isStringEmpty(bankDetails.ifscCode)
-//       ? `<p class="dtl-head">IFSC Code</p>
-//   <p class="dtl">${bankDetails.ifscCode}</p>`
-//       : ""
-//   }
-//   </div>
-// </div>
-//   `;
-//   bankDetailsHTML += `
-//   <div class="bank-row">
-//   <div class="bank-col">
-//   ${
-//     !isStringEmpty(bankDetails.swiftCode)
-//       ? `<p class="dtl-head">Swift Code</p>
-//   <p class="dtl">${bankDetails.swiftCode}</p>`
-//       : ""
-//   }
-//   </div>
-//   <div class="bank-col">
-//   ${
-//     !isStringEmpty(bankDetails.vatNumber)
-//       ? `<p class="dtl-head">VAT Number</p>
-//   <p class="dtl">${bankDetails.vatNumber}</p>`
-//       : ""
-//   }
-//   </div>
-// </div>
-//   `;
-
-//   // Set the bank details container HTML to the dynamically generated HTML
-//   bankDetailsContainer.innerHTML = bankDetailsHTML;
-//   const bankArr = document.getElementsByClassName("bank-col");
-//   for (let i = 0; i < bankArr.length; i++) {
-//     if (bankArr[i].children.length === 0) {
-//       bankArr[i].style.display = "none";
-//     }
-//     bankArr[i].addEventListener("click", () => {
-//       const colName = bankArr[i].children[0].innerHTML;
-//       let colValue = bankArr[i].children[1].innerHTML;
-//       // remove the <br> tag from the colValue
-//       colValue = colValue.replace("<br>", "");
-//       toggleModel(colName, [colValue], (copy = true));
-//     });
-//   }
-// }
-
-// // Call the renderBankDetails function to render the bank details
-// renderBankDetails();
-
-// --------
-
-// define an array of services
 const awards = data?.award?.awards;
 
 let awardStatus = data?.award?.status;
@@ -832,7 +606,6 @@ const awardHead = document.createElement("h3");
 awardHead.classList.add("products-head", "head");
 awardHead.textContent = "Awards";
 
-// Create the products icons container element
 const awardIcons = document.createElement("div");
 awardIcons.classList.add("products-icons");
 
@@ -880,23 +653,16 @@ awardSection.appendChild(awardHead);
 awardSection.appendChild(document.createElement("hr"));
 awardSection.appendChild(awardIcons);
 
-// --------
-
-// define an array of services
 const certif = data?.certificate?.certificates;
 
 let certifVisibility = data?.certificate?.status;
 
-// main code
-
 if (!certifVisibility || certif.length == 0) {
   document.getElementsByClassName("certif-section")[0].style.display = "none";
 }
-// get the services-icons container
 const certifIcons = document.getElementById("certif-icons");
 certifIcons.classList.add("products-icons");
 
-// loop through the services array and dynamically create the service elements
 certif?.forEach((service) => {
   const card = document.createElement("div");
   card.classList.add("card");
@@ -937,7 +703,6 @@ certif?.forEach((service) => {
   certifIcons.appendChild(card);
 });
 
-// Function to scroll to the top of the page
 function scrollToTop() {
   window.scrollTo({
     top: 0,
@@ -964,10 +729,7 @@ function handleScroll() {
   }
 }
 
-// Attach the scroll event listener to the window
 window.addEventListener("scroll", handleScroll);
-
-// Products Popup
 
 function openPopup(
   image = null,
@@ -978,7 +740,6 @@ function openPopup(
   price = null
 ) {
   var popup = document.querySelector(".popup__container");
-  // popup.style.display = "block";
   var popupImage = document.getElementById("popupImage");
   popupImage.style.display = "none";
   var popupTitle = document.getElementById("popupTitle");
@@ -998,7 +759,6 @@ function openPopup(
 
   popup.classList.add("show_popup");
 
-  // Set the content of the popup dynamically
   if (isEmpty(image)) {
     popupImage.src = image;
   } else {
@@ -1118,8 +878,6 @@ submitBtn.addEventListener("click", (e) => {
         emailInput.value = "";
         phoneInput.value = "";
         messageInput.value = "";
-
-        // Process the response if needed
       } else {
         console.error("Failed to send POST request.");
       }
