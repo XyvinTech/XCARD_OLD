@@ -21,8 +21,47 @@ altBtn.style.display = "none";
 const darkBtn = document.getElementById("butnDrk");
 const lightBtn = document.getElementById("butnLgt");
 
+
+function showFullScreenSpinner() {
+  // Create the spinner element
+  const spinner = document.createElement('div');
+  spinner.className = 'fullscreen-spinner';
+
+  // Append the spinner to the body
+  document.body.appendChild(spinner);
+
+  // Optional: You can add additional styling to the spinner element
+  spinner.style.background = 'rgba(0, 0, 0, 0.5)';
+  spinner.style.display = 'flex';
+  spinner.style.justifyContent = 'center';
+  spinner.style.alignItems = 'center';
+
+  // Optional: You can also add a message or icon inside the spinner
+  spinner.innerHTML = '<div class="spinner-icon"></div><p>Loading...</p>';
+
+  // Add a class to the body to disable scrolling while the spinner is active
+  document.body.classList.add('no-scroll');
+}
+
+showFullScreenSpinner();
+
+
+function hideFullScreenSpinner() {
+  // Remove the spinner element from the DOM
+  const spinner = document.querySelector('.fullscreen-spinner');
+  if (spinner) {
+    spinner.remove();
+  }
+
+  // Remove the no-scroll class from the body
+  document.body.classList.remove('no-scroll');
+}
+
+
 window.addEventListener("load", () => {
   lightMode();
+  hideFullScreenSpinner();
+
 
   const videoContainer = document.querySelector(
     ".embedding .video .video-container"
