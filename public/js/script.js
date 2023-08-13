@@ -21,7 +21,52 @@ altBtn.style.display = "none";
 const darkBtn = document.getElementById("butnDrk");
 const lightBtn = document.getElementById("butnLgt");
 
-window.addEventListener("load", () => lightMode());
+window.addEventListener("load", () => {
+  lightMode();
+
+  const videoContainer = document.querySelector(
+    ".embedding .video .video-container"
+  );
+  const youtubeUrls = videos?.map((video) => video?.link);
+
+  function extractVideoId(link) {
+    const patterns = [
+      /(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|watch\?.+&amp;v=))([\w-]{11})/,
+      /^([\w-]{11})$/,
+    ];
+
+    for (const pattern of patterns) {
+      const match = link.match(pattern);
+      if (match) {
+        return match[1];
+      }
+    }
+
+    return null;
+  }
+
+  function getEmbeddedLink(youtubeLink) {
+    const videoId = extractVideoId(youtubeLink);
+
+    const embeddedLink = `https://www.youtube.com/embed/${videoId}`;
+
+    return embeddedLink;
+  }
+
+  if (!videoVisibility || youtubeUrls.length == 0) {
+    document.getElementsByClassName("embedding")[0].style.display = "none";
+  } else {
+    youtubeUrls?.forEach((ytLink) => {
+      const ytEmbed = getEmbeddedLink(ytLink);
+      const videoFrame = document.createElement("iframe");
+      videoFrame.src = ytEmbed;
+      videoFrame.frameborder = "0";
+      videoFrame.allowfullscreen = true;
+
+      videoContainer.appendChild(videoFrame);
+    });
+  }
+});
 
 const darkMode = () => {
   document.documentElement.classList.add("dark");
@@ -477,49 +522,6 @@ if (!docsVisibility || documents.length == 0) {
   docsSection.appendChild(docsSectionIcons);
 }
 
-const videoContainer = document.querySelector(
-  ".embedding .video .video-container"
-);
-const youtubeUrls = videos?.map((video) => video?.link);
-
-function extractVideoId(link) {
-  const patterns = [
-    /(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|watch\?.+&amp;v=))([\w-]{11})/,
-    /^([\w-]{11})$/,
-  ];
-
-  for (const pattern of patterns) {
-    const match = link.match(pattern);
-    if (match) {
-      return match[1];
-    }
-  }
-
-  return null;
-}
-
-function getEmbeddedLink(youtubeLink) {
-  const videoId = extractVideoId(youtubeLink);
-
-  const embeddedLink = `https://www.youtube.com/embed/${videoId}`;
-
-  return embeddedLink;
-}
-
-if (!videoVisibility || youtubeUrls.length == 0) {
-  document.getElementsByClassName("embedding")[0].style.display = "none";
-} else {
-  youtubeUrls?.forEach((ytLink) => {
-    const ytEmbed = getEmbeddedLink(ytLink);
-    const videoFrame = document.createElement("iframe");
-    videoFrame.src = ytEmbed;
-    videoFrame.frameborder = "0";
-    videoFrame.allowfullscreen = true;
-
-    videoContainer.appendChild(videoFrame);
-  });
-}
-
 // ---------
 
 if (!productVisibility || products.length == 0) {
@@ -729,7 +731,6 @@ function handleScroll() {
 
 window.addEventListener("scroll", handleScroll);
 
-
 function openPopup(
   image = null,
   title = null,
@@ -877,7 +878,6 @@ submitBtn.addEventListener("click", (e) => {
         emailInput.value = "";
         phoneInput.value = "";
         messageInput.value = "";
-
       } else {
         console.error("Failed to send POST request.");
       }
