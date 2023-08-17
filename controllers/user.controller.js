@@ -2168,11 +2168,32 @@ function mixinEngineStatus(req, array) {
  */
 export const createUserProfileBulk = asyncHandler(async (req, res, next) => {
   try {
+    const url = req.body.url;
+    let workbook;
+    //CHECK IF THE URL IS THERE FOR LINK UPLOAD
+    if (url) {
+      const domain = new URL(url).hostname;
+      if (
+        !ALLOWED_DOMAINS.some((allowedDomain) => domain.endsWith(allowedDomain))
+      ) {
+        throw new Error(`Invalid URL domain: ${domain}`);
+      }
+      const file = await getFileFromUrl(url);
+      // Parse the spreadsheet data
+      workbook = xlsx.read(file, { type: "buffer" });
+    } else {
+      workbook = xlsx.readFile(req.file.path);
+    }
+
     // Read the spreadsheet file
-    const workbook = xlsx.readFile(req.file.path);
     const sheetName = workbook.SheetNames[0];
     const worksheet = workbook.Sheets[sheetName];
-    const headers = ["phone", "name", "designation", "company", "bio"];
+    const headers = ["phone", "name", "designation", "company", "bio",
+      "email", "wabusiness", "completeaddress", "landmark", "maplink", "whatsapp", "instagram", "facebook", "linkedin", "spotify", "youtube", "dribble", "behance", "medium", "twitter",
+      "websitename", "websitelink",
+      "youtubelink"
+    ];
+
     headers.forEach((header) => {
       if (worksheet[`${header}1`]) {
         throw new Error(`Header '${header}' not found in '${sheetName}' sheet`);
@@ -2180,6 +2201,7 @@ export const createUserProfileBulk = asyncHandler(async (req, res, next) => {
     });
     // Convert the spreadsheet data to an array of objects
     const rows = xlsx.utils.sheet_to_json(worksheet);
+    console.log(rows)
     rows.forEach((row, rowIndex) => {
       headers.forEach((header) => {
         if (!row[header]) {
@@ -2191,7 +2213,7 @@ export const createUserProfileBulk = asyncHandler(async (req, res, next) => {
       if (!/^\+[0-9]+/.test(row.phone)) {
         throw new Error(`Invalid phone in row ${rowIndex + 2}`);
       }
-    
+
     });
     const users = rows.map((row) => ({
       phone: row.phone,
@@ -2209,7 +2231,7 @@ export const createUserProfileBulk = asyncHandler(async (req, res, next) => {
     const existingPhones = existingUsers.map((u) => u.username);
     const newUsers = users.filter((u) => !existingPhones.includes(u.username));
     const oldUsers = users.filter((u) => existingPhones.includes(u.username));
-
+return null;
     users.map(async (idx, inx) => {
       const options = {
         scale: 34,
@@ -2233,7 +2255,7 @@ export const createUserProfileBulk = asyncHandler(async (req, res, next) => {
         "cards",
         getRandomFileName("card-")
       );
-      
+
       let user;
       if (existingPhones.includes(phone)) {
         user = oldUsers.find(user => user.username === phone);
@@ -2331,25 +2353,6 @@ export const createUserProfileBulk = asyncHandler(async (req, res, next) => {
   }
 });
 
-/**
- * @desc    Get Application Version
- * @route   GET /api/v1/user/appversion
- * @access  Oublic
- */
-export const appVersion = asyncHandler(async (req, res, next) => {
-  if (!req.query.app) {
-    let message = { success: "Please pass app and platform" };
-    return res.status(400).json({ success: false, message });
-  }
-  const settings = await Setting.findById(process.env.SETTINGS_DOCUMENT_ID, {
-    application: 1,
-  });
-  let update = settings.application[req.query.app][req.query.platform];
-  res.status(200).json({
-    success: true,
-    data: update,
-  });
-});
 
 /**
  * @desc    Create user profile bulk from cloud
@@ -2372,6 +2375,7 @@ export const createUserProfileCloudBulk = asyncHandler(
       const file = await getFileFromUrl(url);
       // Parse the spreadsheet data
       const workbook = xlsx.read(file, { type: "buffer" });
+
       const sheetName = workbook.SheetNames[0];
       const worksheet = workbook.Sheets[sheetName];
       const headers = ["phone", "name", "designation", "company", "bio"];
@@ -2395,7 +2399,7 @@ export const createUserProfileCloudBulk = asyncHandler(
         if (!/^\+[0-9]+/.test(row.phone)) {
           throw new Error(`Invalid phone in row ${rowIndex + 2}`);
         }
-      
+
       });
       const users = rows.map((row) => ({
         phone: row.phone,
@@ -2495,6 +2499,28 @@ export const createUserProfileCloudBulk = asyncHandler(
     }
   }
 );
+
+
+/**
+ * @desc    Get Application Version
+ * @route   GET /api/v1/user/appversion
+ * @access  Oublic
+ */
+export const appVersion = asyncHandler(async (req, res, next) => {
+  if (!req.query.app) {
+    let message = { success: "Please pass app and platform" };
+    return res.status(400).json({ success: false, message });
+  }
+  const settings = await Setting.findById(process.env.SETTINGS_DOCUMENT_ID, {
+    application: 1,
+  });
+  let update = settings.application[req.query.app][req.query.platform];
+  res.status(200).json({
+    success: true,
+    data: update,
+  });
+});
+
 
 async function streamToBase64(stream) {
   return new Promise((resolve, reject) => {
