@@ -134,7 +134,8 @@ async function uploadBufferFiles(files, directory) {
     });
 }
 
-async function uploadFiles(files, directory) {
+async function uploadFiles(files, directory,asFunction = false) {
+  if(asFunction) return null;
   const bucket = admin.storage().bucket(process.env.BUCKET_URL);
   const uploadPromises = files.map(async (image, index) => {
     const randomName = getRandomFileName(`${directory}-`);

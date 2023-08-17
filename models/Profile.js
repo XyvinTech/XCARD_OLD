@@ -106,6 +106,7 @@ const ProfileSchema = new mongoose.Schema(
                 "youtube",
                 "spotify",
                 "medium",
+                "dribble",
                 "behance",
                 "github",
                 "other",

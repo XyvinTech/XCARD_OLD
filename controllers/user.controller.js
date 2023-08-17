@@ -35,6 +35,7 @@ import { query } from "express";
 export const createUserProfile = asyncHandler(async (req, res, next) => {
   const { phone, update } = req?.body;
   const all = JSON.parse(update);
+
   const {
     profile,
     contact,
@@ -53,7 +54,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
   delete video?.link?._id;
   delete enquiry?.email?._id;
   console.log('inside create profile')
-  await uploadFiles(req?.files, "profiles")
+  await uploadFiles(req?.files, "profiles", req?.body?.asFunction)
     .then(async (images) => {
       const options = {
         scale: 34,
@@ -157,6 +158,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
               return { ...all, image: upload };
             })
           );
+          console.log(images);
           await Profile.create({
             user: user?.id,
             group: req?.query?.group,
@@ -166,8 +168,8 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
             profile: {
               ...profile,
               profileLink,
-              profilePicture: images?.find((obj) => obj.type === "profile"),
-              profileBanner: images?.find((obj) => obj.type === "banner"),
+              profilePicture: !images ? null : images?.find((obj) => obj.type === "profile"),
+              profileBanner: !images ? null : images?.find((obj) => obj.type === "banner"),
               profileQR: qrImageUrl,
             },
             contact: {
@@ -264,9 +266,9 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
               email: enquiry?.email,
             },
           });
-
           let message = { success: "User Profile Created" };
-          return res.status(201).send({ success: true, message, data: user });
+          console.log(message);
+          if (!req?.body?.asFunction) return res.status(201).send({ success: true, message, data: user });
         })
         .catch(async (error) => {
           //If User already exisits create second or third profile
@@ -319,6 +321,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
                 return { ...all, image: upload };
               })
             );
+
             // Upload Service Images
             const modifiedService = await Promise.all(
               service?.services?.map(async (item) => {
@@ -381,8 +384,8 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
               profile: {
                 ...profile,
                 profileLink,
-                profilePicture: images?.find((obj) => obj.type === "profile"),
-                profileBanner: images?.find((obj) => obj.type === "banner"),
+                profilePicture: !images ? null : images?.find((obj) => obj.type === "profile"),
+                profileBanner: !images ? null : images?.find((obj) => obj.type === "banner"),
                 profileQR: qrImageUrl,
               },
               contact: {
@@ -477,10 +480,11 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
               },
             });
             let message = { success: "User Profile Created" };
-            return res.status(201).send({ success: true, message, data: user });
+            console.log(message);
+            if (!req?.body?.asFunction) return res.status(201).send({ success: true, message, data: user });
           }
 
-          return next(
+          if (!req?.body?.asFunction) return next(
             new ErrorResponse(
               `Something went wrong ${error?.errorInfo?.code ?? error}`,
               400
@@ -490,7 +494,8 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
 
     })
     .catch((err) => {
-      return next(new ErrorResponse(`File upload failed ${err}`, 400));
+      console.log(err);
+      if (!req?.body?.asFunction) return next(new ErrorResponse(`File upload failed ${err}`, 400));
     });
 });
 
@@ -2189,10 +2194,13 @@ export const createUserProfileBulk = asyncHandler(async (req, res, next) => {
     const sheetName = workbook.SheetNames[0];
     const worksheet = workbook.Sheets[sheetName];
     const headers = ["phone", "name", "designation", "company", "bio",
-      "email", "wabusiness", "completeaddress", "landmark", "maplink", "whatsapp", "instagram", "facebook", "linkedin", "spotify", "youtube", "dribble", "behance", "medium", "twitter",
-      "websitename", "websitelink",
-      "youtubelink"
+      "email", "wabusiness", "location", "landmark", "maplink",
+      "whatsapp", "instagram", "facebook", "linkedin", "spotify", "youtube", "dribble", "behance", "medium", "twitter",
+      "websitename", "websitelink", "youtubelink"
     ];
+    const profileCheckList = ["name", "designation", "company", "bio",];
+    const contactsCheckList = ["phone", "email", "social", "whatsapp", "wabusiness"];
+    const multiDataCheckList = ["websitename", "websitelink", "youtubelink"];
 
     headers.forEach((header) => {
       if (worksheet[`${header}1`]) {
@@ -2201,13 +2209,14 @@ export const createUserProfileBulk = asyncHandler(async (req, res, next) => {
     });
     // Convert the spreadsheet data to an array of objects
     const rows = xlsx.utils.sheet_to_json(worksheet);
-    console.log(rows)
+
+
     rows.forEach((row, rowIndex) => {
       headers.forEach((header) => {
         if (!row[header]) {
-          throw new Error(
-            `Missing data in '${header}' column in row ${rowIndex + 2}`
-          );
+          // throw new Error(
+          //   `Missing data in '${header}' column in row ${rowIndex + 2}`
+          // );
         }
       });
       if (!/^\+[0-9]+/.test(row.phone)) {
@@ -2215,6 +2224,157 @@ export const createUserProfileBulk = asyncHandler(async (req, res, next) => {
       }
 
     });
+
+     rows.forEach(async (profile, rowIndex) => {
+      let body;
+      let update = {};
+      let value;
+      const { websitename, websitelink, youtubelink } = profile;
+      let contacts = [];
+      let socials = [];
+
+      //MULTIDATA
+      /*WEBSITE*/
+      if (websitename && websitelink) {
+        const name = websitename.split(',');
+        const link = websitelink.split(',');
+        if (name?.length == link?.length) {
+          let websites = [];
+          for (let i = 0; i < name?.length; i++) {
+            websites.push({
+              name: name[i],
+              link: link[i],
+            })
+          }
+          update['website'] = {
+            status: true,
+            websites: websites,
+          };
+
+        }
+      }
+      /*YOUTUBE VIDEO LINK*/
+      if (youtubelink) {
+        const link = youtubelink.split(',');
+        let videos = [];
+        for (let i = 0; i < link?.length; i++) {
+          videos.push({
+            link: link[i],
+          })
+        }
+        update['video'] = {
+          status: true,
+          videos: videos,
+        };
+
+      }
+
+
+      /*LOCATION*/
+      if (profile?.location || profile?.landmark || profile?.maplink) {
+        contacts.push({
+          label: 'Location',
+          value: profile?.location,
+          street: profile?.landmark,
+          pincode: profile?.maplink,
+          type: 'location',
+        });
+      }
+
+
+
+      //DELETE ALREADY DONE THINGS
+      delete profile?.location;
+      delete profile?.landmark;
+      delete profile?.maplink;
+      delete profile?.websitename;
+      delete profile?.websitelink;
+      delete profile?.youtubelink;
+
+
+      // console.log(profile);
+      // profile = profile.filter(obj => Object.keys(obj).length !== 0);
+      for (const key in profile) {
+        if (profile.hasOwnProperty(key)) {
+          // console.log(`${key}: ${profile[key]}`);
+          value = `${profile[key]}`;
+          let contact = {}, social = {};
+          if (multiDataCheckList.includes(key)) {
+            //Multidata
+          } else if (contactsCheckList.includes(key)) {
+              //CONTACTS
+              contact['label'] = key.charAt(0).toUpperCase() + key.slice(1);
+              contact['value'] = value;
+              contact['type'] = key;
+            } else if (!profileCheckList.includes(key)) {
+              //SOCIALS
+              social['label'] = key.charAt(0).toUpperCase() + key.slice(1);
+              social['value'] = value;
+              social['type'] = key;
+            }
+          if (Object.keys(contact).length !== 0)
+            contacts.push(contact);
+          if (Object.keys(social).length !== 0)
+            socials.push(social);
+
+        }
+      }
+
+      update['profile'] = {
+        name: profile?.name,
+        designation: profile?.designation,
+        companyName: profile?.company,
+        bio: profile?.bio,
+      };
+      update['contact'] = {
+        status: false,
+        contacts: contacts,
+      };
+      update['social'] = {
+        status: false,
+        socials: socials,
+      };
+      update['product'] = {
+        status: false,
+        products: [],
+      };
+      update['service'] = {
+        status: false,
+        services: [],
+      };
+      update['document'] = {
+        status: false,
+        documents: [],
+      };
+      update['award'] = {
+        status: false,
+        awards: [],
+      };
+      update['certificate'] = {
+        status: false,
+        certificates: [],
+      };
+
+      body = {
+        phone: profile.phone,
+        update: JSON.stringify(update),
+        // update: update,
+        asFunction: true
+      }
+
+
+      await createUserProfile({ body: body }, res, next);
+
+      console.log(update.contact)
+      console.log(update.social)
+      body = {};
+      update = {};
+      update.length = 0;
+      socials.length = 0;
+      contacts.length = 0;
+      
+    });
+    return res.status(200).json({ message: 'testing' });
     const users = rows.map((row) => ({
       phone: row.phone,
       profile: {
@@ -2231,7 +2391,7 @@ export const createUserProfileBulk = asyncHandler(async (req, res, next) => {
     const existingPhones = existingUsers.map((u) => u.username);
     const newUsers = users.filter((u) => !existingPhones.includes(u.username));
     const oldUsers = users.filter((u) => existingPhones.includes(u.username));
-return null;
+
     users.map(async (idx, inx) => {
       const options = {
         scale: 34,
