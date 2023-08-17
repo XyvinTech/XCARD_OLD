@@ -2364,10 +2364,10 @@ export const createUserProfileBulk = asyncHandler(async (req, res, next) => {
       }
 
 
-      await createUserProfile({ body: body }, res, next);
+      await createUserProfile({ body: body,query:{group: req?.query?.group,} }, res, next);
 
-      console.log(update.contact)
-      console.log(update.social)
+      // console.log(update.contact)
+      // console.log(update.social)
       body = {};
       update = {};
       update.length = 0;
