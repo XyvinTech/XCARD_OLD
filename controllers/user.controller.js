@@ -72,7 +72,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
         buffer: qrCode,
         mimetype: "image/jpeg",
       };
-      admin
+      await admin
         .auth()
         .createUser({
           phoneNumber: phone,
@@ -2225,7 +2225,8 @@ export const createUserProfileBulk = asyncHandler(async (req, res, next) => {
 
     });
 
-     rows.forEach(async (profile, rowIndex) => {
+
+    for(const profile of rows) {
       let body;
       let update = {};
       let value;
@@ -2297,7 +2298,7 @@ export const createUserProfileBulk = asyncHandler(async (req, res, next) => {
       for (const key in profile) {
         if (profile.hasOwnProperty(key)) {
           // console.log(`${key}: ${profile[key]}`);
-          value = `${profile[key]}`;
+          value = `${profile[key].trim()}`;
           let contact = {}, social = {};
           if (multiDataCheckList.includes(key)) {
             //Multidata
@@ -2373,8 +2374,11 @@ export const createUserProfileBulk = asyncHandler(async (req, res, next) => {
       socials.length = 0;
       contacts.length = 0;
       
-    });
-    return res.status(200).json({ message: 'testing' });
+    };
+    let message = {
+      success: `Uploaded ${rows.length} new profiles created.`,
+    };
+    return res.json({ success: true, message });
     const users = rows.map((row) => ({
       phone: row.phone,
       profile: {
