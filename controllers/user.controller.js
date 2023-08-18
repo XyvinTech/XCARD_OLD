@@ -1295,7 +1295,7 @@ export const deleteFirebaseUser = asyncHandler(async (req, res, next) => {
  */
 export const updateUserProfile = asyncHandler(async (req, res, next) => {
   console.log('')
-  await uploadFiles(req?.files, "profiles", getRandomFileName("profile-"))
+  await uploadFiles(req?.files, "profiles")
     .then(async (images) => {
 
       const { name, designation, companyName, bio } = req?.body;
