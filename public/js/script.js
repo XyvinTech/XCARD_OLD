@@ -31,7 +31,8 @@ function showFullScreenSpinner() {
   document.body.appendChild(spinner);
 
   // Optional: You can add additional styling to the spinner element
-  spinner.style.background = 'rgba(255, 255, 255, 1)';
+  spinner.style.background = 'rgba(0, 0, 0, 1)';
+  spinner.style.color = '#fff';
   spinner.style.display = 'flex';
   spinner.style.justifyContent = 'center';
   spinner.style.alignItems = 'center';
