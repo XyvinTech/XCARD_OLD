@@ -1027,6 +1027,6 @@ main {
 }
 
 #form_submit{
-  width: 50%;
-  border-radius: 30px;
+  width: 50% !important;
+  border-radius: 30px !important;
 }
