@@ -1025,3 +1025,8 @@ main {
 .no-scroll {
   overflow: hidden;
 }
+
+#form_submit{
+  width: 50%;
+  border-radius: 30px;
+}
