@@ -33,7 +33,7 @@ import { query } from "express";
  * @schema  Private
  */
 export const createUserProfile = asyncHandler(async (req, res, next) => {
-  const { phone, update } = req?.body;
+  const { phone, update, theme } = req?.body;
   const all = JSON.parse(update);
 
   const {
@@ -165,6 +165,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
             group: req?.query?.group,
             card: {
               cardId,
+              theme,
             },
             profile: {
               ...profile,
@@ -381,6 +382,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
               group: req?.query?.group,
               card: {
                 cardId,
+                theme,
               },
               profile: {
                 ...profile,
@@ -1298,7 +1300,7 @@ export const updateUserProfile = asyncHandler(async (req, res, next) => {
   await uploadFiles(req?.files, "profiles")
     .then(async (images) => {
 
-      const { name, designation, companyName, bio } = req?.body;
+      const { name, designation, companyName, bio, theme } = req?.body;
       //TODO: Delete old profile picture from Firebase Storage
       const updateArray = JSON?.parse(req?.body?.update) ?? [];
       const updateStatusArray = JSON?.parse(req?.body?.status) ?? [];
@@ -1316,6 +1318,7 @@ export const updateUserProfile = asyncHandler(async (req, res, next) => {
         },
         {
           $set: {
+            "card.theme": theme,
             "profile.name": name,
             "profile.designation": designation,
             "profile.companyName": companyName,

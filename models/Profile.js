@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import User from "./User.js";
 const ProfileSchema = new mongoose.Schema(
   {
-    
+
     user: {
       type: mongoose.Schema.ObjectId,
       ref: "User",
@@ -17,6 +17,7 @@ const ProfileSchema = new mongoose.Schema(
     card: {
       cardId: { type: String },
       cardWrited: { type: Number, default: 0 },
+      theme: { type: String, enum: ["gold&black", "white&black", "violet&green", "orange&black", "white&blue", "blue&black"], default: "gold&black"}
     },
     profile: {
       name: { type: String },
