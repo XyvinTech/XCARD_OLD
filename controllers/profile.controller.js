@@ -92,7 +92,7 @@ export const viewProfile = asyncHandler(async (req, res, next) => {
     { "card.cardId": req?.params?.id },
     { $inc: { visitCount: 1 } },
   );
-  res.render("index", { data: profile });
+  res.render("gold-black", { data: profile });
 });
 /**
  * @desc    Public User EJS
