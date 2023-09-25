@@ -1,3 +1,4 @@
+const data = JSON.parse(document.currentScript.getAttribute("data"));
 const viewable = [
     "png",
     "jpg",
@@ -23,12 +24,6 @@ const viewable = [
     "3gp",
 ];
 
-const fetchUserData = async () => {
-    // change to backend api
-    const data = JSON.parse(document.currentScript.getAttribute("data"));
-
-    return data;
-}
 
 const handleImage = (imageUrl) => {
     if (imageUrl === null) {
@@ -410,7 +405,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     const lets_chat_btn = document.getElementById("chatButton");
     const bottom_fixed_btn_link = document.getElementById("bottom_fixed_btn_link")
 
-    const data = await fetchUserData();
 
     // profile details
     if (data.profile) {
