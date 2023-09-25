@@ -1,11 +1,9 @@
 #!/bin/bash
-
-echo "🔥🔥🔥  Starting Deployment  🔥🔥🔥"
-
-cd ~ 
-
-echo "✅ ✅ ✅  SSH Connection Established ✅ ✅ ✅"
-
-ssh -o PasswordAuthentication=yes ubuntu@45.118.161.254 './deploy.sh'
-
-echo "🚀🚀🚀  Xcard Deployed  🚀🚀🚀 "
+pm2 delete --silent xcard
+cd /var/www/
+sudo rm -rf /var/www/xcard || true
+git clone --single-branch --branch main git@github.com:acutecode2/xcard-API.git xcard 
+sudo chmod -R 777 xcard/ 
+cd xcard 
+npm i 
+pm2 start --name=xcard npm -- start -i max
