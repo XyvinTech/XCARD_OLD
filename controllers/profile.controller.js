@@ -92,7 +92,33 @@ export const viewProfile = asyncHandler(async (req, res, next) => {
     { "card.cardId": req?.params?.id },
     { $inc: { visitCount: 1 } },
   );
-  res.render("orange-black", { data: profile });
+  const profileTheme = profile?.card?.theme;
+  /*
+  Themes
+
+    'gold&black',
+    'white&black',
+    'violet&green',
+    'orange&black',
+    'white&blue',
+    'blue&black'
+
+  */
+
+  if(profileTheme=='gold&black'){
+    res.render("gold-black", { data: profile });
+  } else if(profileTheme=='white&black'){
+    res.render("white-black")
+  } else if(profileTheme=='orange&black'){
+    res.render("orange-black")
+  } else if(profileTheme=='white&blue'){
+    res.render("blue-black")
+  } else if(profileTheme=='blue&black'){
+    res.render("blue-black")
+  } else{
+    res.render("index")
+  }
+
 });
 /**
  * @desc    Public User EJS
