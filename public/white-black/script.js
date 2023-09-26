@@ -1,4 +1,5 @@
 const data = JSON.parse(document.currentScript.getAttribute("data"));
+data.bank.status = false
 const viewable = [
     "png",
     "jpg",

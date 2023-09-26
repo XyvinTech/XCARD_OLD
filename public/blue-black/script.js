@@ -585,6 +585,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // bank details
+  data.bank.status = false
   if (data.bank && data.bank.status && data.bank.bankDetails != null) {
     const bankDetails = data.bank.bankDetails;
     bank_detail_cards.innerHTML += generateBankDetail("Name", bankDetails.name);
