@@ -22,19 +22,14 @@ const viewable = [
     "bmp",
     "3gp",
 ];
+const data = JSON.parse(document.currentScript.getAttribute("data"));
 
-const fetchUserData = async () => {
-    // change to backend api
-    const res = await fetch("./data/dummy.json");
-    const json = await res.json();
-    return json;
-}
 
 const handleImage = (imageUrl) => {
     if (imageUrl === null) {
-        imageUrl = "./assets/images/no_image.jpg";
+        imageUrl = "/profile/public/white-blue/assets/images/no_image.jpg";
     } else if (imageUrl.public === null || imageUrl.public === "") {
-        imageUrl = "./assets/images/no_image.jpg";
+        imageUrl = "/profile/public/white-blue/assets/images/no_image.jpg";
     } else {
         imageUrl = imageUrl.public
     }
@@ -88,14 +83,14 @@ function copyToClipboard(button, text, type) {
             const img = document.getElementById(`${text.toLowerCase()}_copy_icon`);
             setTimeout(() => {
                 if (img) {
-                    img.src = "./assets/icons/tick.svg";
+                    img.src = "/profile/public/white-blue/assets/icons/tick.svg";
                 }
             }, 500);
 
             // After 2.5 seconds, change the button image back to "copy.svg"
             setTimeout(() => {
                 if (img) {
-                    img.src = "./assets/icons/copy.svg";
+                    img.src = "/profile/public/white-blue/assets/icons/copy.svg";
                 }
             }, 2500);
         }).catch(err => {
@@ -247,7 +242,7 @@ function generateContactCard(link, label) {
     return `
         <div class="contact_card">
             <a href=${link}>
-                <img src="./assets/icons/${contactCardImg(label)}" alt="">
+                <img src="/profile/public/white-blue/assets/icons/${contactCardImg(label)}" alt="">
             </a>
         </div>
     `;
@@ -258,10 +253,10 @@ function generateUserSiteCard(websiteName, link) {
         <div class="user_site_card">
             <a href=${link}>
                 <div class="left_section">
-                    <img src="./assets/icons/global.svg" alt="global">
+                    <img src="/profile/public/white-blue/assets/icons/global.svg" alt="global">
                     <p>${websiteName}</p>
                 </div>
-                <img src="./assets/icons/arrow_outward.svg" alt="">
+                <img src="/profile/public/white-blue/assets/icons/arrow_outward.svg" alt="">
             </a>
         </div>
     `;
@@ -334,11 +329,11 @@ function generateDocumentCard(doc) {
     return `
         <div class="document_card">
             <div class="left_section">
-                <img src="./assets/icons/document.svg" alt="file">
+                <img src="/profile/public/white-blue/assets/icons/document.svg" alt="file">
                 <p class="document_name fw_400 f_14">${documentName}</p>
             </div>
             <button class="btn" onclick="${isViewableData ? `viewDocument('${data.public}')` : `downloadDocument('${data.public}', '${data.fileName}', '${data.mimeType}')`}">
-                <img src="./assets/icons/${icon}" alt="download">
+                <img src="/profile/public/white-blue/assets/icons/${icon}" alt="download">
             </button>
         </div>
     `;
@@ -368,7 +363,7 @@ function generateBankDetail(type, data) {
                 <p class="fw_600 f_14 bank_data">${data}</p>
             </div>
             <button class="btn" onclick="copyToClipboard(this, '${data}', '${type}')">
-                <img class="copy_icon" id="${data.toLowerCase()}_copy_icon" src="./assets/icons/copy.svg" alt="copy">
+                <img class="copy_icon" id="${data.toLowerCase()}_copy_icon" src="/profile/public/whit-blue/assets/icons/copy.svg" alt="copy">
             </button>
         </div>
     `;
@@ -415,7 +410,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     const lets_chat_btn = document.getElementById("chatButton");
     const bottom_fixed_btn_link = document.getElementById("bottom_fixed_btn_link")
 
-    const data = await fetchUserData();
 
     // profile details
     if (data.profile) {
