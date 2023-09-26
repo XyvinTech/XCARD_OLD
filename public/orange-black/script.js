@@ -1,3 +1,6 @@
+const data = JSON.parse(document.currentScript.getAttribute("data"));
+
+
 const viewable = [
   "png",
   "jpg",
@@ -107,7 +110,7 @@ function generateProfile() {
   <img src="${
     profile.profileBanner?.public
       ? profile.profileBanner?.public
-      : "./assets/orange-dark/card-bg.png"
+      : "/profile/public/orange-black/assets/orange-dark/card-bg.png"
   }" alt="card-bg" />
   <div class="info">
     <img
@@ -115,7 +118,7 @@ function generateProfile() {
       src="${
         profile.profilePicture?.public
           ? profile.profilePicture?.public
-          : "./assets/orange-dark/no_image.jpg"
+          : "/profile/public/orange-black/assets/orange-dark/no_image.jpg"
       }"
       alt="profile-pic"
     />
@@ -129,7 +132,7 @@ function generateProfile() {
     <button class="btn btn-primary" target="_blank" href="${
       profile.profileLink ?? "#"
     }">
-     <img src="./assets/orange-dark/icons/add-contact.svg" alt="add-contact">
+     <img src="/profile/public/orange-black/assets/orange-dark/icons/add-contact.svg" alt="add-contact">
       <span>Save Contact</span>
     </button>
   </div>
@@ -190,7 +193,7 @@ function generateWebsites() {
       content += `
       <li>
         <a class="website-card" target="_blank" href="${website.link}">
-          <img src="./assets/orange-dark/icons/global.svg" alt="website" />
+          <img src="/profile/public/orange-black/assets/orange-dark/icons/global.svg" alt="website" />
           <span class="text">${website.name}</span>
         </a>
       </li>
@@ -219,7 +222,7 @@ function generateAwards() {
       content += `
       <li class="award-card">
         <img src="${
-          award.image?.public ?? "./assets/orange-dark/no_image.jpg"
+          award.image?.public ?? "/profile/public/orange-black/assets/orange-dark/no_image.jpg"
         }" alt="award" />
         <h3>${award.label}</h3>
         ${award.value && "<p>" + award.value + "</p>"}
@@ -252,7 +255,7 @@ function generateServices() {
           <img src="${
             service.image?.public
               ? service.image.public
-              : "./assets/orange-dark/no_image.jpg"
+              : "/profile/public/orange-black/assets/orange-dark/no_image.jpg"
           }" alt="service" />
           <h3>${service.label}</h3>
           <p>${service.description ?? ""}</p>
@@ -297,7 +300,7 @@ function generateProducts() {
           <img src="${
             product.image?.public
               ? product.image.public
-              : "./assets/orange-dark/no_image.jpg"
+              : "/profile/public/orange-black/assets/orange-dark/no_image.jpg"
           }" alt="" />
           <h3>${product.name}</h3>
           <p>${product.description ?? ""}</p>
@@ -392,10 +395,10 @@ function generateCatalogues() {
       li.innerHTML += `
     <div class="website-card">
       <div class="content">
-        <img src="./assets/orange-dark/icons/pdf.svg" alt="" />
+        <img src="/profile/public/orange-black/assets/orange-dark/icons/pdf.svg" alt="" />
         <span class="text">${label}</span>
       </div>
-      <button class="action"><img src="./assets/orange-dark/icons/download.svg" alt="" /></button>
+      <button class="action"><img src="/profile/public/orange-black/assets/orange-dark/icons/download.svg" alt="" /></button>
     </div>
     `;
       ul.appendChild(li);
@@ -426,11 +429,11 @@ function generateUpis() {
     li.innerHTML += `
       <div class="website-card">
       <div class="content">
-        <img src="./assets/orange-dark/icons/upi.png" alt="upi" />
+        <img src="/profile/public/orange-black/assets/orange-dark/icons/upi.png" alt="upi" />
         <span class="text">${upi.id}</span>
       </div>
       <button class="action">
-        <img src="./assets/orange-dark/icons/copy.svg" alt="copy" />
+        <img src="/profile/public/orange-black/assets/orange-dark/icons/copy.svg" alt="copy" />
       </button>
     </div>
     `;
@@ -465,7 +468,7 @@ function generateSocials() {
       card.innerHTML = `
       <a target="_blank" href="${social.value}">
       <img
-        src="./assets/orange-dark/socials/${contactCardImg(social.type)}"
+        src="/profile/public/orange-black/assets/orange-dark/socials/${contactCardImg(social.type)}"
         alt="${social.type}"
       />
       <div>
@@ -478,7 +481,7 @@ function generateSocials() {
     } else {
       card.innerHTML = `
       <a target="_blank" href="${social.value}">
-        <img src="./assets/orange-dark/icons/${contactCardImg(
+        <img src="/profile/public/orange-black/assets/orange-dark/icons/${contactCardImg(
           social.type
         )}" alt="${social.type}" />
       </a>
@@ -498,7 +501,7 @@ function generateSocials() {
     largeDiv.innerHTML += `
     <a target="_blank" href="https://wa.me/${wabusiness.value}" class="btn btn-secondary whatsapp-btn">
     <img
-      src="./assets/orange-dark/icons/whatsapp-org.svg"
+      src="/profile/public/orange-black/assets/orange-dark/icons/whatsapp-org.svg"
       alt="whatsapp"
     />
     <span>Say Hello</span>
@@ -510,7 +513,7 @@ function generateSocials() {
     smallDiv.innerHTML += `
     <div class="card">
           <a target="_blank" href="mailto:${email.value}">
-            <img src="./assets/orange-dark/socials/mail.svg" alt="email" />
+            <img src="/profile/public/orange-black/assets/orange-dark/socials/mail.svg" alt="email" />
           </a>
       </div>
     `;
@@ -519,7 +522,7 @@ function generateSocials() {
     smallDiv.innerHTML += `
     <div class="card">
           <a target="_blank" href="tel:${phone.value}">
-            <img src="./assets/orange-dark/socials/phone.svg" alt="phone" />
+            <img src="/profile/public/orange-black/assets/orange-dark/socials/phone.svg" alt="phone" />
           </a>
       </div>
     `;
@@ -528,7 +531,7 @@ function generateSocials() {
     smallDiv.innerHTML += `
     <div class="card">
           <a target="_blank" href="https://wa.me/${whatsapp.value}">
-            <img src="./assets/orange-dark/socials/whatsapp.svg" alt="whatsapp" />
+            <img src="/profile/public/orange-black/assets/orange-dark/socials/whatsapp.svg" alt="whatsapp" />
           </a>
       </div>
     `;
@@ -582,7 +585,7 @@ function generateCertificates() {
     <li>
               <img
                 src="${
-                  cert.image?.public ?? "./assets/orange-dark/no_image.jpg"
+                  cert.image?.public ?? "/profile/public/orange-black/assets/orange-dark/no_image.jpg"
                 }"
                 alt="certificate"
               />
@@ -657,9 +660,9 @@ function closeModal() {
 function openModal(type, data) {
   const parent = document.querySelector(".modal");
   const modal = document.querySelector(".modal > .modal-content");
-  let content = `<button class="close-button"><img src="./assets/orange-dark/icons/close.svg" alt="close"></button>
+  let content = `<button class="close-button"><img src="/profile/public/orange-black/assets/orange-dark/icons/close.svg" alt="close"></button>
   <img class="w-full" src="${
-    data.image ?? "./assets/orange-dark/service.png"
+    data.image ?? "/profile/public/orange-black/assets/orange-dark/service.png"
   }" alt="image"> <h2>${data.heading}</h2>
   <p class="description">${data.desc}</p>`;
 
@@ -771,9 +774,9 @@ function setContent() {
 
 function handleImage(imageUrl) {
   if (imageUrl === null) {
-    imageUrl = "../assets/images/no_image.jpg";
+    imageUrl = "/profile/public/orange-black/assets/images/no_image.jpg";
   } else if (imageUrl.public === null || imageUrl.public === "") {
-    imageUrl = "../assets/images/no_image.jpg";
+    imageUrl = "/profile/public/orange-black/assets/images/no_image.jpg";
   } else {
     imageUrl = imageUrl.public;
   }
@@ -808,14 +811,14 @@ function copyToClipboard(text, li) {
         console.log("hiii");
         setTimeout(() => {
           if (img) {
-            img.src = "./assets/orange-dark/icons/tick.svg";
+            img.src = "/profile/public/orange-black/assets/orange-dark/icons/tick.svg";
           }
         }, 500);
 
         // After 2.5 seconds, change the button image back to "copy.svg"
         setTimeout(() => {
           if (img) {
-            img.src = "../assets/orange-dark/icons/copy.svg";
+            img.src = "/profile/public/orange-black/assets/orange-dark/icons/copy.svg";
           }
         }, 2500);
       })
