@@ -1,7 +1,8 @@
 function getSocialMedia(link) {
   const socialMediaRegex = {
     Facebook: /(?:https?:\/\/)?(?:www\.)?facebook\.com/i,
-    Twitter: /(?:https?:\/\/)?(?:www\.)?twitter\.com/i,
+    Twitter: /(?:https?:\/\/)?(?:www\.)?(?:twitter\.com|x\.com)/i,
+    // Twitter: /(?:https?:\/\/)?(?:www\.)?x\.com/i,
     Instagram: /(?:https?:\/\/)?(?:www\.)?instagram\.com/i,
     Linkedin: /(?:https?:\/\/)?(?:www\.)?linkedin\.com/i,
     Youtube: /(?:https?:\/\/)?(?:www\.)?youtube\.com/i,
