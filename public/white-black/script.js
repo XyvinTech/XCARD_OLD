@@ -1,3 +1,4 @@
+const data = JSON.parse(document.currentScript.getAttribute("data"));
 const viewable = [
     "png",
     "jpg",
@@ -23,7 +24,6 @@ const viewable = [
     "3gp",
 ];
 
-const data = document.currentScript.getAttribute("data");
 const handleImage = (imageUrl) => {
     if (imageUrl === null) {
         imageUrl = "/profile/public/white-black/assets/images/no_image.jpg";
