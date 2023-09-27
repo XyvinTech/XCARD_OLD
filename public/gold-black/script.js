@@ -442,14 +442,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (data.profile) {
         const profile = data.profile
 
-        var name = profile.name
-        var company = profile.companyName
-        var designation = profile.designation
+        var name = profile?.name
+        var company = profile?.companyName
+        var designation = profile?.designation
 
-        user_bg.src = profile.profileBanner.public
-        avatar.src = profile.profilePicture.public
+        user_bg.src = profile?.profileBanner?.public
+        avatar.src = profile?.profilePicture?.public
         user_name.innerText = name
-        bio.innerText = profile.bio
+        bio.innerText = profile?.bio
         user_designation.innerText = `${designation}, `;
         user_company.innerText = company
     }
