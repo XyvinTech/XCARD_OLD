@@ -25,6 +25,11 @@ const viewable = [
 
 const data = JSON.parse(document.currentScript.getAttribute("data"));
 
+const fetchUserData = async () => {
+  // change to backend api
+  return data;
+};
+
 const handleImage = (imageUrl) => {
   if (imageUrl === null) {
     imageUrl = "/profile/public/blue-black/assets/images/no_image.jpg";
@@ -463,6 +468,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     "bottom_fixed_btn_link"
   );
 
+  const data = await fetchUserData();
 
   // profile details
   if (data.profile) {
@@ -585,7 +591,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // bank details
-  data.bank.status = false
   if (data.bank && data.bank.status && data.bank.bankDetails != null) {
     const bankDetails = data.bank.bankDetails;
     bank_detail_cards.innerHTML += generateBankDetail("Name", bankDetails.name);

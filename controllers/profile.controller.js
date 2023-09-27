@@ -112,9 +112,11 @@ export const viewProfile = asyncHandler(async (req, res, next) => {
   } else if(profileTheme=='orange&black'){
     res.render("orange-black", { data: profile })
   } else if(profileTheme=='white&blue'){
-    res.render("blue-black", { data: profile })
+    res.render("white-blue", { data: profile })
   } else if(profileTheme=='blue&black'){
     res.render("blue-black", { data: profile })
+  }else if(profileTheme=='aero&black'){
+    res.render("sky-blue", { data: profile })
   } else{
     res.render("index", { data: profile })
   }

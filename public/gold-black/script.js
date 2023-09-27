@@ -1,5 +1,3 @@
-const data = JSON.parse(document.currentScript.getAttribute("data"));
-data.bank.status = false
 const viewable = [
     "png",
     "jpg",
@@ -25,12 +23,18 @@ const viewable = [
     "3gp",
 ];
 
+const data = JSON.parse(document.currentScript.getAttribute("data"));
 
-const handleImage = (imageUrl) => {
+const fetchUserData = async () => {
+    // change to backend api
+    return data
+}
+
+const handleImage = (imageUrl,no_image) => {
     if (imageUrl === null) {
-        imageUrl = "/profile/public/gold-black/assets/images/no_image.jpg";
+        imageUrl = no_image;
     } else if (imageUrl.public === null || imageUrl.public === "") {
-        imageUrl = "/profile/public/gold-black/assets/images/no_image.jpg";
+        imageUrl = no_image;
     } else {
         imageUrl = imageUrl.public
     }
@@ -49,32 +53,34 @@ function viewDocument(fileName) {
 }
 
 function downloadDocument(publicUrl, fileName, mimeType) {
-    // Use the fetch API to fetch the document from the public URL
-    fetch(publicUrl)
-        .then(response => response.blob())
-        .then(blob => {
-            // Create a URL for the blob data
-            const blobUrl = window.URL.createObjectURL(blob);
+    window.location.href = publicUrl
+    // // Check if the required parameters are provided
+    // if (!publicUrl || !fileName || !mimeType) {
+    //     console.error("Missing required parameters");
+    //     return;
+    // }
 
-            // Create an invisible anchor element
-            const a = document.createElement('a');
-            a.style.display = 'none';
-            document.body.appendChild(a);
+    // // Create a Blob with the provided mimeType
+    // fetch(publicUrl)
+    //     .then(response => response.blob())
+    //     .then(blob => {
+    //         const url = URL.createObjectURL(blob);
 
-            // Set the anchor's href, download attribute, and click it to trigger the download
-            a.href = blobUrl;
-            a.download = fileName;
-            a.type = mimeType;
-            a.click();
+    //         const downloadLink = document.createElement("a");
+    //         downloadLink.href = url;
+    //         downloadLink.download = fileName; // Use the provided fileName
+    //         document.body.appendChild(downloadLink);
+    //         downloadLink.click();
+    //         document.body.removeChild(downloadLink);
 
-            // Clean up by removing the anchor element and revoking the blob URL
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(blobUrl);
-        })
-        .catch(error => {
-            console.error('Error downloading document:', error);
-        });
+    //         // Release the object URL after the download has started
+    //         URL.revokeObjectURL(url);
+    //     })
+    //     .catch(error => {
+    //         console.error("Error fetching the document:", error);
+    //     });
 }
+
 
 
 function copyToClipboard(button, text, type) {
@@ -102,18 +108,18 @@ function copyToClipboard(button, text, type) {
     }
 }
 
-const contactCardImg = (label) => {
-    switch (label.toLowerCase()) {
+const contactCardImg = (type) => {
+    switch (type.toLowerCase()) {
         case "instagram":
             return 'ig.svg'
         case "linkedin":
             return 'linkedin.svg'
         case "twitter":
             return 'x.svg'
-        case "facebook":
-            return 'fb.svg'
         case "x":
             return 'x.svg'
+        case "facebook":
+            return 'fb.svg'
         case "phone":
             return 'call.svg'
         case "dribble":
@@ -121,9 +127,15 @@ const contactCardImg = (label) => {
         case "whatsapp":
             return 'whatsapp.svg'
         case "email" || "gmail":
-            return 'ig.svg'
-        case "whatsapp-business":
+            return 'email.svg'
+        case "gmail":
+            return 'email.svg'
+        case "wabusiness":
             return 'wp_b.svg'
+        case "location":
+            return 'location.svg'
+        case "other":
+            return 'global.svg'
         default: return 'global.svg'
     }
 }
@@ -176,6 +188,16 @@ const createVCard = (websites, name, company, designation, email, phoneNumber, l
 const sendHiToWhatsApp = (whatsapp,btn) => {
     const whatsappLink = `https://wa.me/${whatsapp}`
     btn.href = whatsappLink
+}
+
+const sendFormData = async (data) => {
+    const res = await fetch("/profile/submitForm", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+    });
 }
 
 
@@ -239,11 +261,11 @@ const showAwardPopup = (heading, description, imageUrl) => {
     }
 }
 
-function generateContactCard(link, label) {
+function generateContactCard(link, type) {
     return `
         <div class="contact_card">
             <a href=${link}>
-                <img src="/profile/public/gold-black/assets/icons/${contactCardImg(label)}" alt="">
+                <img src="/profile/public/gold-black/assets/icons/${contactCardImg(type)}" alt="">
             </a>
         </div>
     `;
@@ -281,10 +303,11 @@ function generateProductCard(productName, fakePrice, originalPrice, imageUrl, de
 
 
 function generateServiceCard(serviceName, serviceDescription, imageUrl, link) {
+    const service_no_img = "/profile/public/gold-black/assets/images/service_no_img.png"
     const service_desc = (serviceDescription != undefined && serviceDescription != null) ? serviceDescription : ""
     return `
-        <div onclick="showServicePopup('${serviceName}', '${service_desc}', '${handleImage(imageUrl)}','${link}')" class="service_card">
-            <img class="service_img" src="${handleImage(imageUrl)}" alt="${serviceName}">
+        <div onclick="showServicePopup('${serviceName}', '${service_desc}', '${handleImage(imageUrl,service_no_img)}','${link}')" class="service_card">
+            <img class="service_img" src="${handleImage(imageUrl,service_no_img)}" alt="${serviceName}">
             <div class="service_details">
                 <h5 class="service_name">${serviceName}</h5>
                 <p class="service_para">${service_desc}</p>
@@ -295,9 +318,10 @@ function generateServiceCard(serviceName, serviceDescription, imageUrl, link) {
 
 
 function generateAwardCard(awardTitle, organizationName, imageUrl) {
+    const award_no_img = "/profile/public/gold-black/assets/images/award_no_img.png"
     return `
-        <div onclick="showAwardPopup('${awardTitle}', '${organizationName}', '${handleImage(imageUrl)}')" class="award_card">
-            <img class="award_img" src="${handleImage(imageUrl)}" alt="product">
+        <div onclick="showAwardPopup('${awardTitle}', '${organizationName}', '${handleImage(imageUrl,award_no_img)}')" class="award_card">
+            <img class="award_img" src="${handleImage(imageUrl,award_no_img)}" alt="product">
             <div class="product_details">
                 <h5 class="fw_600 f_16 gradient_text">${awardTitle}</h5>
                 <p class="fw_400 f_16">${organizationName}</p>
@@ -337,9 +361,10 @@ function generateDocumentCard(doc) {
 
 
 function generateCertificateCard(certificateTitle, organizationName, imageUrl) {
+    const certificate_no_img = "/profile/public/gold-black/assets/images/certificate.png"
     return `
         <div class="certificate_card">
-            <img src="${handleImage(imageUrl)}" alt="certificate">
+            <img src="${handleImage(imageUrl,certificate_no_img)}" alt="certificate">
             <h5 class="gradient_text fw_600 f_16">${certificateTitle}</h5>
             <p class="fw_400 f_16">${organizationName}</p>
         </div>
@@ -406,6 +431,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     const lets_chat_btn = document.getElementById("chatButton");
     const bottom_fixed_btn_link = document.getElementById("bottom_fixed_btn_link")
 
+    const data = await fetchUserData();
+
+    if (data) {
+        const loader = document.getElementById("loader")
+        loader.style.display = "none"
+    }
 
     // profile details
     if (data.profile) {
@@ -421,16 +452,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         bio.innerText = profile.bio
         user_designation.innerText = `${designation}, `;
         user_company.innerText = company
-    }
-
-    // social media links
-    if (data.social && data.social.status && data.social.socials.length > 0) {
-        var socials = data.social.socials
-        socials.map(social => {
-            contact_cards.innerHTML += generateContactCard(social.value, social.label)
-        })
-    }else{
-        document.getElementById("contact_section").classList.add("d_none")
     }
 
     // websites
@@ -454,9 +475,29 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // services
     if (data.service && data.service.status && data.service.services.length > 0) {
-        data.service.services.map(service => {
-            services_cards.innerHTML += generateServiceCard(service.label, service.description, service.image, service.value)
-        })
+        const view_more = document.getElementById("view_more")
+
+        if (data.service.services.length >= 3) {
+            // show first three only
+            data.service.services.slice(0, 3).map(service => {
+                services_cards.innerHTML += generateServiceCard(service.label, service.description, service.image, service.value)
+            })
+
+            view_more.addEventListener("click",() => {
+                services_cards.innerHTML = ""
+                data.service.services.map(service => {
+                    services_cards.innerHTML += generateServiceCard(service.label, service.description, service.image, service.value)
+                })
+                view_more.style.display = "none"
+            })
+
+        }else{
+            // show all the elements
+            data.service.services.map(service => {
+                services_cards.innerHTML += generateServiceCard(service.label, service.description, service.image, service.value)
+            })
+            view_more.style.display = "none"
+        }
     }else{
         document.getElementById("services_section").classList.add("d_none")
     }
@@ -517,7 +558,27 @@ document.addEventListener("DOMContentLoaded", async () => {
     let whatsapp = null
 
     if (data.contact && data.contact.status && data.contact.contacts.length > 0) {
+        const valueForSocials = (type, value) => {
+            switch (type) {
+                case "wabusiness":
+                case "whatsapp":
+                    return `https://wa.me/${value}`;
+                case "phone":
+                    return `tel:${value}`;
+                case "email":
+                    return `mailto:${value}`;
+                case "location":
+                    return value;
+                default:
+                    return;
+            }
+        };
         for (const contact of data.contact.contacts) {
+            data.social.socials.push({
+                label:contact.label,
+                type:contact.type,
+                value:valueForSocials(contact.type,contact.value)
+            })
             if (contact.type === "email") {
                 email = contact.value;
             } else if (contact.type === "phone") {
@@ -534,6 +595,32 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
+    // social media links
+    if (data.social && data.social.status && data.social.socials.length > 0) {
+        var socials = data.social.socials
+
+        // Custom sorting function
+        socials.sort((a, b) => {
+            if (a.type === "phone") {
+                return -1; // "phone" comes before other types
+            } else if (b.type === "phone") {
+                return 1; // "phone" comes before other types
+            } else if (a.type === "whatsapp") {
+                return -1; // "whatsapp" comes after "phone"
+            } else if (b.type === "whatsapp") {
+                return 1; // "whatsapp" comes after "phone"
+            } else {
+                return 0; // Keep the original order for other types
+            }
+        });
+
+        socials.map(social => {
+            contact_cards.innerHTML += generateContactCard(social.value, social.type)
+        })
+    }else{
+        document.getElementById("contact_section").classList.add("d_none")
+    }
+
     save_contact.addEventListener("click", () => {
         createVCard(websites, name, company, designation, email, phoneNumber, locationInfo, socials, whatsapp)
     })
@@ -546,7 +633,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         sendHiToWhatsApp(whatsapp,bottom_fixed_btn_link)
     })
 
-    enquiry_btn.addEventListener("click", (e) => {
+    enquiry_btn.addEventListener("click", async (e) => {
         e.preventDefault()
         const name_input = document.getElementById("name_input")
         const phone = document.getElementById("phone")
@@ -586,7 +673,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 country_code: code,
                 message: textarea.value
             }
-            //  send the data to the backend api
+            await sendFormData(data)
         }
     })
 

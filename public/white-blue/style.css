@@ -94,7 +94,7 @@ body{
     align-items: center;
     background-color: #fff;
     border-radius: 50%;
-    left: 3rem;
+    left: 5vw;
 }
 .avatar{
     width: var(--avatar-size);
@@ -105,7 +105,8 @@ body{
 .details{
     position: relative;
     align-self: flex-end;
-    margin-right: 4rem;
+    margin-right:calc(var(--avatar-size) / 2 - 25px);
+    
     top: -3rem;
 }
 .user_name{
@@ -127,15 +128,17 @@ body{
     margin-top: 12px;
 }
 .contact_btns{
+    padding: 0 3%;
     display: flex;
     align-self: center;
     gap: 12px;
     margin-top: 24px;
+    width: 100%;
 }
 
 .btn_primary{
     height: 51px;
-    width: 175px;
+    /* width: 175px; */
     border-radius: var(--border-radius);
     /* border: 1px solid #184BBE; */
     display: flex;
@@ -144,6 +147,15 @@ body{
     gap: 10px;
     font-size: 14px;
     font-weight: 500;
+
+}
+
+.hi_btn{
+    display: flex;
+    gap: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #fff;
 }
 .btn_dark{
     background: #184BBE;
@@ -153,8 +165,14 @@ body{
     background: #fff;
     /* color: #184BBE; */
 }
+#save_contact{
+    flex: 1;
+    width: 100%;
+}
 #send_hi_btn{
     text-decoration: none;
+    flex: 1;
+    width: 100%;
 }
 
 /* quote section */
@@ -603,10 +621,11 @@ body{
     height: 58px;
     border-radius: 8px;
     border: none;
-    padding-left: -20px !important;
+    padding-left: -15px !important;
+    width: 100%;
 
     background: #fff;
-    padding-left: 21px;
+    padding-left:15px;
     color: rgba(130, 130, 130, 0.50);
     &:focus{
         outline: none;
@@ -623,7 +642,7 @@ body{
 }
 .enquiry_btn{
     height: 60px;
-    border-radius: 4px;
+    border-radius:var(--border-radius);
     border: 1px solid #184BBE;
     background: #184BBE;
 
@@ -779,3 +798,8 @@ footer{
 
 
 
+@media(max-width:375px){
+    .contact_cards{
+        grid-template-columns: repeat(4,1fr);
+    }
+}

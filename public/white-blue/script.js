@@ -22,8 +22,13 @@ const viewable = [
     "bmp",
     "3gp",
 ];
+
 const data = JSON.parse(document.currentScript.getAttribute("data"));
-data.bank.status = false
+
+const fetchUserData = async () => {
+
+    return data;
+}
 
 const handleImage = (imageUrl) => {
     if (imageUrl === null) {
@@ -123,7 +128,7 @@ const contactCardImg = (label) => {
             return 'ig.svg'
         case "whatsapp-business":
             return 'wp_b.svg'
-        default: return 'global.svg'
+        default: return 'global_wht.svg'
     }
 }
 
@@ -363,7 +368,7 @@ function generateBankDetail(type, data) {
                 <p class="fw_600 f_14 bank_data">${data}</p>
             </div>
             <button class="btn" onclick="copyToClipboard(this, '${data}', '${type}')">
-                <img class="copy_icon" id="${data.toLowerCase()}_copy_icon" src="/profile/public/whit-blue/assets/icons/copy.svg" alt="copy">
+                <img class="copy_icon" id="${data.toLowerCase()}_copy_icon" src="/profile/public/white-blue/assets/icons/copy.svg" alt="copy">
             </button>
         </div>
     `;
@@ -410,6 +415,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const lets_chat_btn = document.getElementById("chatButton");
     const bottom_fixed_btn_link = document.getElementById("bottom_fixed_btn_link")
 
+    const data = await fetchUserData();
 
     // profile details
     if (data.profile) {

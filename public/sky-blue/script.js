@@ -1,5 +1,3 @@
-const data = JSON.parse(document.currentScript.getAttribute("data"));
-data.bank.status = false
 const viewable = [
   "png",
   "jpg",
@@ -24,6 +22,7 @@ const viewable = [
   "bmp",
   "3gp",
 ];
+const data = JSON.parse(document.currentScript.getAttribute("data"));
 const profile = data.profile;
 const contacts =
   data.contact && data.contact.status && data.contact.contacts?.length > 0
