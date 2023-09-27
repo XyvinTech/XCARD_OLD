@@ -620,7 +620,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         var socials = data.social.socials
 
         socials.map(social => {
-            contact_cards.innerHTML += generateContactCard(social.value, social.type)
+            if(social.value){
+                contact_cards.innerHTML += generateContactCard(social.value, social.type)
+            }
         })
     }else{
         document.getElementById("contact_section").classList.add("d_none")
