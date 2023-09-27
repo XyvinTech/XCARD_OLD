@@ -26,15 +26,14 @@ const viewable = [
 const data = JSON.parse(document.currentScript.getAttribute("data"));
 
 const fetchUserData = async () => {
-
-    return data;
+    return data
 }
 
-const handleImage = (imageUrl) => {
+const handleImage = (imageUrl,no_image) => {
     if (imageUrl === null) {
-        imageUrl = "/profile/public/white-blue/assets/images/no_image.jpg";
+        imageUrl = no_image;
     } else if (imageUrl.public === null || imageUrl.public === "") {
-        imageUrl = "/profile/public/white-blue/assets/images/no_image.jpg";
+        imageUrl = no_image;
     } else {
         imageUrl = imageUrl.public
     }
@@ -53,31 +52,32 @@ function viewDocument(fileName) {
 }
 
 function downloadDocument(publicUrl, fileName, mimeType) {
-    // Use the fetch API to fetch the document from the public URL
-    fetch(publicUrl)
-        .then(response => response.blob())
-        .then(blob => {
-            // Create a URL for the blob data
-            const blobUrl = window.URL.createObjectURL(blob);
+    window.location.href = publicUrl
+    // Check if the required parameters are provided
+    // if (!publicUrl || !fileName || !mimeType) {
+    //     console.error("Missing required parameters");
+    //     return;
+    // }
 
-            // Create an invisible anchor element
-            const a = document.createElement('a');
-            a.style.display = 'none';
-            document.body.appendChild(a);
+    // Create a Blob with the provided mimeType
+    // fetch(publicUrl)
+    //     .then(response => response.blob())
+    //     .then(blob => {
+    //         const url = URL.createObjectURL(blob);
 
-            // Set the anchor's href, download attribute, and click it to trigger the download
-            a.href = blobUrl;
-            a.download = fileName;
-            a.type = mimeType;
-            a.click();
+    //         const downloadLink = document.createElement("a");
+    //         downloadLink.href = url;
+    //         downloadLink.download = fileName; // Use the provided fileName
+    //         document.body.appendChild(downloadLink);
+    //         downloadLink.click();
+    //         document.body.removeChild(downloadLink);
 
-            // Clean up by removing the anchor element and revoking the blob URL
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(blobUrl);
-        })
-        .catch(error => {
-            console.error('Error downloading document:', error);
-        });
+    //         // Release the object URL after the download has started
+    //         URL.revokeObjectURL(url);
+    //     })
+    //     .catch(error => {
+    //         console.error("Error fetching the document:", error);
+    //     });
 }
 
 
@@ -106,29 +106,39 @@ function copyToClipboard(button, text, type) {
     }
 }
 
-const contactCardImg = (label) => {
-    switch (label.toLowerCase()) {
+const contactCardImg = (type) => {
+    switch (type.toLowerCase()) {
         case "instagram":
             return 'ig.svg'
         case "linkedin":
             return 'linkedin.svg'
         case "twitter":
             return 'x.svg'
-        case "facebook":
-            return 'fb.svg'
         case "x":
             return 'x.svg'
+        case "facebook":
+            return 'fb.svg'
         case "phone":
             return 'call.svg'
         case "dribble":
             return 'dribble.svg'
         case "whatsapp":
-            return 'whatsapp.svg'
-        case "email" || "gmail":
-            return 'ig.svg'
-        case "whatsapp-business":
+            return 'whatsapp_blk.svg'
+        case "email":
+            return 'email.svg'
+        case "gmail":
+            return 'email.svg'
+        case "gmail":
+            return 'email.svg'
+        case "wabusiness":
             return 'wp_b.svg'
-        default: return 'global_wht.svg'
+        case "location":
+            return 'location.svg'
+        case "youtube":
+            return 'youtube.svg'
+        case "other":
+            return 'link.svg'
+        default: return 'link.svg'
     }
 }
 
@@ -181,6 +191,7 @@ const sendHiToWhatsApp = (whatsapp,btn) => {
     const whatsappLink = `https://wa.me/${whatsapp}`
     btn.href = whatsappLink
 }
+
 
 
 const showProductPopup = (productName, fakePrice, originalPrice, imageUrl, description, link) => {
@@ -244,10 +255,122 @@ const showAwardPopup = (heading, description, imageUrl) => {
 }
 
 function generateContactCard(link, label) {
-    return `
+  var cardImage;
+  label = label.toLowerCase();
+  if (label == "email") {
+    cardImage = '<i class="fa-solid fa-at"></i>';
+  } else if (label == "instagram") {
+    cardImage = '<i class="fa-brands fa-instagram"></i>';
+  } else if (label == "whatsapp") {
+    cardImage = '<i class="fa-brands fa-whatsapp"></i>';
+  } else if (label == "linkedin") {
+    cardImage = '<i class="fa-brands fa-linkedin"></i>';
+  } else if (label == "facebook") {
+    cardImage = '<i class="fa-brands fa-facebook"></i>';
+  } else if (label == "x" || label == "twitter") {
+    cardImage = '<i class="fa-brands fa-x-twitter"></i>';
+  } else if (label == "dribble") {
+    cardImage = '<i class="fa-brands fa-dribbble"></i>';
+  } else if (label == "phone") {
+    cardImage = '<i class="fa-solid fa-phone"></i>';
+  } else if (label == "whatsapp-business") {
+    cardImage = '<img src="/profile/public/white-blue/assets/icons/wp_b.svg">';
+  } else if (label == "youtube") {
+    cardImage = '<i class="fa-brands fa-youtube"></i>';
+  } else if (label == "snapchat") {
+    cardImage = '<i class="fa-brands fa-snapchat"></i>';
+  } else if (label == "pinterest") {
+    cardImage = '<i class="fa-brands fa-pinterest"></i>';
+  } else if (label == "github") {
+    cardImage = '<i class="fa-brands fa-github"></i>';
+  } else if (label == "discord") {
+    cardImage = '<i class="fa-brands fa-discord"></i>';
+  } else if (label == "tiktok") {
+    cardImage = '<i class="fa-brands fa-tiktok"></i>';
+  } else if (label == "telegram") {
+    cardImage = '<i class="fa-brands fa-telegram"></i>';
+  } else if (label == "spotify") {
+    cardImage = '<i class="fa-brands fa-spotify"></i>';
+  } else if (label == "threads") {
+    cardImage = '<i class="fa-brands fa-threads"></i>';
+  } else {
+    cardImage = '<i class="fa-solid fa-globe"></i>';
+  }
+
+  return `
         <div class="contact_card">
             <a href=${link}>
-                <img src="/profile/public/white-blue/assets/icons/${contactCardImg(label)}" alt="">
+            ${cardImage}
+            </a>
+        </div>
+    `;
+}
+
+function generateLongContactCard(label, type,link,value) {
+
+    if (value === null || value === undefined || value === "") {
+        return ""
+    }
+    var cardImage;
+    temp = label;
+    label = type;
+    if (label == "email") {
+        cardImage = '<i class="fa-solid fa-at"></i>';
+      } else if (label == "instagram") {
+        cardImage = '<i class="fa-brands fa-instagram"></i>';
+      } else if (label == "whatsapp" || label == "wabusiness") {
+        cardImage = '<i class="fa-brands fa-whatsapp"></i>';
+      } else if (label == "linkedin") {
+        cardImage = '<i class="fa-brands fa-linkedin"></i>';
+      } else if (label == "facebook") {
+        cardImage = '<i class="fa-brands fa-facebook"></i>';
+      } else if (label == "x" || label == "twitter") {
+        cardImage = '<i class="fa-brands fa-x-twitter"></i>';
+      } else if (label == "dribble") {
+        cardImage = '<i class="fa-brands fa-dribbble"></i>';
+      } else if (label == "phone") {
+        cardImage = '<i class="fa-solid fa-phone"></i>';
+    //   } else if (label == "wabusiness") {
+    //     cardImage = '<img src="/profile/public/white-blue/assets/icons/wp_b.svg">';
+      } else if (label == "youtube") {
+        cardImage = '<i class="fa-brands fa-youtube"></i>';
+      } else if (label == "snapchat") {
+        cardImage = '<i class="fa-brands fa-snapchat"></i>';
+      } else if (label == "pinterest") {
+        cardImage = '<i class="fa-brands fa-pinterest"></i>';
+      } else if (label == "github") {
+        cardImage = '<i class="fa-brands fa-github"></i>';
+      } else if (label == "discord") {
+        cardImage = '<i class="fa-brands fa-discord"></i>';
+      } else if (label == "tiktok") {
+        cardImage = '<i class="fa-brands fa-tiktok"></i>';
+      } else if (label == "telegram") {
+        cardImage = '<i class="fa-brands fa-telegram"></i>';
+      } else if (label == "spotify") {
+        cardImage = '<i class="fa-brands fa-spotify"></i>';
+      } else if (label == "threads") {
+        cardImage = '<i class="fa-brands fa-threads"></i>';
+      } else if (label == "location") {
+        cardImage = '<i class="fa-solid fa-location-dot"></i>';
+      }
+      
+      
+      else {
+        cardImage = '<i class="fa-solid fa-globe"></i>';
+      }
+    
+      label = temp
+
+
+
+    return `
+        <div class="contact_long_card">
+            <a class="contact_link" href="${link}">
+                ${cardImage}
+                <div class="contact_info">
+                    <h5 class="fw_500 f_12">${label}</h5>
+                    <p class="f_14 fw_600">${value}</p>
+                </div>
             </a>
         </div>
     `;
@@ -286,11 +409,11 @@ function generateProductCard(productName, fakePrice, originalPrice, imageUrl, de
 
 function createServiceCard(serviceName, serviceDescription, imageUrl, link) {
     const service_desc = serviceDescription || ""; // Use empty string if serviceDescription is undefined
-
+    const service_no_img = "/profile/public/white-blue/assets/images/service_no_img.png"
     const card = document.createElement("div");
     card.classList.add("slider_service_card");
     card.innerHTML = `
-        <img class="service_img" src="${handleImage(imageUrl)}" alt="${serviceName}">
+        <img class="service_img" src="${handleImage(imageUrl,service_no_img)}" alt="${serviceName}">
         <div class="service_details">
             <h4 class="fw_600 f_16 service_heading">${serviceName}</h4>
             <p class="fw_400 f_14 service_desc">${service_desc}</p>
@@ -298,16 +421,17 @@ function createServiceCard(serviceName, serviceDescription, imageUrl, link) {
     `;
 
     card.addEventListener("click", function() {
-        showServicePopup(serviceName, service_desc, handleImage(imageUrl), link);
+        showServicePopup(serviceName, service_desc, handleImage(imageUrl,service_no_img), link);
     });
 
     return card;
 }
 
 function generateAwardCard(awardTitle, organizationName, imageUrl) {
+    const award_no_img = "/profile/public/white-blue/assets/images/award_no_img.png"
     return `
-        <div onclick="showAwardPopup('${awardTitle}', '${organizationName}', '${handleImage(imageUrl)}')" class="award_card">
-            <img class="award_img" src="${handleImage(imageUrl)}" alt="product">
+        <div onclick="showAwardPopup('${awardTitle}', '${organizationName}', '${handleImage(imageUrl,award_no_img)}')" class="award_card">
+            <img class="award_img" src="${handleImage(imageUrl,award_no_img)}" alt="product">
             <div class="product_details">
                 <h5 class="fw_600 f_16 award_title">${awardTitle}</h5>
                 <p class="fw_400 f_16 award_organisation">${organizationName}</p>
@@ -347,9 +471,10 @@ function generateDocumentCard(doc) {
 
 
 function generateCertificateCard(certificateTitle, organizationName, imageUrl) {
+    const certificate_no_img = "/profile/public/white-blue/assets/images/certificate.png"
     return `
         <div class="certificate_card">
-            <img src="${handleImage(imageUrl)}" alt="certificate">
+            <img src="${handleImage(imageUrl,certificate_no_img)}" alt="certificate">
             <h5 class="gradient_text fw_600 f_16">${certificateTitle}</h5>
             <p class="fw_400 f_16">${organizationName}</p>
         </div>
@@ -390,6 +515,7 @@ function generateYouTubePlayer(link) {
 document.addEventListener("DOMContentLoaded", async () => {
 
     const contact_cards = document.getElementById("contact_cards")
+    const contact_long_cards = document.getElementById("contact_long_cards")
     const user_contact_sites = document.getElementById("user_contact_sites")
     const products_card_section = document.getElementById("products_card_section")
     const awards_cards = document.getElementById("awards_cards")
@@ -408,6 +534,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // enquery form
     const enquiry_btn = document.getElementById("enquiry_btn")
+    console.log(enquiry_btn)
 
     // contact
     const save_contact = document.getElementById("save_contact")
@@ -416,6 +543,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     const bottom_fixed_btn_link = document.getElementById("bottom_fixed_btn_link")
 
     const data = await fetchUserData();
+
+    if (data) {
+        const loader = document.getElementById("loader")
+        loader.style.display = "none"
+    }
 
     // profile details
     if (data.profile) {
@@ -432,16 +564,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         user_designation.innerText = designation
         user_company.innerText = company
-    }
-
-    // social media links
-    if (data.social && data.social.status && data.social.socials.length > 0) {
-        var socials = data.social.socials
-        socials.map(social => {
-            contact_cards.innerHTML += generateContactCard(social.value, social.label)
-        })
-    }else{
-        document.getElementById("contact_section").classList.add("d_none")
     }
 
     // websites
@@ -532,6 +654,21 @@ document.addEventListener("DOMContentLoaded", async () => {
     let whatsapp = null
 
     if (data.contact && data.contact.status && data.contact.contacts.length > 0) {
+        const valueForSocials = (type, value) => {
+            switch (type) {
+                case "wabusiness":
+                case "whatsapp":
+                    return `https://wa.me/${value}`;
+                case "phone":
+                    return `tel:${value}`;
+                case "email":
+                    return `mailto:${value}`;
+                case "location":
+                    return `https://www.google.com/maps?q=${value}`;
+                default:
+                    return;
+            }
+        };
         for (const contact of data.contact.contacts) {
             if (contact.type === "email") {
                 email = contact.value;
@@ -546,7 +683,40 @@ document.addEventListener("DOMContentLoaded", async () => {
             } else if (contact.type === 'wabusiness') {
                 whatsapp = contact.value
             }
+            contact_long_cards.innerHTML += generateLongContactCard(contact.label,contact.type,valueForSocials(contact.type,contact.value),contact.value)
         }
+
+        if (whatsapp === null || whatsapp === undefined || whatsapp === "") {
+            send_hi_btn.style.display = "none"
+            lets_chat_btn.style.display = "none"
+            document.getElementsByTagName("body")[0].style.marginBottom = "0px"
+        }
+    }
+
+    // social media links
+    if (data.social && data.social.status && data.social.socials.length > 0) {
+        var socials = data.social.socials
+
+        // Custom sorting function
+        socials.sort((a, b) => {
+            if (a.type === "phone") {
+                return -1; // "phone" comes before other types
+            } else if (b.type === "phone") {
+                return 1; // "phone" comes before other types
+            } else if (a.type === "whatsapp") {
+                return -1; // "whatsapp" comes after "phone"
+            } else if (b.type === "whatsapp") {
+                return 1; // "whatsapp" comes after "phone"
+            } else {
+                return 0; // Keep the original order for other types
+            }
+        });
+
+        socials.map(social => {
+            contact_cards.innerHTML += generateContactCard(social.value, social.type)
+        })
+    }else{
+        document.getElementById("contact_section").classList.add("d_none")
     }
 
     save_contact.addEventListener("click", () => {
@@ -561,8 +731,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         sendHiToWhatsApp(whatsapp,bottom_fixed_btn_link)
     })
 
-    enquiry_btn.addEventListener("click", (e) => {
+    enquiry_btn.addEventListener("click", async (e) => {
         e.preventDefault()
+
+
         const name_input = document.getElementById("name_input")
         const phone = document.getElementById("phone")
         const email_input = document.getElementById("email_input")
@@ -601,7 +773,23 @@ document.addEventListener("DOMContentLoaded", async () => {
                 country_code: code,
                 message: textarea.value
             }
-            //  send the data to the backend api
+            try{
+                const res = await fetch("/profile/submitForm", {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(data),
+                });
+                const json = await res.json()
+    
+                if(json){
+                    enquiry_btn.innerHTML = "Submitted";
+                }
+
+            }catch(e){
+                enquiry_btn.innerHTML = "Can't submit form";
+            }
         }
     })
 
@@ -653,28 +841,19 @@ document.addEventListener("DOMContentLoaded", async () => {
         dots: '#dots',
     
         scrollLock: false,
-        // scrollLockDelay: 2000,
+
         resizeLock: true,
 
         scrollLockDelay: 150,
 
-        scrollPropagate: false,
-        eventPropagate: true,
-
         slidesToScroll: 1,
     
-        // Set easing and duration for smooth slide transitions
-        easing: function (x, t, b, c, d) {
-            return c * (t /= d) * t + b;
-        },
-        duration: 800, // Adjust the duration for your preferred speed (in milliseconds)
+        duration: 1, // Adjust the duration for your preferred speed (in milliseconds)
     
         arrows: {
             prev: '.awards_glider_prev',
             next: '.awards_glider_next'
         },
     });
-
-
 });
 

@@ -23,11 +23,11 @@ const viewable = [
     "3gp",
 ];
 
-const data = JSON.parse(document.currentScript.getAttribute("data"));
+const data = JSON.parse(document.currentScript().getAttribute("data"));
 
 const fetchUserData = async () => {
-    // change to backend api
-    return data
+    
+    return data;
 }
 
 const handleImage = (imageUrl,no_image) => {
@@ -54,31 +54,6 @@ function viewDocument(fileName) {
 
 function downloadDocument(publicUrl, fileName, mimeType) {
     window.location.href = publicUrl
-    // // Check if the required parameters are provided
-    // if (!publicUrl || !fileName || !mimeType) {
-    //     console.error("Missing required parameters");
-    //     return;
-    // }
-
-    // // Create a Blob with the provided mimeType
-    // fetch(publicUrl)
-    //     .then(response => response.blob())
-    //     .then(blob => {
-    //         const url = URL.createObjectURL(blob);
-
-    //         const downloadLink = document.createElement("a");
-    //         downloadLink.href = url;
-    //         downloadLink.download = fileName; // Use the provided fileName
-    //         document.body.appendChild(downloadLink);
-    //         downloadLink.click();
-    //         document.body.removeChild(downloadLink);
-
-    //         // Release the object URL after the download has started
-    //         URL.revokeObjectURL(url);
-    //     })
-    //     .catch(error => {
-    //         console.error("Error fetching the document:", error);
-    //     });
 }
 
 
@@ -90,14 +65,14 @@ function copyToClipboard(button, text, type) {
             const img = document.getElementById(`${text.toLowerCase()}_copy_icon`);
             setTimeout(() => {
                 if (img) {
-                    img.src = "/profile/public/gold-black/assets/icons/tick.svg";
+                    img.src = "./assets/icons/tick.svg";
                 }
             }, 500);
 
             // After 2.5 seconds, change the button image back to "copy.svg"
             setTimeout(() => {
                 if (img) {
-                    img.src = "/profile/public/gold-black/assets/icons/copy.svg";
+                    img.src = "./assets/icons/copy.svg";
                 }
             }, 2500);
         }).catch(err => {
@@ -126,7 +101,7 @@ const contactCardImg = (type) => {
             return 'dribble.svg'
         case "whatsapp":
             return 'whatsapp.svg'
-        case "email" || "gmail":
+        case "email":
             return 'email.svg'
         case "gmail":
             return 'email.svg'
@@ -134,9 +109,11 @@ const contactCardImg = (type) => {
             return 'wp_b.svg'
         case "location":
             return 'location.svg'
+        case "youtube":
+            return 'youtube.svg'
         case "other":
-            return 'global.svg'
-        default: return 'global.svg'
+            return 'link.svg'
+        default: return 'link.svg'
     }
 }
 
@@ -265,21 +242,41 @@ function generateContactCard(link, type) {
     return `
         <div class="contact_card">
             <a href=${link}>
-                <img src="/profile/public/gold-black/assets/icons/${contactCardImg(type)}" alt="">
+                <img src="./assets/icons/${contactCardImg(type)}" alt="">
             </a>
         </div>
     `;
 }
+
+function generateLongContactCard(label, type,link,value) {
+
+    if (value === null || value === undefined || value === "") {
+        return ""
+    }
+
+    return `
+        <div class="contact_long_card">
+            <a class="contact_link" href="${link}">
+                <img src="./assets/icons/${contactCardImg(type)}" alt="">
+                <div class="contact_info">
+                    <h5 class="fw_500 f_12">${label}</h5>
+                    <p class="gradient_text f_14 fw_600">${value}</p>
+                </div>
+            </a>
+        </div>
+    `;
+}
+
 
 function generateUserSiteCard(websiteName, link) {
     return `
         <div class="user_site_card">
             <a href=${link}>
                 <div class="left_section">
-                    <img src="/profile/public/gold-black/assets/icons/global.svg" alt="global">
+                    <img src="./assets/icons/global.svg" alt="global">
                     <p>${websiteName}</p>
                 </div>
-                <img src="/profile/public/gold-black/assets/icons/arrow_outward.svg" alt="">
+                <img src="./assets/icons/arrow_outward.svg" alt="">
             </a>
         </div>
     `;
@@ -303,7 +300,7 @@ function generateProductCard(productName, fakePrice, originalPrice, imageUrl, de
 
 
 function generateServiceCard(serviceName, serviceDescription, imageUrl, link) {
-    const service_no_img = "/profile/public/gold-black/assets/images/service_no_img.png"
+    const service_no_img = "./assets/images/service_no_img.png"
     const service_desc = (serviceDescription != undefined && serviceDescription != null) ? serviceDescription : ""
     return `
         <div onclick="showServicePopup('${serviceName}', '${service_desc}', '${handleImage(imageUrl,service_no_img)}','${link}')" class="service_card">
@@ -318,7 +315,7 @@ function generateServiceCard(serviceName, serviceDescription, imageUrl, link) {
 
 
 function generateAwardCard(awardTitle, organizationName, imageUrl) {
-    const award_no_img = "/profile/public/gold-black/assets/images/award_no_img.png"
+    const award_no_img = "./assets/images/award_no_img.png"
     return `
         <div onclick="showAwardPopup('${awardTitle}', '${organizationName}', '${handleImage(imageUrl,award_no_img)}')" class="award_card">
             <img class="award_img" src="${handleImage(imageUrl,award_no_img)}" alt="product">
@@ -348,11 +345,11 @@ function generateDocumentCard(doc) {
     return `
         <div class="document_card">
             <div class="left_section">
-                <img src="/profile/public/gold-black/assets/icons/global.svg" alt="file">
+                <img src="./assets/icons/global.svg" alt="file">
                 <p>${documentName}</p>
             </div>
             <button class="btn" onclick="${isViewableData ? `viewDocument('${data.public}')` : `downloadDocument('${data.public}', '${data.fileName}', '${data.mimeType}')`}">
-                <img src="/profile/public/gold-black/assets/icons/${icon}" alt="download">
+                <img src="./assets/icons/${icon}" alt="download">
             </button>
         </div>
     `;
@@ -361,7 +358,7 @@ function generateDocumentCard(doc) {
 
 
 function generateCertificateCard(certificateTitle, organizationName, imageUrl) {
-    const certificate_no_img = "/profile/public/gold-black/assets/images/certificate.png"
+    const certificate_no_img = "./assets/images/certificate.png"
     return `
         <div class="certificate_card">
             <img src="${handleImage(imageUrl,certificate_no_img)}" alt="certificate">
@@ -383,7 +380,7 @@ function generateBankDetail(type, data) {
                 <p class="fw_600 f_18">${data}</p>
             </div>
             <button class="btn" onclick="copyToClipboard(this, '${data}', '${type}')">
-                <img class="copy_icon" id="${data.toLowerCase()}_copy_icon" src="/profile/public/gold-black/assets/icons/copy.svg" alt="copy">
+                <img class="copy_icon" id="${data.toLowerCase()}_copy_icon" src="./assets/icons/copy.svg" alt="copy">
             </button>
         </div>
     `;
@@ -405,6 +402,7 @@ function generateYouTubePlayer(link) {
 document.addEventListener("DOMContentLoaded", async () => {
 
     const contact_cards = document.getElementById("contact_cards")
+    const contact_long_cards = document.getElementById("contact_long_cards")
     const user_contact_sites = document.getElementById("user_contact_sites")
     const products_card_section = document.getElementById("products_card_section")
     const services_cards = document.getElementById("services_cards")
@@ -436,6 +434,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (data) {
         const loader = document.getElementById("loader")
         loader.style.display = "none"
+
+        console.log(data)
     }
 
     // profile details
@@ -477,27 +477,44 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (data.service && data.service.status && data.service.services.length > 0) {
         const view_more = document.getElementById("view_more")
 
-        if (data.service.services.length >= 3) {
-            // show first three only
+        let isFullServices = false
+
+        // Function to show the first three services
+        function showFirstThreeServices() {
+            services_cards.innerHTML = "";
             data.service.services.slice(0, 3).map(service => {
-                services_cards.innerHTML += generateServiceCard(service.label, service.description, service.image, service.value)
-            })
-
-            view_more.addEventListener("click",() => {
-                services_cards.innerHTML = ""
-                data.service.services.map(service => {
-                    services_cards.innerHTML += generateServiceCard(service.label, service.description, service.image, service.value)
-                })
-                view_more.style.display = "none"
-            })
-
-        }else{
-            // show all the elements
-            data.service.services.map(service => {
-                services_cards.innerHTML += generateServiceCard(service.label, service.description, service.image, service.value)
-            })
-            view_more.style.display = "none"
+                services_cards.innerHTML += generateServiceCard(service.label, service.description, service.image, service.value);
+            });
+            view_more.innerText = "View More";
+            isFullServices = false
         }
+
+        // Function to show all services
+        function showAllServices() {
+            services_cards.innerHTML = "";
+            data.service.services.map(service => {
+                services_cards.innerHTML += generateServiceCard(service.label, service.description, service.image, service.value);
+            });
+            view_more.innerText = "View Less";
+            isFullServices = true
+        }
+        
+        // Toggle between the two functions when the button is clicked
+        view_more.addEventListener("click", () => {
+            if (isFullServices) {
+                showFirstThreeServices(); // If all services are currently shown, switch to showing the first three
+            } else {
+                showAllServices(); // If only the first three services are currently shown, switch to showing all services
+            }
+        });
+        
+        if (data.service.services.length > 3) {
+            showFirstThreeServices(); // Show the first three services initially
+        } else {
+            showAllServices(); // Show all services initially
+            view_more.style.display = "none"; // Hide the "View More" button if there are no additional services
+        }
+        
     }else{
         document.getElementById("services_section").classList.add("d_none")
     }
@@ -568,17 +585,13 @@ document.addEventListener("DOMContentLoaded", async () => {
                 case "email":
                     return `mailto:${value}`;
                 case "location":
-                    return value;
+                    return `https://www.google.com/maps?q=${value}`;
                 default:
                     return;
             }
         };
         for (const contact of data.contact.contacts) {
-            data.social.socials.push({
-                label:contact.label,
-                type:contact.type,
-                value:valueForSocials(contact.type,contact.value)
-            })
+
             if (contact.type === "email") {
                 email = contact.value;
             } else if (contact.type === "phone") {
@@ -592,27 +605,19 @@ document.addEventListener("DOMContentLoaded", async () => {
             } else if (contact.type === 'wabusiness') {
                 whatsapp = contact.value
             }
+            contact_long_cards.innerHTML += generateLongContactCard(contact.label,contact.type,valueForSocials(contact.type,contact.value),contact.value)
+        }
+
+        if (whatsapp === null || whatsapp === undefined || whatsapp === "") {
+            send_hi_btn.style.display = "none"
+            lets_chat_btn.style.display = "none"
+            document.getElementsByTagName("body")[0].style.marginBottom = "0px"
         }
     }
 
     // social media links
     if (data.social && data.social.status && data.social.socials.length > 0) {
         var socials = data.social.socials
-
-        // Custom sorting function
-        socials.sort((a, b) => {
-            if (a.type === "phone") {
-                return -1; // "phone" comes before other types
-            } else if (b.type === "phone") {
-                return 1; // "phone" comes before other types
-            } else if (a.type === "whatsapp") {
-                return -1; // "whatsapp" comes after "phone"
-            } else if (b.type === "whatsapp") {
-                return 1; // "whatsapp" comes after "phone"
-            } else {
-                return 0; // Keep the original order for other types
-            }
-        });
 
         socials.map(social => {
             contact_cards.innerHTML += generateContactCard(social.value, social.type)
@@ -630,6 +635,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     })
 
     lets_chat_btn.addEventListener("click", () => {
+        console.log(whatsapp)
         sendHiToWhatsApp(whatsapp,bottom_fixed_btn_link)
     })
 
@@ -664,6 +670,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         })
 
         if (name_input.value && isPhoneNumber(phone.value) && isValidEmail(email_input.value)) {
+            enquiry_btn.innerHTML = "Submitting...";
             let code = country_code.title.split(" ")
             code = code[code.length - 1]
             const data = {
@@ -673,7 +680,24 @@ document.addEventListener("DOMContentLoaded", async () => {
                 country_code: code,
                 message: textarea.value
             }
-            await sendFormData(data)
+
+            try{
+                const res = await fetch("/profile/submitForm", {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(data),
+                });
+                const json = await res.json()
+    
+                if(json){
+                    enquiry_btn.innerHTML = "Submitted";
+                }
+
+            }catch(e){
+                enquiry_btn.innerHTML = "Can't submit form";
+            }
         }
     })
 

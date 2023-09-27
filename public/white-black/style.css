@@ -28,7 +28,6 @@ body{
     font-family: 'Poppins', sans-serif;
 
     margin-bottom: 82px;
-    overflow-x: hidden;
 }
 
 .fw_400{
@@ -207,6 +206,39 @@ body{
     box-shadow: var(--card-box-shadow);
 }
 
+.contact_long_cards{
+    margin-top: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.contact_long_card{
+    width: 100%;
+    border-radius: var(--border-radius);
+    padding: 22px;
+    background: #fff;
+    background-blend-mode: overlay, normal;
+    box-shadow: 0px .47043px 2.21381px 0px rgba(0, 0, 0, 0.01), 0px 1.13052px 5.32008px 0px rgba(0, 0, 0, 0.01), 0px 2.12866px 10.01724px 0px rgba(0, 0, 0, 0.01), 0px 3.79717px 17.86905px 0px rgba(0, 0, 0, 0.02), 0px 7.10219px 33.42209px 0px rgba(0, 0, 0, 0.02), 0px 17px 80px 0px rgba(0, 0, 0, 0.03);
+}
+.contact_link{
+    display: flex;
+    gap: 20px;
+    text-decoration: none;
+    
+}
+.contact_info{
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 4px;
+}
+.contact_info h5{
+    color: #9B9B9B;
+}
+.contact_info p{
+    color: #141414;
+}
+
 /* website links */
 .user_contact_sites{
     padding: 0 3%;
@@ -317,6 +349,9 @@ body{
 .glider-track{
     display: flex;
     gap: 20px;
+}
+.glider-track::-webkit-scrollbar{
+    display: none;
 }
 .slider_service_card {
     width: 305px;

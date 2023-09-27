@@ -27,7 +27,6 @@ body{
     font-family: 'Barlow', sans-serif;
 
     margin-bottom: 82px;
-    overflow-x: hidden;
 }
 
 .fw_400{
@@ -205,6 +204,36 @@ body{
 }
 .contact_card:hover{
     box-shadow: var(--card-box-shadow);
+}
+
+.contact_long_cards{
+    margin-top: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.contact_long_card{
+    width: 100%;
+    border-radius: var(--border-radius);
+    padding: 22px;
+    background: #222;
+    background-blend-mode: overlay, normal;
+    box-shadow: 0px 2px 2px 0px rgba(255, 255, 255, 0.35) inset, 0px -2px 2px 0px rgba(0, 0, 0, 0.40) inset;
+}
+.contact_link{
+    display: flex;
+    gap: 20px;
+    text-decoration: none;
+    
+}
+.contact_info{
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 4px;
+}
+.contact_info h5{
+    color: #9B9B9B;
 }
 
 /* website links */
@@ -710,7 +739,7 @@ footer{
     background: #000;
     z-index: 3;
 }
-  
+
 #loader img {
     width: 2rem;
     aspect-ratio: 1;
@@ -726,7 +755,6 @@ footer{
     }
 }
 
-  
 @media(max-width:375px){
     .contact_cards{
         grid-template-columns: repeat(4,1fr);

@@ -135,9 +135,11 @@ const contactCardImg = (type) => {
             return 'wp_b.svg'
         case "location":
             return 'location.svg'
+        case "youtube":
+            return 'youtube.svg'
         case "other":
-            return 'global.svg'
-        default: return 'global.svg'
+            return 'link.svg'
+        default: return 'link.svg'
     }
 }
 
@@ -191,15 +193,6 @@ const sendHiToWhatsApp = (whatsapp,btn) => {
     btn.href = whatsappLink
 }
 
-const sendFormData = async (data) => {
-    const res = await fetch("/profile/submitForm", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-    });
-}
 
 
 const showProductPopup = (productName, fakePrice, originalPrice, imageUrl, description, link) => {
@@ -267,6 +260,25 @@ function generateContactCard(link, label) {
         <div class="contact_card">
             <a href=${link}>
                 <img src="/profile/public/white-black/assets/icons/${contactCardImg(label)}" alt="">
+            </a>
+        </div>
+    `;
+}
+
+function generateLongContactCard(label, type,link,value) {
+
+    if (value === null || value === undefined || value === "") {
+        return ""
+    }
+
+    return `
+        <div class="contact_long_card">
+            <a class="contact_link" href="${link}">
+                <img src="/profile/public/white-black/assets/icons/${contactCardImg(type)}" alt="">
+                <div class="contact_info">
+                    <h5 class="fw_500 f_12">${label}</h5>
+                    <p class="f_14 fw_600">${value}</p>
+                </div>
             </a>
         </div>
     `;
@@ -411,6 +423,7 @@ function generateYouTubePlayer(link) {
 document.addEventListener("DOMContentLoaded", async () => {
 
     const contact_cards = document.getElementById("contact_cards")
+    const contact_long_cards = document.getElementById("contact_long_cards")
     const user_contact_sites = document.getElementById("user_contact_sites")
     const products_card_section = document.getElementById("products_card_section")
     const awards_cards = document.getElementById("awards_cards")
@@ -429,6 +442,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // enquery form
     const enquiry_btn = document.getElementById("enquiry_btn")
+    console.log(enquiry_btn)
 
     // contact
     const save_contact = document.getElementById("save_contact")
@@ -558,17 +572,12 @@ document.addEventListener("DOMContentLoaded", async () => {
                 case "email":
                     return `mailto:${value}`;
                 case "location":
-                    return value;
+                    return `https://www.google.com/maps?q=${value}`;
                 default:
                     return;
             }
         };
         for (const contact of data.contact.contacts) {
-            data.social.socials.push({
-                label:contact.label,
-                type:contact.type,
-                value:valueForSocials(contact.type,contact.value)
-            })
             if (contact.type === "email") {
                 email = contact.value;
             } else if (contact.type === "phone") {
@@ -582,6 +591,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             } else if (contact.type === 'wabusiness') {
                 whatsapp = contact.value
             }
+            contact_long_cards.innerHTML += generateLongContactCard(contact.label,contact.type,valueForSocials(contact.type,contact.value),contact.value)
+        }
+
+        if (whatsapp === null || whatsapp === undefined || whatsapp === "") {
+            send_hi_btn.style.display = "none"
+            lets_chat_btn.style.display = "none"
+            document.getElementsByTagName("body")[0].style.marginBottom = "0px"
         }
     }
 
@@ -625,6 +641,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     enquiry_btn.addEventListener("click", async (e) => {
         e.preventDefault()
+
+
         const name_input = document.getElementById("name_input")
         const phone = document.getElementById("phone")
         const email_input = document.getElementById("email_input")
@@ -663,7 +681,23 @@ document.addEventListener("DOMContentLoaded", async () => {
                 country_code: code,
                 message: textarea.value
             }
-            await sendFormData(data)
+            try{
+                const res = await fetch("/profile/submitForm", {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(data),
+                });
+                const json = await res.json()
+    
+                if(json){
+                    enquiry_btn.innerHTML = "Submitted";
+                }
+
+            }catch(e){
+                enquiry_btn.innerHTML = "Can't submit form";
+            }
         }
     })
 
@@ -715,7 +749,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         dots: '#dots',
     
         scrollLock: false,
-        // scrollLockDelay: 2000,
+
         resizeLock: true,
 
         scrollLockDelay: 150,
@@ -729,7 +763,5 @@ document.addEventListener("DOMContentLoaded", async () => {
             next: '.awards_glider_next'
         },
     });
-
-
 });
 

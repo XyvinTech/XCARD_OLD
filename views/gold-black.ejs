@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="https://cdn.tutorialjinni.com/intl-tel-input/17.0.19/css/intlTelInput.css"    />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <link rel="stylesheet" href="/profile/public/gold-black/style.css">
-    <title>x-card</title>
+    <title>Profile</title>
 </head>
 
 <body>
@@ -23,14 +23,16 @@
                     src=""
                     alt="avatar">
             </div>
-            <h1 id="user_name" class="user_name gradient_text">Swathi Nair </h1>
+            <h1 id="user_name" class="user_name gradient_text">
+                <!-- name -->
+            </h1>
             <div class="user_details">
                 <h2 id="user_designation" class="user_designation">
-                     <!--  -->
+                     <!-- designation -->
                 </h2>
 
                 <h2 id="user_company">
-                    <!--  -->
+                    <!-- company -->
                 </h2>
             </div>
             <div class="contact_btns">
@@ -52,8 +54,47 @@
         </p>
     </div>
 
-    <section id="contact_section" class="contact_section">
+    <section id="contact_long_card_section" class="contact_section">
         <h4 class="gradient_text sub_heading">Contact me</h4>
+        
+        <div id="contact_long_cards" class="contact_long_cards">
+
+            <!-- <div class="contact_long_card">
+                <a class="contact_link" href="#">
+                    <img src="/profile/public/gold-black/assets/icons/call.svg" alt="">
+                    <div class="contact_info">
+                        <h5 class="fw_500 f_12">Phone</h5>
+                        <p class="gradient_text f_14 fw_600">+91 9954862335</p>
+                    </div>
+                </a>
+            </div>
+
+            <div class="contact_long_card">
+                <a class="contact_link" href="#">
+                    <img src="/profile/public/gold-black/assets/icons/call.svg" alt="">
+                    <div class="contact_info">
+                        <h5 class="fw_500 f_12">Phone</h5>
+                        <p class="gradient_text f_14 fw_600">+91 9954862335</p>
+                    </div>
+                </a>
+            </div>
+
+            <div class="contact_long_card">
+                <a class="contact_link" href="#">
+                    <img src="/profile/public/gold-black/assets/icons/call.svg" alt="">
+                    <div class="contact_info">
+                        <h5 class="fw_500 f_12">Phone</h5>
+                        <p class="gradient_text f_14 fw_600">+91 9954862335</p>
+                    </div>
+                </a>
+            </div> -->
+
+        </div>
+
+    </section>
+
+    <section id="contact_section" class="contact_section">
+        <h4 class="gradient_text sub_heading">Social media</h4>
         <div id="contact_cards" class="contact_cards">
 
             <!-- <div class="contact_card">
@@ -376,14 +417,16 @@
             <input id="email_input" class="enquiry_input fw_400 f_16" type="email" placeholder="Enter your email">
             <textarea id="textarea" class="enquiry_input textarea fw_400 f_16" type="text"
                 placeholder="Message"></textarea>
-            <button id="enquiry_btn" class="enquiry_btn" type="submit">Submit</button>
+            <button id="enquiry_btn" class="enquiry_btn" type="submit" value="Submit">Submit</button>
         </form>
     </section>
 
     <footer>
-        <h5 class="footer_text fw_400 f_12">Powered by <span class="footer_company_text fw_600 f_14">Skybertech</span>
+        <h5 class="footer_text fw_400 f_12">Powered by <span class="footer_company_text fw_600 f_14">Alphamaze</span>
         </h5>
-        <button class="btn footer_company_text">View more</button>
+        <a href="https://www.visitingcard.store/">
+            <button class="btn footer_company_text">View more</button>
+        </a>
     </footer>
 
 
@@ -484,11 +527,11 @@
         });
     </script>
 
-<script
-defer
-src="/profile/public/gold-black/script.js"
-data="<%= JSON.stringify(data) %>"
-></script>
+    <script
+    defer
+    src="/profile/public/blue-black/script.js"
+    data="<%= JSON.stringify(data) %>"
+    ></script>
 
 </body>
 
