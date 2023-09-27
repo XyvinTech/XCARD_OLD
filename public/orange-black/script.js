@@ -387,7 +387,7 @@ function generateCatalogues() {
             ? splittedFileName.slice(0, splittedFileName.length - 1).join("")
             : doc.label;
       }
-      const fileType = splittedFileName[-1].toLowerCase();
+      // const fileType = splittedFileName[-1].toLowerCase();
       console.log(splittedFileName);
       const li = document.createElement("li");
       li.innerHTML += `
