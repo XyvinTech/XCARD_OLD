@@ -28,6 +28,7 @@ body{
     font-family: 'Poppins', sans-serif;
 
     margin-bottom: 82px;
+    overflow-x: hidden;
 }
 
 .fw_400{
