@@ -28,31 +28,13 @@
       rel="stylesheet"
       href="https://cdn.tutorialjinni.com/intl-tel-input/17.0.19/css/intlTelInput.css"
     />
-    <script src="/profile/public/orange-black/script.js" defer data="<%= JSON.stringify(data) %>"></script>
+    <script src="/profile/public/orange-black/script.js" defer></script>
   </head>
   <body>
     <!-- Header Section -->
-    <header class="header">
-      <a href="/">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-        >
-          <path
-            d="M15 18L9 12L15 6"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
-      </a>
-    </header>
-    <div id="loader">
-      <img src="/profile/public/orange-black/assets/orange-dark/icons/loader.svg" alt="loading">
+
+    <div id="loader-page">
+      <img class="loading" src="/profile/public/orange-black/assets/orange-dark/icons/loader.svg" alt="loading">
     </div>
     <main style="opacity: 0">
       <!-- Profile Section -->
@@ -60,25 +42,6 @@
         <div class="profile-card">
           <img src="/profile/public/orange-black/assets/orange-dark/card-bg.png" alt="card-bg" />
           <div class="info">
-            <img
-              class="profile-pic"
-              src="/profile/public/orange-black/assets/orange-dark/profile-pic.png"
-              alt="profile-pic"
-            />
-            <h1>Robert C. Shelton</h1>
-            <h2>President ABC Solutions | CEO Talent Hub</h2>
-            <p>
-              Ut tellus interdum massa at platea sit at mi ipsum. Dictum mauris
-              tempus sit bibendum. Feugiat bibendum dictum tincidunt molestie
-              fames morbi egestas a condi
-            </p>
-            <a class="btn btn-primary" href="">
-              <img
-                src="/profile/public/orange-black/assets/orange-dark/icons/add-contact.svg"
-                alt="add-contact"
-              />
-              <span>Save Contact</span>
-            </a>
           </div>
         </div>
       </section>
@@ -141,6 +104,16 @@
         <div role="tablist" class="dots-video"></div>
       </section>
 
+         <!-- Awards Section -->
+         <section id="awards">
+          <div class="main-card">
+            <h2>Awards</h2>
+            <ul class="award-cards">
+              
+            </ul>
+          </div>
+        </section>
+
       <!-- Products Section -->
 
       <section id="products">
@@ -169,15 +142,6 @@
         </div>
       </section>
 
-      <!-- Awards Section -->
-      <section id="awards">
-        <div class="main-card">
-          <h2>Awards</h2>
-          <ul class="award-cards">
-            
-          </ul>
-        </div>
-      </section>
 
       <!-- Catalogs Section -->
       <section id="catalogues">

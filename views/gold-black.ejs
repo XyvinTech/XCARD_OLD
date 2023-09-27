@@ -11,8 +11,12 @@
 
 <body>
 
+    <div id="loader">
+        <img src="/profile/public/gold-black/assets/icons/loader.svg" alt="loading">
+    </div>
+
     <header>
-        <img class="user_bg" id="user_bg" src="/profile/public/gold-black/assets/images/user_bg.png" alt="user-bg">
+        <img class="user_bg" id="user_bg" src="" alt="user-bg">
         <div class="user_info">
             <div class="avatar_img">
                 <img id="avatar" class="avatar"
@@ -33,9 +37,9 @@
                 <button id="save_contact" class="btn btn_primary">
                     <p>Save contact</p> <img src="/profile/public/gold-black/assets/icons/download.svg" alt="download-icon">
                 </button>
-                <a id="send_hi_btn">
-                    <button class="btn btn_primary">
-                        <p>Send a Hi!</p><img src="/profile/public/gold-black/assets/icons/whatapp.svg" alt="whatsapp-icon">
+                <a id="send_hi_btn" class="btn_primary">
+                    <button class="btn hi_btn">
+                        <p>Send a Hi!</p><img src="/profile/public/gold-black/assets/icons/whatsapp_wt.svg" alt="whatsapp-icon">
                     </button>
                 </a>
             </div>
@@ -210,7 +214,7 @@
 
         </div>
         <div class="view_more_btn">
-            <button class="btn btn_primary">
+            <button class="btn btn_primary" id="view_more">
                 View more
             </button>
         </div>
@@ -352,12 +356,12 @@
                     <button class="btn">
                         <img src="/profile/public/gold-black/assets/icons/copy.svg" alt="copy">
                     </button>
-                </div> --> 
+                </div> -->
 
-           </div>
+            </div>
         </div>
 
-    </section> 
+    </section>
 
 
     <section class="enquiry_section">
@@ -389,7 +393,7 @@
             <img src="/profile/public/gold-black/assets/icons/close.svg" alt="close">
         </button>
         <div class="popup_card">
-            <img id="product_popup_img" class="popup_img" src="/profile/public/gold-black/assets/images/headset.png" alt="product">
+            <img id="product_popup_img" class="popup_img" src="" alt="product">
             <div class="popup_info">
                 <h4 id="product_popup_heading" class="popup_heading fw_600">
                     <!-- heading here -->
@@ -420,7 +424,7 @@
             <img src="/profile/public/gold-black/assets/icons/close.svg" alt="close">
         </button>
         <div class="popup_card">
-            <img id="service_popup_img" class="popup_img" src="/profile/public/gold-black/assets/images/headset.png" alt="product">
+            <img id="service_popup_img" class="popup_img" src="" alt="product">
             <div class="popup_info">
                 <h4 id="service_popup_heading" class="popup_heading fw_600">
                     <!-- heading here -->
@@ -444,7 +448,7 @@
             <img src="/profile/public/gold-black/assets/icons/close.svg" alt="close">
         </button>
         <div class="popup_card">
-            <img id="award_popup_img" class="popup_img" src="/profile/public/gold-black/assets/images/headset.png" alt="product">
+            <img id="award_popup_img" class="popup_img" src="" alt="product">
             <div class="popup_info">
                 <h4 id="award_popup_heading" class="popup_heading fw_600">XR headsets</h4>
                 <p id="award_popup_desc" class="popup_desc text_dim fw_400 f_16">
@@ -480,7 +484,7 @@
         });
     </script>
 
-    <script defer src="/profile/public/gold-black/script.js" data="<%= JSON.stringify(data) %>"></script>
+    <script src="script.js"></script>
 
 </body>
 

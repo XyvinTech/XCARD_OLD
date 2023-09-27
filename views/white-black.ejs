@@ -13,12 +13,16 @@
 
 <body>
 
+    <div id="loader">
+        <img src="/profile/public/white-black/assets/icons/loader.svg" alt="loading">
+    </div>
+
     <header>
-        <img class="user_bg" id="user_bg" src="/profile/public/white-black/assets/images/user_bg.png" alt="user-bg">
+        <img class="user_bg" id="user_bg" src="" alt="user-bg">
         <div class="user_info">
             <div class="avatar_img">
                 <img id="avatar" class="avatar"
-                    src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=600&q=60"
+                    src=""
                     alt="avatar">
             </div>
             <h1 id="user_name" class="user_name">
@@ -30,7 +34,7 @@
             <h2 id="user_company" class="user_designation">
                 <!-- company -->
             </h2>
-            <div class="contact_btns">
+            <!-- <div class="contact_btns">
                 <button id="save_contact" class="btn btn_primary btn_dark">
                     <p>Save contact</p> <img src="/profile/public/white-black/assets/icons/download.svg" alt="download-icon">
                 </button>
@@ -39,7 +43,20 @@
                         <p>Send a Hi!</p><img src="/profile/public/white-black/assets//icons/whatsapp.svg" alt="whatsapp-icon">
                     </button>
                 </a>
+            </div> -->
+
+            <div class="contact_btns">
+                <button id="save_contact" class="btn btn_primary btn_dark">
+                    <p>Save contact</p> <img src="/profile/public/white-black/assets/icons/download.svg" alt="download-icon">
+                </button>
+                <a id="send_hi_btn" class="btn_primary btn_light">
+                    <button class="btn hi_btn btn_light">
+                        <p>Send a Hi!</p><img src="/profile/public/white-black/assets/icons/whatsapp.svg" alt="whatsapp-icon">
+                    </button>
+                </a>
             </div>
+
+
     </header>
 
     <div class="quote_section">
@@ -344,7 +361,8 @@
             </div>
         </div>
 
-    </section> 
+    </section>
+
 
     <section class="enquiry_section">
         <h4 class="gradient_text sub_heading">ADD YOUR ENQUIRY</h4>
@@ -375,7 +393,7 @@
             <img src="/profile/public/white-black/assets/icons/close.svg" alt="close">
         </button>
         <div class="popup_card">
-            <img id="product_popup_img" class="popup_img" src="/profile/public/white-black/assets/images/headset.png" alt="product">
+            <img id="product_popup_img" class="popup_img" src="" alt="product">
             <div class="popup_info">
                 <h4 id="product_popup_heading" class="popup_heading fw_600">
                     <!-- heading here -->
@@ -406,7 +424,7 @@
             <img src="/profile/public/white-black/assets/icons/close.svg" alt="close">
         </button>
         <div class="popup_card">
-            <img id="service_popup_img" class="popup_img" src="/profile/public/white-black/assets/images/headset.png" alt="product">
+            <img id="service_popup_img" class="popup_img" src="" alt="product">
             <div class="popup_info">
                 <h4 id="service_popup_heading" class="popup_heading fw_600">
                     <!-- heading here -->
@@ -430,7 +448,7 @@
             <img src="/profile/public/white-black/assets/icons/close.svg" alt="close">
         </button>
         <div class="popup_card">
-            <img id="award_popup_img" class="popup_img" src="/profile/public/white-black/assets/images/headset.png" alt="product">
+            <img id="award_popup_img" class="popup_img" src="" alt="product">
             <div class="popup_info">
                 <h4 id="award_popup_heading" class="popup_heading fw_600">XR headsets</h4>
                 <p id="award_popup_desc" class="popup_desc text_dim fw_400 f_16">
@@ -468,8 +486,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/glider-js@1/glider.min.js"></script>
 
-    <script defer src="/profile/public/white-black/script.js" data="<%= JSON.stringify(data) %>"></script>
-
+    <script src="script.js"></script>
 
 </body>
 
