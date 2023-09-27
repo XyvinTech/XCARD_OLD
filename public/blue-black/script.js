@@ -30,11 +30,11 @@ const fetchUserData = async () => {
   return data;
 };
 
-const handleImage = (imageUrl) => {
+const handleImage = (imageUrl, no_image) => {
   if (imageUrl === null) {
-    imageUrl = "/profile/public/blue-black/assets/images/no_image.jpg";
+    imageUrl = no_image;
   } else if (imageUrl.public === null || imageUrl.public === "") {
-    imageUrl = "/profile/public/blue-black/assets/images/no_image.jpg";
+    imageUrl = no_image;
   } else {
     imageUrl = imageUrl.public;
   }
@@ -57,31 +57,32 @@ function viewDocument(fileName) {
 }
 
 function downloadDocument(publicUrl, fileName, mimeType) {
-  // Use the fetch API to fetch the document from the public URL
-  fetch(publicUrl)
-    .then((response) => response.blob())
-    .then((blob) => {
-      // Create a URL for the blob data
-      const blobUrl = window.URL.createObjectURL(blob);
+  window.location.href = publicUrl;
+  // Check if the required parameters are provided
+  // if (!publicUrl || !fileName || !mimeType) {
+  //     console.error("Missing required parameters");
+  //     return;
+  // }
 
-      // Create an invisible anchor element
-      const a = document.createElement("a");
-      a.style.display = "none";
-      document.body.appendChild(a);
+  // Create a Blob with the provided mimeType
+  // fetch(publicUrl)
+  //     .then(response => response.blob())
+  //     .then(blob => {
+  //         const url = URL.createObjectURL(blob);
 
-      // Set the anchor's href, download attribute, and click it to trigger the download
-      a.href = blobUrl;
-      a.download = fileName;
-      a.type = mimeType;
-      a.click();
+  //         const downloadLink = document.createElement("a");
+  //         downloadLink.href = url;
+  //         downloadLink.download = fileName; // Use the provided fileName
+  //         document.body.appendChild(downloadLink);
+  //         downloadLink.click();
+  //         document.body.removeChild(downloadLink);
 
-      // Clean up by removing the anchor element and revoking the blob URL
-      document.body.removeChild(a);
-      window.URL.revokeObjectURL(blobUrl);
-    })
-    .catch((error) => {
-      console.error("Error downloading document:", error);
-    });
+  //         // Release the object URL after the download has started
+  //         URL.revokeObjectURL(url);
+  //     })
+  //     .catch(error => {
+  //         console.error("Error fetching the document:", error);
+  //     });
 }
 
 function copyToClipboard(button, text, type) {
@@ -111,28 +112,36 @@ function copyToClipboard(button, text, type) {
   }
 }
 
-const contactCardImg = (label) => {
-  switch (label.toLowerCase()) {
+const contactCardImg = (type) => {
+  switch (type.toLowerCase()) {
     case "instagram":
       return "ig.svg";
     case "linkedin":
       return "linkedin.svg";
     case "twitter":
       return "x.svg";
-    case "facebook":
-      return "fb.svg";
     case "x":
       return "x.svg";
+    case "facebook":
+      return "fb.svg";
     case "phone":
       return "call.svg";
     case "dribble":
       return "dribble.svg";
     case "whatsapp":
-      return "wp.svg";
-    case "email" || "gmail":
-      return "mail.svg";
-    case "whatsapp-business":
+      return "whatsapp_blk.svg";
+    case "email":
+      return "email.svg";
+    case "gmail":
+      return "email.svg";
+    case "gmail":
+      return "email.svg";
+    case "wabusiness":
       return "wp_b.svg";
+    case "location":
+      return "location.svg";
+    case "other":
+      return "global.svg";
     default:
       return "global.svg";
   }
@@ -194,6 +203,16 @@ const createVCard = (
 const sendHiToWhatsApp = (whatsapp, btn) => {
   const whatsappLink = `https://wa.me/${whatsapp}`;
   btn.href = whatsappLink;
+};
+
+const sendFormData = async (data) => {
+  const res = await fetch("/profile/submitForm", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
 };
 
 const showProductPopup = (
@@ -281,26 +300,26 @@ const showAwardPopup = (heading, description, imageUrl) => {
 
 function generateContactCard(link, label) {
   return `
-        <div class="contact_card">
-            <a href=${link}>
-                <img src="/profile/public/blue-black/assets/icons/${contactCardImg(label)}" alt="">
-            </a>
-        </div>
-    `;
+      <div class="contact_card">
+          <a href=${link}>
+              <img src="/profile/public/blue-black/assets/icons/${contactCardImg(label)}" alt="">
+          </a>
+      </div>
+  `;
 }
 
 function generateUserSiteCard(websiteName, link) {
   return `
-        <div class="user_site_card">
-            <a href=${link}>
-                <div class="left_section">
-                    <img src="/profile/public/blue-black/assets/icons/global.svg" alt="global">
-                    <p>${websiteName}</p>
-                </div>
-                <img src="/profile/public/blue-black/assets/icons/arrow_outward.svg" alt="">
-            </a>
-        </div>
-    `;
+      <div class="user_site_card">
+          <a href=${link}>
+              <div class="left_section">
+                  <img src="/profile/public/blue-black/assets/icons/global.svg" alt="global">
+                  <p>${websiteName}</p>
+              </div>
+              <img src="/profile/public/blue-black/assets/icons/arrow_outward.svg" alt="">
+          </a>
+      </div>
+  `;
 }
 
 function generateProductCard(
@@ -312,57 +331,68 @@ function generateProductCard(
   link
 ) {
   return `
-    <div onclick="showProductPopup('${productName}', ${fakePrice}, ${originalPrice}, '${imageUrl}','${description}','${link}')" class="product_card">
-    <img class="product_img" src="${imageUrl}" alt="${productName}">
-            <div class="product_details">
-                <div class="product_name">${productName}</div>
-                <div class="product_price">
-                    <p class="fake_price f_16 fw_400">${
-                      fakePrice === null ? "" : `₹${fakePrice}`
-                    }</p>
-                    <p class="orginal_price f_16 fw_600">${
-                      originalPrice === null ? "" : `₹${originalPrice}`
-                    }</p>
-                </div>
-            </div>
-        </div>
-    `;
+  <div onclick="showProductPopup('${productName}', ${fakePrice}, ${originalPrice}, '${imageUrl}','${description}','${link}')" class="product_card">
+  <img class="product_img" src="${imageUrl}" alt="${productName}">
+          <div class="product_details">
+              <div class="product_name">${productName}</div>
+              <div class="product_price">
+                  <p class="fake_price f_16 fw_400">${
+                    fakePrice === null ? "" : `₹${fakePrice}`
+                  }</p>
+                  <p class="orginal_price f_16 fw_600">${
+                    originalPrice === null ? "" : `₹${originalPrice}`
+                  }</p>
+              </div>
+          </div>
+      </div>
+  `;
 }
 
 function createServiceCard(serviceName, serviceDescription, imageUrl, link) {
   const service_desc = serviceDescription || ""; // Use empty string if serviceDescription is undefined
-
+  const service_no_img = "/profile/public/blue-black/assets/images/service_no_img.png";
   const card = document.createElement("div");
   card.classList.add("slider_service_card");
   card.innerHTML = `
-        <img class="service_img" src="${handleImage(
-          imageUrl
-        )}" alt="${serviceName}">
-        <div class="service_details">
-            <h4 class="fw_600 f_16 service_heading">${serviceName}</h4>
-            <p class="fw_400 f_14 service_desc">${service_desc}</p>
-        </div>
-    `;
+      <img class="service_img" src="${handleImage(
+        imageUrl,
+        service_no_img
+      )}" alt="${serviceName}">
+      <div class="service_details">
+          <h4 class="fw_600 f_16 service_heading">${serviceName}</h4>
+          <p class="fw_400 f_14 service_desc">${service_desc}</p>
+      </div>
+  `;
 
   card.addEventListener("click", function () {
-    showServicePopup(serviceName, service_desc, handleImage(imageUrl), link);
+    showServicePopup(
+      serviceName,
+      service_desc,
+      handleImage(imageUrl, service_no_img),
+      link
+    );
   });
 
   return card;
 }
 
 function generateAwardCard(awardTitle, organizationName, imageUrl) {
+  const award_no_img = "/profile/public/blue-black/assets/images/award_no_img.png";
   return `
-        <div onclick="showAwardPopup('${awardTitle}', '${organizationName}', '${handleImage(
-    imageUrl
+      <div onclick="showAwardPopup('${awardTitle}', '${organizationName}', '${handleImage(
+    imageUrl,
+    award_no_img
   )}')" class="award_card">
-            <img class="award_img" src="${handleImage(imageUrl)}" alt="product">
-            <div class="product_details">
-                <h5 class="fw_600 f_16 award_title">${awardTitle}</h5>
-                <p class="fw_400 f_16 award_organisation">${organizationName}</p>
-            </div>
-        </div>
-    `;
+          <img class="award_img" src="${handleImage(
+            imageUrl,
+            award_no_img
+          )}" alt="product">
+          <div class="product_details">
+              <h5 class="fw_600 f_16 award_title">${awardTitle}</h5>
+              <p class="fw_400 f_16 award_organisation">${organizationName}</p>
+          </div>
+      </div>
+  `;
 }
 
 function generateDocumentCard(doc) {
@@ -380,30 +410,34 @@ function generateDocumentCard(doc) {
   }
 
   return `
-        <div class="document_card">
-            <div class="left_section">
-                <img src="/profile/public/blue-black/assets/icons/document.svg" alt="file">
-                <p class="document_name fw_400 f_14">${documentName}</p>
-            </div>
-            <button class="btn" onclick="${
-              isViewableData
-                ? `viewDocument('${data.public}')`
-                : `downloadDocument('${data.public}', '${data.fileName}', '${data.mimeType}')`
-            }">
-                <img src="/profile/public/blue-black/assets/icons/${icon}" alt="download">
-            </button>
-        </div>
-    `;
+      <div class="document_card">
+          <div class="left_section">
+              <img src="/profile/public/blue-black/assets/icons/document.svg" alt="file">
+              <p class="document_name fw_400 f_14">${documentName}</p>
+          </div>
+          <button class="btn" onclick="${
+            isViewableData
+              ? `viewDocument('${data.public}')`
+              : `downloadDocument('${data.public}', '${data.fileName}', '${data.mimeType}')`
+          }">
+              <img src="/profile/public/blue-black/assets/icons/${icon}" alt="download">
+          </button>
+      </div>
+  `;
 }
 
 function generateCertificateCard(certificateTitle, organizationName, imageUrl) {
+  const certificate_no_img = "/profile/public/blue-black/assets/images/certificate.png";
   return `
-        <div class="certificate_card">
-            <img src="${handleImage(imageUrl)}" alt="certificate">
-            <h5 class="gradient_text fw_600 f_16">${certificateTitle}</h5>
-            <p class="fw_400 f_16">${organizationName}</p>
-        </div>
-    `;
+      <div class="certificate_card">
+          <img src="${handleImage(
+            imageUrl,
+            certificate_no_img
+          )}" alt="certificate">
+          <h5 class="gradient_text fw_600 f_16">${certificateTitle}</h5>
+          <p class="fw_400 f_16">${organizationName}</p>
+      </div>
+  `;
 }
 
 function generateBankDetail(type, data) {
@@ -411,16 +445,16 @@ function generateBankDetail(type, data) {
     return "";
   }
   return `
-        <div class="bank_detail">
-            <div class="bank_detail_left_section">
-                <h6 class="gradient_text f_14 fw_500 bank_data_type">${type}</h6>
-                <p class="fw_600 f_14 bank_data">${data}</p>
-            </div>
-            <button class="btn" onclick="copyToClipboard(this, '${data}', '${type}')">
-                <img class="copy_icon" id="${data.toLowerCase()}_copy_icon" src="/profile/public/blue-black/assets/icons/copy.svg" alt="copy">
-            </button>
-        </div>
-    `;
+      <div class="bank_detail">
+          <div class="bank_detail_left_section">
+              <h6 class="gradient_text f_14 fw_500 bank_data_type">${type}</h6>
+              <p class="fw_600 f_14 bank_data">${data}</p>
+          </div>
+          <button class="btn" onclick="copyToClipboard(this, '${data}', '${type}')">
+              <img class="copy_icon" id="${data.toLowerCase()}_copy_icon" src="/profile/public/blue-black/assets/icons/copy.svg" alt="copy">
+          </button>
+      </div>
+  `;
 }
 
 function generateYouTubePlayer(link) {
@@ -429,10 +463,10 @@ function generateYouTubePlayer(link) {
   }
   const videoId = link.split("/")[3];
   return `
-      <div class="youtube_player">
-        <iframe class="yt_iframe" src="https://www.youtube.com/embed/${videoId}?controls=1" frameborder="0" allowfullscreen></iframe>
-      </div>
-    `;
+    <div class="youtube_player">
+      <iframe class="yt_iframe" src="https://www.youtube.com/embed/${videoId}?controls=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+  `;
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -470,6 +504,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const data = await fetchUserData();
 
+  if (data) {
+    const loader = document.getElementById("loader");
+    loader.style.display = "none";
+  }
+
   // profile details
   if (data.profile) {
     const profile = data.profile;
@@ -485,19 +524,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     user_designation.innerText = designation;
     user_company.innerText = company;
-  }
-
-  // social media links
-  if (data.social && data.social.status && data.social.socials.length > 0) {
-    var socials = data.social.socials;
-    socials.map((social) => {
-      contact_cards.innerHTML += generateContactCard(
-        social.value,
-        social.label
-      );
-    });
-  } else {
-    document.getElementById("contact_section").classList.add("d_none");
   }
 
   // websites
@@ -631,7 +657,27 @@ document.addEventListener("DOMContentLoaded", async () => {
   let whatsapp = null;
 
   if (data.contact && data.contact.status && data.contact.contacts.length > 0) {
+    const valueForSocials = (type, value) => {
+      switch (type) {
+        case "wabusiness":
+        case "whatsapp":
+          return `https://wa.me/${value}`;
+        case "phone":
+          return `tel:${value}`;
+        case "email":
+          return `mailto:${value}`;
+        case "location":
+          return value;
+        default:
+          return;
+      }
+    };
     for (const contact of data.contact.contacts) {
+      data.social.socials.push({
+        label: contact.label,
+        type: contact.type,
+        value: valueForSocials(contact.type, contact.value),
+      });
       if (contact.type === "email") {
         email = contact.value;
       } else if (contact.type === "phone") {
@@ -646,6 +692,32 @@ document.addEventListener("DOMContentLoaded", async () => {
         whatsapp = contact.value;
       }
     }
+  }
+
+  // social media links
+  if (data.social && data.social.status && data.social.socials.length > 0) {
+    var socials = data.social.socials;
+
+    // Custom sorting function
+    socials.sort((a, b) => {
+      if (a.type === "phone") {
+        return -1; // "phone" comes before other types
+      } else if (b.type === "phone") {
+        return 1; // "phone" comes before other types
+      } else if (a.type === "whatsapp") {
+        return -1; // "whatsapp" comes after "phone"
+      } else if (b.type === "whatsapp") {
+        return 1; // "whatsapp" comes after "phone"
+      } else {
+        return 0; // Keep the original order for other types
+      }
+    });
+
+    socials.map((social) => {
+      contact_cards.innerHTML += generateContactCard(social.value, social.type);
+    });
+  } else {
+    document.getElementById("contact_section").classList.add("d_none");
   }
 
   save_contact.addEventListener("click", () => {
@@ -670,7 +742,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     sendHiToWhatsApp(whatsapp, bottom_fixed_btn_link);
   });
 
-  enquiry_btn.addEventListener("click", (e) => {
+  enquiry_btn.addEventListener("click", async (e) => {
     e.preventDefault();
     const name_input = document.getElementById("name_input");
     const phone = document.getElementById("phone");
@@ -714,7 +786,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         country_code: code,
         message: textarea.value,
       };
-      //  send the data to the backend api
+      await sendFormData(data);
     }
   });
 
@@ -734,28 +806,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     draggable: true,
     dots: "#dots",
 
-    // scrollLockDelay: 2000,
-    schrollLock: true,
-
-    scrollLockDelay: 150,
-
-    slidesToScroll: 1,
-
-    // Set easing and duration for smooth slide transitions
-    duration: 1, // Adjust the duration for your preferred speed (in milliseconds)
-
-    arrows: {
-      prev: ".service_glider_prev",
-      next: ".service_glider_next",
-    },
-  });
-
-  // awards_slider
-  new Glider(document.querySelector(".awards_slider"), {
-    slidesToShow: 1.8,
-    draggable: true,
-    dots: "#dots",
-
     scrollLock: false,
     // scrollLockDelay: 2000,
     resizeLock: true,
@@ -768,6 +818,31 @@ document.addEventListener("DOMContentLoaded", async () => {
     slidesToScroll: 1,
 
     // Set easing and duration for smooth slide transitions
+    easing: function (x, t, b, c, d) {
+      return c * (t /= d) * t + b;
+    },
+    duration: 800, // Adjust the duration for your preferred speed (in milliseconds)
+
+    arrows: {
+      prev: ".service_glider_prev",
+      next: ".service_glider_next",
+    },
+  });
+
+  // awards_slider
+  new Glider(document.querySelector(".awards_slider"), {
+    slidesToShow: 2,
+    draggable: true,
+    dots: "#dots",
+
+    scrollLock: false,
+    // scrollLockDelay: 2000,
+    resizeLock: true,
+
+    scrollLockDelay: 150,
+
+    slidesToScroll: 1,
+
     duration: 1, // Adjust the duration for your preferred speed (in milliseconds)
 
     arrows: {
@@ -776,3 +851,4 @@ document.addEventListener("DOMContentLoaded", async () => {
     },
   });
 });
+

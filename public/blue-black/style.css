@@ -32,7 +32,6 @@ body {
   background-repeat: no-repeat;
   color: var(--bg-clr);
   font-family: "Poppins", sans-serif;
-  overflow-x: hidden;
 
   margin-bottom: 82px;
 }
@@ -123,10 +122,28 @@ body {
   color: #a1a1a1;
 }
 .contact_btns {
+  --gap: 12px;
   display: flex;
-  gap: 12px;
+  gap: var(--gap);
+  width: 100%;
+  padding: 0 1rem;
+  flex-wrap: nowrap;
   margin-top: 24px;
+  justify-content: center;
 }
+
+.contact_btns > *{
+  width: calc(50% - (var(--gap) / 2)) !important;
+}
+
+#send_hi_btn > button{
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+
+} 
+
+
 
 .btn_primary {
   height: 51px;
@@ -152,6 +169,7 @@ body {
 #send_hi_btn {
   text-decoration: none;
 }
+
 
 /* quote section */
 .quote_section {
@@ -822,4 +840,46 @@ footer {
 #chatButton.visible {
   opacity: 1;
   transform: translateY(0);
+}
+
+
+#loader {
+  position: fixed;
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #000;
+  z-index: 3;
+}
+
+#loader img {
+  width: 2rem;
+  aspect-ratio: 1;
+  animation: spin 500ms infinite linear;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.glider::-webkit-scrollbar {
+  height: 0 !important;
+}
+
+.glider::-webkit-scrollbar-thumb {
+  box-shadow: none !important;
+}
+
+
+@media(max-width:375px){
+  .contact_cards{
+      grid-template-columns: repeat(4,1fr);
+  }
 }
