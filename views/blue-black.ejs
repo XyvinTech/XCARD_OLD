@@ -6,7 +6,8 @@
     <link rel="stylesheet" href="https://cdn.tutorialjinni.com/intl-tel-input/17.0.19/css/intlTelInput.css"    />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glider-js@1/glider.min.css">
-
+    <!-- font awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="/profile/public/blue-black/style.css">
     <title>x-card</title>
 </head>
@@ -60,14 +61,53 @@
     </header>
 
     <div class="quote_section">
-        <h2 style="font-size: 0.875rem;font-weight: 800;">ABOUT ME</h2>
+        <img src="/profile/public/blue-black/assets/icons/quot.svg" alt="quote">
         <p id="bio">
             <!-- bio here -->
         </p>
     </div>
 
-    <section id="contact_section" class="contact_section">
+    <section id="contact_long_card_section" class="contact_section">
         <h4 class="gradient_text sub_heading">Contact me</h4>
+        
+        <div id="contact_long_cards" class="contact_long_cards">
+
+            <!-- <div class="contact_long_card">
+                <a class="contact_link" href="#">
+                    <img src="/profile/public/blue-black/assets/icons/call.svg" alt="">
+                    <div class="contact_info">
+                        <h5 class="fw_500 f_12">Phone</h5>
+                        <p class="gradient_text f_14 fw_600">+91 9954862335</p>
+                    </div>
+                </a>
+            </div>
+
+            <div class="contact_long_card">
+                <a class="contact_link" href="#">
+                    <img src="/profile/public/blue-black/assets/icons/call.svg" alt="">
+                    <div class="contact_info">
+                        <h5 class="fw_500 f_12">Phone</h5>
+                        <p class="gradient_text f_14 fw_600">+91 9954862335</p>
+                    </div>
+                </a>
+            </div>
+
+            <div class="contact_long_card">
+                <a class="contact_link" href="#">
+                    <img src="/profile/public/blue-black/assets/icons/call.svg" alt="">
+                    <div class="contact_info">
+                        <h5 class="fw_500 f_12">Phone</h5>
+                        <p class="gradient_text f_14 fw_600">+91 9954862335</p>
+                    </div>
+                </a>
+            </div> -->
+
+        </div>
+
+    </section>
+
+    <section id="contact_section" class="contact_section">
+        <h4 class="gradient_text sub_heading">Social media</h4>
         <div id="contact_cards" class="contact_cards">
 
             <!-- <div class="contact_card">
@@ -381,9 +421,11 @@
     </section>
 
     <footer>
-        <h5 class="footer_text fw_400 f_12">Powered by <span class="footer_company_text fw_600 f_14">Skybertech</span>
+        <h5 class="footer_text fw_400 f_12">Powered by <span class="footer_company_text fw_600 f_14">Alphamaze</span>
         </h5>
-        <button class="btn footer_company_text">View more</button>
+        <a href="https://www.visitingcard.store/">
+            <button class="btn footer_company_text">View more</button>
+        </a>
     </footer>
 
 
@@ -490,7 +532,7 @@
     defer
     src="/profile/public/blue-black/script.js"
     data="<%= JSON.stringify(data) %>"
-    ></script>
+  ></script>
 
 </body>
 
