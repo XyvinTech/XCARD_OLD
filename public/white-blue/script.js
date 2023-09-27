@@ -557,8 +557,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         var company = profile.companyName
         var designation = profile.designation
 
-        user_bg.src = profile.profileBanner.public
-        avatar.src = profile.profilePicture.public
+        user_bg.src = profile.profileBanner?.public
+        avatar.src = profile.profilePicture?.public
         user_name.innerText = name
         bio.innerText = profile.bio
 
@@ -713,7 +713,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
 
         socials.map(social => {
-            contact_cards.innerHTML += generateContactCard(social.value, social.type)
+            if(social.value){
+                contact_cards.innerHTML += generateContactCard(social.value, social.type)
+            }
         })
     }else{
         document.getElementById("contact_section").classList.add("d_none")
