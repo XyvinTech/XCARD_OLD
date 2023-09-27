@@ -1,26 +1,4 @@
-const viewable = ["png",
-"jpg",
-"jpeg",
-"gif",
-"mp4",
-"avi",
-"mkv",
-"mov",
-"webm",
-"mp3",
-"ogg",
-"wav",
-"flac",
-"aac",
-"wma",
-"m4a",
-"opus",
-"svg",
-"ico",
-"webp",
-"bmp",
-"3gp",];
-const data = JSON.parse(document.currentScript.getAttribute("data"));
+const viewable = ["png", "jpg", "jpeg", "gif", "mov", "svg", "ico", "webp"];
 const profile = data.profile;
 const contacts =
   data.contact && data.contact.status && data.contact.contacts?.length > 0
@@ -71,6 +49,8 @@ const bank =
   data.bank && data.bank.status && data.bank.bankDetails
     ? data.bank.bankDetails
     : null;
+
+// console.log(socials)
 
 function run() {
   generateProfile();
@@ -377,6 +357,17 @@ function generateCatalogues() {
   ul.innerHTML = "";
 
   documents.forEach((doc) => {
+    console.log(doc)
+
+    let icon = ""
+    if (viewable.includes(doc.image.fileName.split('.')[1])) {
+      icon = "eye.svg";
+      isViewableData = true
+    } else {
+        icon = "download.svg";
+        isViewableData = false
+    }
+
     if (doc.image?.public) {
       const splittedFileName = doc.image?.fileName.split(".");
       let label = "";
@@ -387,8 +378,7 @@ function generateCatalogues() {
             ? splittedFileName.slice(0, splittedFileName.length - 1).join("")
             : doc.label;
       }
-      // const fileType = splittedFileName[-1].toLowerCase();
-      console.log(splittedFileName);
+
       const li = document.createElement("li");
       li.innerHTML += `
     <div class="website-card">
@@ -396,7 +386,7 @@ function generateCatalogues() {
         <img src="/profile/public/orange-black/assets/orange-dark/icons/pdf.svg" alt="" />
         <span class="text">${label}</span>
       </div>
-      <button class="action"><img src="/profile/public/orange-black/assets/orange-dark/icons/download.svg" alt="" /></button>
+      <button class="action"><img src="/profile/public/orange-black/assets/orange-dark/icons/${icon}" alt="${icon}" /></button>
     </div>
     `;
       ul.appendChild(li);
@@ -451,7 +441,7 @@ function generateSocials() {
     return;
   }
 
-  const large = ["facebook", "twitter", "instagram", "linkedin"];
+  const large = ["phone", "whatsapp", "email", "gmail","location","wabusiness"];
   const smallDiv = socialSection.querySelector(".small-cards");
   const largeDiv = socialSection.querySelector(".large-cards");
 
@@ -464,7 +454,7 @@ function generateSocials() {
 
     if (social.value === "") return;
 
-    if (large.includes(social.type)) {
+    if (!large.includes(social.type)) {
       card.innerHTML = `
       <a target="_blank" href="${social.value}">
       <img
@@ -497,6 +487,38 @@ function generateSocials() {
   const location = contacts.find((contact) => contact.type === "location");
   const whatsapp = contacts.find((contact) => contact.type === "whatsapp");
 
+
+  if (phone && phone.value?.trim() !== "") {
+    smallDiv.innerHTML += `
+    <div class="card">
+          <a target="_blank" href="tel:${phone.value}">
+            <img src="/profile/public/orange-black/assets/orange-dark/socials/phone.svg" alt="phone" />
+          </a>
+      </div>
+    `;
+  }
+
+  if (email && email.value?.trim() !== "") {
+    smallDiv.innerHTML += `
+    <div class="card">
+          <a target="_blank" href="mailto:${email.value}">
+            <img src="/profile/public/orange-black/assets/orange-dark/socials/mail.svg" alt="email" />
+          </a>
+      </div>
+    `;
+  }
+
+  if (wabusiness && wabusiness.value) {
+    largeDiv.innerHTML += `
+      <a target="_blank" href="https://wa.me/${wabusiness.value}" id="say-hello-btn" class="btn btn-secondary whatsapp-btn">
+      <img
+        src="/profile/public/orange-black/assets/orange-dark/icons/whatsapp-org.svg"
+        alt="whatsapp"
+      />
+      <span>Say Hello</span>
+    </a>
+  `;
+
   if (location) {
     const query = `${location.street ?? ""}, ${location.pincode ?? ""}`;
 
@@ -511,43 +533,6 @@ function generateSocials() {
     </div>`;
   }
 
-  if (wabusiness && wabusiness.value) {
-    largeDiv.innerHTML += `
-    <a target="_blank" href="https://wa.me/${wabusiness.value}" id="say-hello-btn" class="btn btn-secondary whatsapp-btn">
-    <img
-      src="/profile/public/orange-black/assets/orange-dark/icons/whatsapp-org.svg"
-      alt="whatsapp"
-    />
-    <span>Say Hello</span>
-  </a>
-  `;
-
-    smallDiv.innerHTML += `
-    <div class="card">
-      <a target="_blank" href="https://wa.me/${wabusiness.value}">
-        <img src="/profile/public/orange-black/assets/orange-dark/socials/wp_b.svg" alt="wabusiness" />
-      </a>
-    </div>`;
-  }
-
-  if (email && email.value?.trim() !== "") {
-    smallDiv.innerHTML += `
-    <div class="card">
-          <a target="_blank" href="mailto:${email.value}">
-            <img src="/profile/public/orange-black/assets/orange-dark/socials/mail.svg" alt="email" />
-          </a>
-      </div>
-    `;
-  }
-  if (phone && phone.value?.trim() !== "") {
-    smallDiv.innerHTML += `
-    <div class="card">
-          <a target="_blank" href="tel:${phone.value}">
-            <img src="/profile/public/orange-black/assets/orange-dark/socials/phone.svg" alt="phone" />
-          </a>
-      </div>
-    `;
-  }
   if (whatsapp && whatsapp.value?.trim() !== "") {
     smallDiv.innerHTML += `
     <div class="card">
@@ -556,6 +541,14 @@ function generateSocials() {
           </a>
       </div>
     `;
+  }
+
+    smallDiv.innerHTML += `
+    <div class="card">
+      <a target="_blank" href="https://wa.me/${wabusiness.value}">
+        <img src="/profile/public/orange-black/assets/orange-dark/socials/wp_b.svg" alt="wabusiness" />
+      </a>
+    </div>`;
   }
 }
 
@@ -666,9 +659,15 @@ function generateEnquiry() {
         message: textarea.value,
       };
 
+
+
       const btn = e.target.querySelector("button");
 
       btn.innerHTML = `<img src="/profile/public/orange-black/assets/orange-dark/icons/loader.svg" class="loading" style="width:1.25rem;height:1.25rem" />`;
+      btn.disabled = true;
+      const info = document.querySelector(".form-info");
+      const p = info.querySelector("#form-info");
+      info.style.display = "none";
 
       try {
         const res = await fetch("/profile/submitForm", {
@@ -679,18 +678,28 @@ function generateEnquiry() {
           body: JSON.stringify(data),
         });
 
+        info.style.display = "block";
+
         if (res.ok) {
           name_input.value = "";
           phone.value = "";
           email_input.value = "";
           textarea.value = "";
+          p.innerText = "Submitted successfully";
+          p.style.color = "green";
+        } else {
+          p.innerText = "Something went wrong";
+          p.style.color = "tomato";
         }
       } catch (err) {
+        p.innerText = "Something went wrong";
+        p.style.color = "tomato";
         console.error(err);
       }
 
       btn.innerHTML = "Submit";
-      //  send the data to the backend api
+      btn.disabled = false;
+
     }
   });
 }
@@ -872,7 +881,6 @@ function copyToClipboard(text, li) {
       .writeText(text)
       .then(() => {
         const img = li.querySelector(".action img");
-        console.log("hiii");
         setTimeout(() => {
           if (img) {
             img.src = "/profile/public/orange-black/assets/orange-dark/icons/tick.svg";
@@ -895,7 +903,6 @@ function copyToClipboard(text, li) {
 }
 
 function contactCardImg(label) {
-  console.log(label);
   switch (label.toLowerCase()) {
     case "instagram":
       return "ig.svg";

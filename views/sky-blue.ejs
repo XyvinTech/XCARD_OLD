@@ -28,33 +28,10 @@
       rel="stylesheet"
       href="https://cdn.tutorialjinni.com/intl-tel-input/17.0.19/css/intlTelInput.css"
     />
-    <script
-    defer
-    src="/profile/public/sky-blue/script.js"
-    data="<%= JSON.stringify(data) %>"
-  ></script>
+    <script src="/profile/public/sky-blue/script.js" defer data="<%= JSON.stringify(data) %>"></script>
   </head>
   <body>
-    <!-- Header Section -->
-    <header class="header">
-      <a href="/">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-        >
-          <path
-            d="M15 18L9 12L15 6"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
-      </a>
-    </header>
+
     <div id="loader">
       <img src="/profile/public/sky-blue/assets/orange-dark/icons/loader.svg" alt="loading">
     </div>
@@ -66,7 +43,7 @@
           <div class="info">
             <img
               class="profile-pic"
-              src=""
+              src="/profile/public/sky-blue/assets/orange-dark/profile-pic.png"
               alt="profile-pic"
             />
             <h1>Robert C. Shelton</h1>
@@ -273,6 +250,11 @@
                 class="text-input"
               ></textarea>
             </div>
+
+            <div style="display: none;" class="form-info">
+              <p style="padding-left: 0.5rem;" id="form-info">hello</p>
+            </div>
+
             <button class="btn btn-primary">Submit</button>
           </form>
         </div>

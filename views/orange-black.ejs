@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Portfolio</title>
+    <title>X-card black orange theme</title>
     <link rel="stylesheet" href="/profile/public/orange-black/style.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -11,6 +11,7 @@
       href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
+    <script src="/profile/public/orange-black/data.js"></script>
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/glider-js/1.7.8/glider.min.js"
       integrity="sha512-AZURF+lGBgrV0WM7dsCFwaQEltUV5964wxMv+TSzbb6G1/Poa9sFxaCed8l8CcFRTiP7FsCgCyOm/kf1LARyxA=="
@@ -28,11 +29,7 @@
       rel="stylesheet"
       href="https://cdn.tutorialjinni.com/intl-tel-input/17.0.19/css/intlTelInput.css"
     />
-    <script
-    defer
-    src="/profile/public/orange-black/script.js"
-    data="<%= JSON.stringify(data) %>"
-  ></script>
+    <script src="/profile/public/orange-black/script.js" defer data="<%= JSON.stringify(data) %>"></script>
   </head>
   <body>
     <!-- Header Section -->
@@ -236,6 +233,10 @@
                 name="message"
                 class="text-input"
               ></textarea>
+            </div>
+            
+            <div style="display: none;" class="form-info">
+              <p style="padding-left: 0.5rem;" id="form-info">hello</p>
             </div>
             <button class="btn btn-primary">Submit</button>
           </form>

@@ -25,7 +25,6 @@ body {
   min-height: 100vh;
   font-family: var(--font-outfit);
   position: relative;
-  overflow-x: hidden;
 }
 
 a {
@@ -321,6 +320,14 @@ ul {
   background-color: #a5a5a5;
 }
 
+.glider::-webkit-scrollbar {
+  height: 0 !important;
+}
+
+.glider::-webkit-scrollbar-thumb {
+  box-shadow: none !important;
+}
+
 .service-card {
   width: 100%;
 }
@@ -544,7 +551,9 @@ ul {
 }
 
 /* Enquiry Section */
-
+#enquiry{
+  margin-bottom: 70px;
+}
 #enquiry h2 {
   font-size: 1.125rem;
   font-weight: 600;

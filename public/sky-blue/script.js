@@ -1,26 +1,27 @@
-const viewable = ["png",
-"jpg",
-"jpeg",
-"gif",
-"mp4",
-"avi",
-"mkv",
-"mov",
-"webm",
-"mp3",
-"ogg",
-"wav",
-"flac",
-"aac",
-"wma",
-"m4a",
-"opus",
-"svg",
-"ico",
-"webp",
-"bmp",
-"3gp",];
-const data = JSON.parse(document.currentScript.getAttribute("data"));
+const viewable = [
+  "png",
+  "jpg",
+  "jpeg",
+  "gif",
+  "mp4",
+  "avi",
+  "mkv",
+  "mov",
+  "webm",
+  "mp3",
+  "ogg",
+  "wav",
+  "flac",
+  "aac",
+  "wma",
+  "m4a",
+  "opus",
+  "svg",
+  "ico",
+  "webp",
+  "bmp",
+  "3gp",
+];
 const profile = data.profile;
 const contacts =
   data.contact && data.contact.status && data.contact.contacts?.length > 0
@@ -218,7 +219,7 @@ function generateAwards() {
       content += `
       <li class="award-card">
         <img src="${
-          award.image?.public ?? "/profile/public/sky-blue/assets/orange-dark/no_image.jpg"
+          award.image?.public ?? "/profile/public/sky-blue/assets/orange-dark/award_no_img.png"
         }" alt="award" />
         <h3>${award.label}</h3>
         ${award.value && "<p>" + award.value + "</p>"}
@@ -251,7 +252,7 @@ function generateServices() {
           <img src="${
             service.image?.public
               ? service.image.public
-              : "/profile/public/sky-blue/assets/orange-dark/no_image.jpg"
+              : "/profile/public/sky-blue/assets/orange-dark/service_no_img.png"
           }" alt="service" />
           <h3>${service.label}</h3>
           <p>${service.description ?? ""}</p>
@@ -296,7 +297,7 @@ function generateProducts() {
           <img src="${
             product.image?.public
               ? product.image.public
-              : "/profile/public/sky-blue/assets/orange-dark/no_image.jpg"
+              : "/profile/public/sky-blue/assets/orange-dark/award_no_img.png.jpg"
           }" alt="" />
           <h3>${product.name}</h3>
           <p>${product.description ?? ""}</p>
@@ -376,6 +377,17 @@ function generateCatalogues() {
   ul.innerHTML = "";
 
   documents.forEach((doc) => {
+    console.log(doc)
+
+    let icon = ""
+    if (viewable.includes(doc.image.fileName.split('.')[1])) {
+      icon = "eye.svg";
+      isViewableData = true
+    } else {
+        icon = "download.svg";
+        isViewableData = false
+    }
+
     if (doc.image?.public) {
       const splittedFileName = doc.image?.fileName.split(".");
       let label = "";
@@ -394,7 +406,7 @@ function generateCatalogues() {
         <img src="/profile/public/sky-blue/assets/orange-dark/icons/pdf.svg" alt="" />
         <span class="text">${label}</span>
       </div>
-      <button class="action"><img src="/profile/public/sky-blue/assets/orange-dark/icons/download.svg" alt="" /></button>
+      <button class="action"><img src="/profile/public/sky-blue/assets/orange-dark/icons/${icon}" alt="${icon}" /></button>
     </div>
     `;
       ul.appendChild(li);
@@ -447,7 +459,7 @@ function generateSocials() {
     return;
   }
 
-  const large = ["facebook", "twitter", "instagram", "linkedin"];
+  const large = ["phone", "whatsapp", "email", "gmail","location","wabusiness"];
   const smallDiv = socialSection.querySelector(".small-cards");
   const largeDiv = socialSection.querySelector(".large-cards");
 
@@ -457,7 +469,10 @@ function generateSocials() {
   socials.forEach((social) => {
     const card = document.createElement("div");
     card.classList.add("card");
-    if (large.includes(social.type)) {
+
+    if (social.value === "") return;
+
+    if (!large.includes(social.type)) {
       card.innerHTML = `
       <a target="_blank" href="${social.value}">
       <img
@@ -490,16 +505,15 @@ function generateSocials() {
   const location = contacts.find((contact) => contact.type === "location");
   const whatsapp = contacts.find((contact) => contact.type === "whatsapp");
 
-  if (wabusiness) {
-    largeDiv.innerHTML += `
-    <a target="_blank" href="https://wa.me/${wabusiness.value}" class="btn btn-secondary whatsapp-btn">
-    <img
-      src="/profile/public/sky-blue/assets/orange-dark/icons/whatsapp-org.svg"
-      alt="whatsapp"
-    />
-    <span>Say Hello</span>
-  </a>
-  `;
+
+  if (phone && phone.value?.trim() !== "") {
+    smallDiv.innerHTML += `
+    <div class="card">
+          <a target="_blank" href="tel:${phone.value}">
+            <img src="/profile/public/sky-blue/assets/orange-dark/socials/phone.svg" alt="phone" />
+          </a>
+      </div>
+    `;
   }
 
   if (email && email.value?.trim() !== "") {
@@ -511,15 +525,32 @@ function generateSocials() {
       </div>
     `;
   }
-  if (phone && phone.value?.trim() !== "") {
+
+  if (wabusiness && wabusiness.value) {
+    largeDiv.innerHTML += `
+      <a target="_blank" href="https://wa.me/${wabusiness.value}" id="say-hello-btn" class="btn btn-secondary whatsapp-btn">
+      <img
+        src="/profile/public/sky-blue/assets/orange-dark/icons/whatsapp-org.svg"
+        alt="whatsapp"
+      />
+      <span>Say Hello</span>
+    </a>
+  `;
+
+  if (location) {
+    const query = `${location.street ?? ""}, ${location.pincode ?? ""}`;
+
     smallDiv.innerHTML += `
     <div class="card">
-          <a target="_blank" href="tel:${phone.value}">
-            <img src="/profile/public/sky-blue/assets/orange-dark/socials/phone.svg" alt="phone" />
-          </a>
-      </div>
-    `;
+      <a target="_blank" href="https://www.google.com/maps?q=${query.replace(
+        /\s+/g,
+        "+"
+      )}">
+        <img src="/profile/public/sky-blue/assets/orange-dark/socials/location.svg" alt="wabusiness" />
+      </a>
+    </div>`;
   }
+
   if (whatsapp && whatsapp.value?.trim() !== "") {
     smallDiv.innerHTML += `
     <div class="card">
@@ -528,6 +559,14 @@ function generateSocials() {
           </a>
       </div>
     `;
+  }
+
+    smallDiv.innerHTML += `
+    <div class="card">
+      <a target="_blank" href="https://wa.me/${wabusiness.value}">
+        <img src="/profile/public/sky-blue/assets/orange-dark/socials/wp_b.svg" alt="wabusiness" />
+      </a>
+    </div>`;
   }
 }
 
@@ -578,7 +617,7 @@ function generateCertificates() {
     <li>
               <img
                 src="${
-                  cert.image?.public ?? "/profile/public/sky-blue/assets/orange-dark/no_image.jpg"
+                  cert.image?.public ?? "/profile/public/sky-blue/assets/orange-dark/certificate.png"
                 }"
                 alt="certificate"
               />
@@ -593,7 +632,7 @@ function generateCertificates() {
 
 function generateEnquiry() {
   const form = document.querySelector("#enquiry form");
-  form.addEventListener("submit", (e) => {
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const name_input = document.getElementById("name");
     const phone = document.getElementById("phone");
@@ -638,8 +677,45 @@ function generateEnquiry() {
         message: textarea.value,
       };
 
-      console.log(data);
-      //  send the data to the backend api
+
+      const btn = e.target.querySelector("button");
+
+      btn.innerHTML = `<img src="/profile/public/sky-blue/assets/orange-dark/icons/loader.svg" class="loading" style="width:1.25rem;height:1.25rem" />`;
+      btn.disabled = true;
+      const info = document.querySelector(".form-info");
+      const p = info.querySelector("#form-info");
+      info.style.display = "none";
+
+      try {
+        const res = await fetch("/profile/submitForm", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        });
+
+        info.style.display = "block";
+
+        if (res) {
+          name_input.value = "";
+          phone.value = "";
+          email_input.value = "";
+          textarea.value = "";
+          p.innerText = "Submitted successfully";
+          p.style.color = "green";
+        } else {
+          p.innerText = "Something went wrong";
+          p.style.color = "tomato";
+        }
+      } catch (err) {
+        console.error(err);
+      }
+
+      btn.innerHTML = "Submit";
+      btn.disabled = false;
+
+      
     }
   });
 }
