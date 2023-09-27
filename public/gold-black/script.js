@@ -23,7 +23,7 @@ const viewable = [
     "3gp",
 ];
 
-const data = JSON.parse(document.currentScript().getAttribute("data"));
+const data = JSON.parse(document.currentScript.getAttribute("data"));
 
 const fetchUserData = async () => {
     
@@ -65,14 +65,14 @@ function copyToClipboard(button, text, type) {
             const img = document.getElementById(`${text.toLowerCase()}_copy_icon`);
             setTimeout(() => {
                 if (img) {
-                    img.src = "./assets/icons/tick.svg";
+                    img.src = "/profile/public/gold-black/assets/icons/tick.svg";
                 }
             }, 500);
 
             // After 2.5 seconds, change the button image back to "copy.svg"
             setTimeout(() => {
                 if (img) {
-                    img.src = "./assets/icons/copy.svg";
+                    img.src = "/profile/public/gold-black/assets/icons/copy.svg";
                 }
             }, 2500);
         }).catch(err => {
@@ -242,7 +242,7 @@ function generateContactCard(link, type) {
     return `
         <div class="contact_card">
             <a href=${link}>
-                <img src="./assets/icons/${contactCardImg(type)}" alt="">
+                <img src="/profile/public/gold-black/assets/icons/${contactCardImg(type)}" alt="">
             </a>
         </div>
     `;
@@ -257,7 +257,7 @@ function generateLongContactCard(label, type,link,value) {
     return `
         <div class="contact_long_card">
             <a class="contact_link" href="${link}">
-                <img src="./assets/icons/${contactCardImg(type)}" alt="">
+                <img src="/profile/public/gold-black/assets/icons/${contactCardImg(type)}" alt="">
                 <div class="contact_info">
                     <h5 class="fw_500 f_12">${label}</h5>
                     <p class="gradient_text f_14 fw_600">${value}</p>
@@ -273,10 +273,10 @@ function generateUserSiteCard(websiteName, link) {
         <div class="user_site_card">
             <a href=${link}>
                 <div class="left_section">
-                    <img src="./assets/icons/global.svg" alt="global">
+                    <img src="/profile/public/gold-black/assets/icons/global.svg" alt="global">
                     <p>${websiteName}</p>
                 </div>
-                <img src="./assets/icons/arrow_outward.svg" alt="">
+                <img src="/profile/public/gold-black/assets/icons/arrow_outward.svg" alt="">
             </a>
         </div>
     `;
@@ -300,7 +300,7 @@ function generateProductCard(productName, fakePrice, originalPrice, imageUrl, de
 
 
 function generateServiceCard(serviceName, serviceDescription, imageUrl, link) {
-    const service_no_img = "./assets/images/service_no_img.png"
+    const service_no_img = "/profile/public/gold-black/assets/images/service_no_img.png"
     const service_desc = (serviceDescription != undefined && serviceDescription != null) ? serviceDescription : ""
     return `
         <div onclick="showServicePopup('${serviceName}', '${service_desc}', '${handleImage(imageUrl,service_no_img)}','${link}')" class="service_card">
@@ -315,7 +315,7 @@ function generateServiceCard(serviceName, serviceDescription, imageUrl, link) {
 
 
 function generateAwardCard(awardTitle, organizationName, imageUrl) {
-    const award_no_img = "./assets/images/award_no_img.png"
+    const award_no_img = "/profile/public/gold-black/assets/images/award_no_img.png"
     return `
         <div onclick="showAwardPopup('${awardTitle}', '${organizationName}', '${handleImage(imageUrl,award_no_img)}')" class="award_card">
             <img class="award_img" src="${handleImage(imageUrl,award_no_img)}" alt="product">
@@ -345,11 +345,11 @@ function generateDocumentCard(doc) {
     return `
         <div class="document_card">
             <div class="left_section">
-                <img src="./assets/icons/global.svg" alt="file">
+                <img src="/profile/public/gold-black/assets/icons/global.svg" alt="file">
                 <p>${documentName}</p>
             </div>
             <button class="btn" onclick="${isViewableData ? `viewDocument('${data.public}')` : `downloadDocument('${data.public}', '${data.fileName}', '${data.mimeType}')`}">
-                <img src="./assets/icons/${icon}" alt="download">
+                <img src="/profile/public/gold-black/assets/icons/${icon}" alt="download">
             </button>
         </div>
     `;
@@ -358,7 +358,7 @@ function generateDocumentCard(doc) {
 
 
 function generateCertificateCard(certificateTitle, organizationName, imageUrl) {
-    const certificate_no_img = "./assets/images/certificate.png"
+    const certificate_no_img = "/profile/public/gold-black/assets/images/certificate.png"
     return `
         <div class="certificate_card">
             <img src="${handleImage(imageUrl,certificate_no_img)}" alt="certificate">
@@ -380,7 +380,7 @@ function generateBankDetail(type, data) {
                 <p class="fw_600 f_18">${data}</p>
             </div>
             <button class="btn" onclick="copyToClipboard(this, '${data}', '${type}')">
-                <img class="copy_icon" id="${data.toLowerCase()}_copy_icon" src="./assets/icons/copy.svg" alt="copy">
+                <img class="copy_icon" id="${data.toLowerCase()}_copy_icon" src="/profile/public/gold-black/assets/icons/copy.svg" alt="copy">
             </button>
         </div>
     `;
