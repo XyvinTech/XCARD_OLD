@@ -643,6 +643,8 @@ function generateCertificates() {
 }
 
 function generateEnquiry() {
+  id= data["_id"];
+
   const form = document.querySelector("#enquiry form");
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -681,7 +683,6 @@ function generateEnquiry() {
     ) {
       let code = country_code.title.split(" ");
       code = code[code.length - 1];
-      id= data["_id"];
       const data = {
         id: id,
         name: name_input.value,

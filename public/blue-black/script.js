@@ -737,6 +737,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     enquiry_btn.addEventListener("click", async (e) => {
         e.preventDefault()
+        const id = data["_id"];
 
 
         const name_input = document.getElementById("name_input")
@@ -770,7 +771,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (name_input.value && isPhoneNumber(phone.value) && isValidEmail(email_input.value)) {
             let code = country_code.title.split(" ")
             code = code[code.length - 1]
-            const id = data["_id"];
             const data = {
                 id: id,
                 name: name_input.value,

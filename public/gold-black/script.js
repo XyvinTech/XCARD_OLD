@@ -644,6 +644,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     enquiry_btn.addEventListener("click", async (e) => {
         e.preventDefault()
+        const id = data["_id"];
         const name_input = document.getElementById("name_input")
         const phone = document.getElementById("phone")
         const email_input = document.getElementById("email_input")
@@ -676,7 +677,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             enquiry_btn.innerHTML = "Submitting...";
             let code = country_code.title.split(" ")
             code = code[code.length - 1]
-            const id = data["_id"];
+
             const data = {
                 id: id,
                 name: name_input.value,
