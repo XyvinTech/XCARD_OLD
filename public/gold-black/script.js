@@ -704,7 +704,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             }catch(e){
                 enquiry_btn.innerHTML = "Can't submit form";
             }
-            e.target.reset();
+            name_input.value = "";
+            phone.value = "";
+            email_input.value = "";
+            textarea.value = "";
+            
         }
     })
 
