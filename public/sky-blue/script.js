@@ -643,7 +643,7 @@ function generateCertificates() {
 }
 
 function generateEnquiry() {
-  id= data["_id"];
+  const id= data["_id"];
 
   const form = document.querySelector("#enquiry form");
   form.addEventListener("submit", async (e) => {
@@ -728,6 +728,7 @@ function generateEnquiry() {
 
       btn.innerHTML = "Submit";
       btn.disabled = false;
+      e.target.reset();
     }
   });
 }
