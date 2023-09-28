@@ -141,6 +141,7 @@ const createVCard = (websites, name, company, designation, email, phoneNumber, l
         `TITLE:${designation}`,
         `ADR;TYPE=WORK:;;${locationInfo.street};${locationInfo.pincode};${locationInfo.value}`,
         `TEL;TYPE=CELL:${phoneNumber}`,
+        `URL:${window.location.href}`,
         ...websites?.map((website) => `URL:${website.link}`),
         `X-SOCIALPROFILE;TYPE=whatsapp:${whatsapp}`,
         ...socials.map((social) => `URL:${social.value}`),
@@ -675,8 +676,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             enquiry_btn.innerHTML = "Submitting...";
             let code = country_code.title.split(" ")
             code = code[code.length - 1]
+            const id = data["_id"];
             const data = {
-                id: data["_id"],
+                id: id,
                 name: name_input.value,
                 phone: phone.value,
                 email: email_input.value,

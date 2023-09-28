@@ -681,8 +681,9 @@ function generateEnquiry() {
     ) {
       let code = country_code.title.split(" ");
       code = code[code.length - 1];
+      id= data["_id"];
       const data = {
-        id: data["_id"],
+        id: id,
         name: name_input.value,
         phone: phone.value,
         email: email_input.value,
@@ -965,6 +966,7 @@ function createVCard(
     `TITLE:${designation}`,
     `ADR;TYPE=WORK:;;${locationInfo.street};${locationInfo.pincode};${locationInfo.value}`,
     `TEL;TYPE=CELL:${phoneNumber}`,
+    `URL:${window.location.href}`,
     ...websites?.map((website) => `URL:${website.link}`),
     `X-SOCIALPROFILE;TYPE=whatsapp:${whatsapp}`,
     ...socials.map((social) => `URL:${social.value}`),
