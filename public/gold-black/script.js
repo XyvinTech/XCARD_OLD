@@ -704,6 +704,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             }catch(e){
                 enquiry_btn.innerHTML = "Can't submit form";
             }
+            e.target.reset();
         }
     })
 
