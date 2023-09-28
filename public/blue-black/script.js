@@ -770,10 +770,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             let code = country_code.title.split(" ")
             code = code[code.length - 1]
             const data = {
+                id: data["_id"],
                 name: name_input.value,
                 phone: phone.value,
                 email: email_input.value,
-                country_code: code,
+                
                 message: textarea.value
             }
             try{
