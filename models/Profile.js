@@ -17,7 +17,7 @@ const ProfileSchema = new mongoose.Schema(
     card: {
       cardId: { type: String },
       cardWrited: { type: Number, default: 0 },
-      theme: { type: String, enum: ["gold&black", "white&black", "violet&green", "orange&black",'aero&black', "white&blue", "blue&black"], default: "gold&black"}
+      theme: { type: String, enum: ["gold&black", "white&black", "violet&green", "orange&black",'aero&black', "white&blue", "blue&black"], default: "orange&black"}
     },
     profile: {
       name: { type: String },
