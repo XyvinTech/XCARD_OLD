@@ -599,7 +599,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // contact
   const save_contact = document.getElementById("save_contact");
-  const send_hi_btn = document.getElementById("send_hi_btn");
   const lets_chat_btn = document.getElementById("chatButton");
   const bottom_fixed_btn_link = document.getElementById(
     "bottom_fixed_btn_link"
@@ -798,7 +797,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     if (whatsapp === null || whatsapp === undefined || whatsapp === "") {
-      send_hi_btn.style.display = "none";
       lets_chat_btn.style.display = "none";
       document.getElementsByTagName("body")[0].style.marginBottom = "0px";
     }
@@ -849,9 +847,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     );
   });
 
-  send_hi_btn.addEventListener("click", () => {
-    sendHiToWhatsApp(whatsapp, send_hi_btn);
-  });
 
   lets_chat_btn.addEventListener("click", () => {
     sendHiToWhatsApp(whatsapp, bottom_fixed_btn_link);

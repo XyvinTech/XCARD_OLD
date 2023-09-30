@@ -154,13 +154,9 @@ body{
 }
 #save_contact{
     flex: 1;
-    width: 100%;
+    max-width: 10.875rem;
 }
-#send_hi_btn{
-    text-decoration: none;
-    flex: 1;
-    width: 100%;
-}
+
 
 /* quote section */
 .quote_section{
