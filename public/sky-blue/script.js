@@ -748,7 +748,7 @@ function openModal(type, data) {
   }" alt="image"> <h2>${data.heading}</h2>
   <p class="description">${data.desc}</p>`;
 
-  if (type === "product") {
+  if (type === "product" && data.price) {
     content += `<p class="price"><span class="discount">₹${
       data.discount ? data.discount : data.price
     }</span>${
