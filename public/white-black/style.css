@@ -119,6 +119,7 @@ body{
     padding: 0 3%;
     width: 100%;
     display: flex;
+    justify-content: center;
     gap: 12px;
     margin-top: 24px;
 }
@@ -153,13 +154,9 @@ body{
 }
 #save_contact{
     flex: 1;
-    width: 100%;
+    max-width: 10.875rem;
 }
-#send_hi_btn{
-    text-decoration: none;
-    flex: 1;
-    width: 100%;
-}
+
 
 /* quote section */
 .quote_section{

@@ -351,12 +351,10 @@ function generateProductCard(
             <div class="product_details">
                 <div class="product_name">${productName}</div>
                 <div class="product_price">
-                    <p class="fake_price f_16 fw_400">${
-                      fakePrice === null ? "" : `₹${fakePrice}`
-                    }</p>
-                    <p class="orginal_price f_16 fw_600">${
-                      originalPrice === null ? "" : `₹${originalPrice}`
-                    }</p>
+                    <p class="fake_price f_16 fw_400">${fakePrice === null ? "" : `₹${fakePrice}`
+    }</p>
+                    <p class="orginal_price f_16 fw_600">${originalPrice === null ? "" : `₹${originalPrice}`
+    }</p>
                 </div>
             </div>
         </div>
@@ -432,11 +430,10 @@ function generateDocumentCard(doc) {
                 <img src="/profile/public/white-black/assets/icons/document.svg" alt="file">
                 <p class="document_name fw_400 f_14">${documentName}</p>
             </div>
-            <button class="btn" onclick="${
-              isViewableData
-                ? `viewDocument('${data.public}')`
-                : `downloadDocument('${data.public}', '${data.fileName}', '${data.mimeType}')`
-            }">
+            <button class="btn" onclick="${isViewableData
+      ? `viewDocument('${data.public}')`
+      : `downloadDocument('${data.public}', '${data.fileName}', '${data.mimeType}')`
+    }">
                 <img src="/profile/public/white-black/assets/icons/${icon}" alt="download">
             </button>
         </div>
@@ -516,7 +513,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // contact
   const save_contact = document.getElementById("save_contact");
-  const send_hi_btn = document.getElementById("send_hi_btn");
   const lets_chat_btn = document.getElementById("chatButton");
   const bottom_fixed_btn_link = document.getElementById(
     "bottom_fixed_btn_link"
@@ -715,7 +711,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     if (whatsapp === null || whatsapp === undefined || whatsapp === "") {
-      send_hi_btn.style.display = "none";
       lets_chat_btn.style.display = "none";
       document.getElementsByTagName("body")[0].style.marginBottom = "0px";
     }
@@ -766,9 +761,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     );
   });
 
-  send_hi_btn.addEventListener("click", () => {
-    sendHiToWhatsApp(whatsapp, send_hi_btn);
-  });
 
   lets_chat_btn.addEventListener("click", () => {
     sendHiToWhatsApp(whatsapp, bottom_fixed_btn_link);
@@ -776,7 +768,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   enquiry_btn.addEventListener("click", async (e) => {
     e.preventDefault();
-    const id= data["_id"];
+    const id = data["_id"];
 
     const name_input = document.getElementById("name_input");
     const phone = document.getElementById("phone");

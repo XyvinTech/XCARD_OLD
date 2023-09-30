@@ -699,7 +699,7 @@ ul {
 
 .price .actual {
   font-weight: 400;
-  text-decoration-line: strikethrough;
+  text-decoration-line: line-through;
   margin-left: 0.5rem;
 }
 
