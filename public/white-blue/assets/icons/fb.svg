@@ -1,11 +1,1 @@
-<svg width="29" height="29" viewBox="0 0 29 29" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g id="gg:facebook">
-<path id="Vector" d="M11.1139 25.9788H15.9473V16.3001H20.3021L20.7806 11.4909H15.9473V9.06217C15.9473 8.7417 16.0746 8.43436 16.3012 8.20775C16.5278 7.98115 16.8351 7.85384 17.1556 7.85384H20.7806V3.02051H17.1556C15.5532 3.02051 14.0165 3.65704 12.8835 4.79007C11.7504 5.9231 11.1139 7.45983 11.1139 9.06217V11.4909H8.69725L8.21875 16.3001H11.1139V25.9788Z" fill="#fff"/>
-</g>
-<defs>
-<linearGradient id="paint0_linear_199_447" x1="8.54454" y1="3.02051" x2="27.2707" y2="10.6835" gradientUnits="userSpaceOnUse">
-<stop/>
-<stop offset="1" stop-color="#fff"/>
-</linearGradient>
-</defs>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="29" height="29" fill="none" viewBox="0 0 29 29"><g id="gg:facebook"><path id="Vector" fill="#fff" d="M11.1139 25.9788H15.9473V16.3001H20.3021L20.7806 11.4909H15.9473V9.06217C15.9473 8.7417 16.0746 8.43436 16.3012 8.20775C16.5278 7.98115 16.8351 7.85384 17.1556 7.85384H20.7806V3.02051H17.1556C15.5532 3.02051 14.0165 3.65704 12.8835 4.79007C11.7504 5.9231 11.1139 7.45983 11.1139 9.06217V11.4909H8.69725L8.21875 16.3001H11.1139V25.9788Z"/></g><defs><linearGradient id="paint0_linear_199_447" x1="8.545" x2="27.271" y1="3.021" y2="10.684" gradientUnits="userSpaceOnUse"><stop/><stop offset="1" stop-color="#fff"/></linearGradient></defs></svg>
