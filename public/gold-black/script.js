@@ -26,11 +26,11 @@ const viewable = [
 const data = JSON.parse(document.currentScript.getAttribute("data"));
 
 const fetchUserData = async () => {
-    
+
     return data;
 }
 
-const handleImage = (imageUrl,no_image) => {
+const handleImage = (imageUrl, no_image) => {
     if (imageUrl === null) {
         imageUrl = no_image;
     } else if (imageUrl.public === null || imageUrl.public === "") {
@@ -163,7 +163,7 @@ const createVCard = (websites, name, company, designation, email, phoneNumber, l
     URL.revokeObjectURL(url);
 }
 
-const sendHiToWhatsApp = (whatsapp,btn) => {
+const sendHiToWhatsApp = (whatsapp, btn) => {
     const whatsappLink = `https://wa.me/${whatsapp}`
     btn.href = whatsappLink
 }
@@ -172,7 +172,7 @@ const sendFormData = async (data) => {
     const res = await fetch("/profile/submitForm", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+            "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
     });
@@ -249,7 +249,7 @@ function generateContactCard(link, type) {
     `;
 }
 
-function generateLongContactCard(label, type,link,value) {
+function generateLongContactCard(label, type, link, value) {
 
     if (value === null || value === undefined || value === "") {
         return ""
@@ -304,8 +304,8 @@ function generateServiceCard(serviceName, serviceDescription, imageUrl, link) {
     const service_no_img = "/profile/public/gold-black/assets/images/service_no_img.png"
     const service_desc = (serviceDescription != undefined && serviceDescription != null) ? serviceDescription : ""
     return `
-        <div onclick="showServicePopup('${serviceName}', '${service_desc}', '${handleImage(imageUrl,service_no_img)}','${link}')" class="service_card">
-            <img class="service_img" src="${handleImage(imageUrl,service_no_img)}" alt="${serviceName}">
+        <div onclick="showServicePopup('${serviceName}', '${service_desc}', '${handleImage(imageUrl, service_no_img)}','${link}')" class="service_card">
+            <img class="service_img" src="${handleImage(imageUrl, service_no_img)}" alt="${serviceName}">
             <div class="service_details">
                 <h5 class="service_name">${serviceName}</h5>
                 <p class="service_para">${service_desc}</p>
@@ -318,8 +318,8 @@ function generateServiceCard(serviceName, serviceDescription, imageUrl, link) {
 function generateAwardCard(awardTitle, organizationName, imageUrl) {
     const award_no_img = "/profile/public/gold-black/assets/images/award_no_img.png"
     return `
-        <div onclick="showAwardPopup('${awardTitle}', '${organizationName}', '${handleImage(imageUrl,award_no_img)}')" class="award_card">
-            <img class="award_img" src="${handleImage(imageUrl,award_no_img)}" alt="product">
+        <div onclick="showAwardPopup('${awardTitle}', '${organizationName}', '${handleImage(imageUrl, award_no_img)}')" class="award_card">
+            <img class="award_img" src="${handleImage(imageUrl, award_no_img)}" alt="product">
             <div class="product_details">
                 <h5 class="fw_600 f_16 gradient_text">${awardTitle}</h5>
                 <p class="fw_400 f_16">${organizationName}</p>
@@ -362,7 +362,7 @@ function generateCertificateCard(certificateTitle, organizationName, imageUrl) {
     const certificate_no_img = "/profile/public/gold-black/assets/images/certificate.png"
     return `
         <div class="certificate_card">
-            <img src="${handleImage(imageUrl,certificate_no_img)}" alt="certificate">
+            <img src="${handleImage(imageUrl, certificate_no_img)}" alt="certificate">
             <h5 class="gradient_text fw_600 f_16">${certificateTitle}</h5>
             <p class="fw_400 f_16">${organizationName}</p>
         </div>
@@ -461,16 +461,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         websites.map(website => {
             user_contact_sites.innerHTML += generateUserSiteCard(website.name, website.link)
         })
-    }else{
+    } else {
         document.getElementById("user_contact_sites").classList.add("d_none")
     }
 
     // products
     if (data.product && data.product.status && data.product.products.length > 0) {
         data.product.products.map(product => {
-            products_card_section.innerHTML += generateProductCard(product.name, product.offerPrice, product.price, product.image.public, product.description, product.link)
+            products_card_section.innerHTML += generateProductCard(product.name, product.price, product.offerPrice, product.image.public, product.description, product.link)
         })
-    }else{
+    } else {
         document.getElementById("products_section").classList.add("d_none")
     }
 
@@ -499,7 +499,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             view_more.innerText = "View Less";
             isFullServices = true
         }
-        
+
         // Toggle between the two functions when the button is clicked
         view_more.addEventListener("click", () => {
             if (isFullServices) {
@@ -508,15 +508,15 @@ document.addEventListener("DOMContentLoaded", async () => {
                 showAllServices(); // If only the first three services are currently shown, switch to showing all services
             }
         });
-        
+
         if (data.service.services.length > 3) {
             showFirstThreeServices(); // Show the first three services initially
         } else {
             showAllServices(); // Show all services initially
             view_more.style.display = "none"; // Hide the "View More" button if there are no additional services
         }
-        
-    }else{
+
+    } else {
         document.getElementById("services_section").classList.add("d_none")
     }
 
@@ -525,7 +525,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         data.award.awards.map(award => {
             awards_cards.innerHTML += generateAwardCard(award.label, award.value, award.image)
         })
-    }else{
+    } else {
         document.getElementById("awards_section").classList.add("d_none")
     }
 
@@ -534,7 +534,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         data.document.documents.map(document => {
             documents_cards.innerHTML += generateDocumentCard(document)
         })
-    }else{
+    } else {
         document.getElementById("documents_section").classList.add("d_none")
     }
 
@@ -543,7 +543,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         data.certificate.certificates.map(certificate => {
             certificate_cards.innerHTML += generateCertificateCard(certificate.label, certificate.value, certificate.image)
         })
-    }else{
+    } else {
         document.getElementById("certificate_section").classList.add("d_none")
     }
 
@@ -557,7 +557,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         bank_detail_cards.innerHTML += generateBankDetail("Branch", bankDetails.branch)
         bank_detail_cards.innerHTML += generateBankDetail("VAT", bankDetails.vat)
         bank_detail_cards.innerHTML += generateBankDetail("Swift", bankDetails.swift)
-    }else{
+    } else {
         document.getElementById("bank_details_section").classList.add("d_none")
     }
 
@@ -566,7 +566,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         data.video.videos.map(video => {
             youtube_player_section.innerHTML += generateYouTubePlayer(video.link)
         })
-    }else{
+    } else {
         document.getElementById("youtube_player_section").classList.add("d_none")
     }
 
@@ -606,7 +606,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             } else if (contact.type === 'wabusiness') {
                 whatsapp = contact.value
             }
-            contact_long_cards.innerHTML += generateLongContactCard(contact.label,contact.type,valueForSocials(contact.type,contact.value),contact.value)
+            contact_long_cards.innerHTML += generateLongContactCard(contact.label, contact.type, valueForSocials(contact.type, contact.value), contact.value)
         }
 
         if (whatsapp === null || whatsapp === undefined || whatsapp === "") {
@@ -621,11 +621,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         var socials = data.social.socials
 
         socials.map(social => {
-            if(social.value){
+            if (social.value) {
                 contact_cards.innerHTML += generateContactCard(social.value, social.type)
             }
         })
-    }else{
+    } else {
         document.getElementById("contact_section").classList.add("d_none")
     }
 
@@ -634,12 +634,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     })
 
     send_hi_btn.addEventListener("click", () => {
-        sendHiToWhatsApp(whatsapp,send_hi_btn)
+        sendHiToWhatsApp(whatsapp, send_hi_btn)
     })
 
     lets_chat_btn.addEventListener("click", () => {
         console.log(whatsapp)
-        sendHiToWhatsApp(whatsapp,bottom_fixed_btn_link)
+        sendHiToWhatsApp(whatsapp, bottom_fixed_btn_link)
     })
 
     enquiry_btn.addEventListener("click", async (e) => {
@@ -683,44 +683,44 @@ document.addEventListener("DOMContentLoaded", async () => {
                 name: name_input.value,
                 phone: phone.value,
                 email: email_input.value,
-                
+
                 message: textarea.value
             }
 
-            try{
+            try {
                 const res = await fetch("/profile/submitForm", {
                     method: "POST",
                     headers: {
-                      "Content-Type": "application/json",
+                        "Content-Type": "application/json",
                     },
                     body: JSON.stringify(data),
                 });
                 const json = await res.json()
-    
-                if(json){
+
+                if (json) {
                     enquiry_btn.innerHTML = "Submitted";
                 }
 
-            }catch(e){
+            } catch (e) {
                 enquiry_btn.innerHTML = "Can't submit form";
             }
             name_input.value = "";
             phone.value = "";
             email_input.value = "";
             textarea.value = "";
-            
+
         }
     })
 
     window.addEventListener("scroll", function () {
         const scrollPosition = window.scrollY;
         const threshold = 40 * window.innerHeight / 100; // 40vh in pixels
-    
+
         if (scrollPosition > threshold) {
             lets_chat_btn.classList.add("visible");
         } else {
             lets_chat_btn.classList.remove("visible");
         }
     });
-    
+
 });

@@ -647,8 +647,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     data.product.products.map((product) => {
       products_card_section.innerHTML += generateProductCard(
         product.name,
-        product.offerPrice,
         product.price,
+        product.offerPrice,
         product.image.public,
         product.description,
         product.link

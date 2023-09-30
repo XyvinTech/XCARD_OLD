@@ -581,7 +581,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // products
     if (data.product && data.product.status && data.product.products.length > 0) {
         data.product.products.map(product => {
-            products_card_section.innerHTML += generateProductCard(product.name, product.offerPrice, product.price, product.image.public, product.description, product.link)
+            products_card_section.innerHTML += generateProductCard(product.name,  product.price, product.offerPrice, product.image.public, product.description, product.link)
         })
     }else{
         document.getElementById("products_section").classList.add("d_none")
