@@ -175,7 +175,7 @@ const createVCard = (
   const vcardData = [
     "BEGIN:VCARD",
     "VERSION:3.0",
-    `N:${lastName};${firstName};;`,
+    // `N:${lastName};${firstName};;`,
     `FN:${name}`,
     `EMAIL;TYPE=WORK:${email}`,
     `ORG:${company}`,

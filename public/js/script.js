@@ -210,7 +210,7 @@ const createVcard = () => {
   const vcardData = [
     "BEGIN:VCARD",
     "VERSION:3.0",
-    `N:${lastName};${firstName};;`,
+    // `N:${lastName};${firstName};;`,
     `FN:${personData.name}`,
     `EMAIL;TYPE=WORK:${personData.email}`,
     `ORG:${personData.company}`,
