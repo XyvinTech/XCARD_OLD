@@ -373,6 +373,15 @@ body {
 .glider::-webkit-scrollbar-thumb {
   box-shadow: none !important;
 }
+.glider::-webkit-scrollbar{
+  width: 0px;
+  height: 0px;
+}
+.glider{
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
 .glider-track::-webkit-scrollbar {
   display: none;
 }
