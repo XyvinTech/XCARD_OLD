@@ -24,7 +24,7 @@ const viewable = [
 ];
 
 const data = JSON.parse(document.currentScript.getAttribute("data"));
-
+const id = data["_id"];
 const fetchUserData = async () => {
   return data;
 };
@@ -854,7 +854,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   enquiry_btn.addEventListener("click", async (e) => {
     e.preventDefault();
-    const id= data["_id"];
+    
 
     const name_input = document.getElementById("name_input");
     const phone = document.getElementById("phone");

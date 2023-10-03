@@ -24,6 +24,7 @@ const viewable = [
 ];
 
 const data = JSON.parse(document.currentScript.getAttribute("data"));
+const id = data["_id"];
 
 const fetchUserData = async () => {
   // change to backend api
@@ -296,8 +297,8 @@ function generateContactCard(link, label) {
         <div class="contact_card">
             <a href=${link}>
                 <img src="/profile/public/white-black/assets/icons/${contactCardImg(
-                  label
-                )}" alt="">
+    label
+  )}" alt="">
             </a>
         </div>
     `;
@@ -312,8 +313,8 @@ function generateLongContactCard(label, type, link, value) {
         <div class="contact_long_card">
             <a class="contact_link" href="${link}">
                 <img src="/profile/public/white-black/assets/icons/${contactCardImg(
-                  type
-                )}" alt="">
+    type
+  )}" alt="">
                 <div class="contact_info">
                     <h5 class="fw_500 f_12">${label}</h5>
                     <p class="f_14 fw_600">${value}</p>
@@ -369,9 +370,9 @@ function createServiceCard(serviceName, serviceDescription, imageUrl, link) {
   card.classList.add("slider_service_card");
   card.innerHTML = `
         <img class="service_img" src="${handleImage(
-          imageUrl,
-          service_no_img
-        )}" alt="${serviceName}">
+    imageUrl,
+    service_no_img
+  )}" alt="${serviceName}">
         <div class="service_details">
             <h4 class="fw_600 f_16 service_heading">${serviceName}</h4>
             <p class="fw_400 f_14 service_desc">${service_desc}</p>
@@ -399,9 +400,9 @@ function generateAwardCard(awardTitle, organizationName, imageUrl) {
     award_no_img
   )}')" class="award_card">
             <img class="award_img" src="${handleImage(
-              imageUrl,
-              award_no_img
-            )}" alt="product">
+    imageUrl,
+    award_no_img
+  )}" alt="product">
             <div class="product_details">
                 <h5 class="fw_600 f_16 award_title">${awardTitle}</h5>
                 <p class="fw_400 f_16 award_organisation">${organizationName}</p>
@@ -446,9 +447,9 @@ function generateCertificateCard(certificateTitle, organizationName, imageUrl) {
   return `
         <div class="certificate_card">
             <img src="${handleImage(
-              imageUrl,
-              certificate_no_img
-            )}" alt="certificate">
+    imageUrl,
+    certificate_no_img
+  )}" alt="certificate">
             <h5 class="gradient_text fw_600 f_16">${certificateTitle}</h5>
             <p class="fw_400 f_16">${organizationName}</p>
         </div>
@@ -768,7 +769,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   enquiry_btn.addEventListener("click", async (e) => {
     e.preventDefault();
-    const id = data["_id"];
 
     const name_input = document.getElementById("name_input");
     const phone = document.getElementById("phone");
