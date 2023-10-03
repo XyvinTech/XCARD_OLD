@@ -369,6 +369,9 @@ body {
 *::-webkit-scrollbar{
   display: none;
 }
+*{
+  scrollbar-width: none;
+}
 .glider-track::-webkit-scrollbar {
   display: none;
 }
