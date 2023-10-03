@@ -190,7 +190,7 @@ const createVCard = (websites, name, company, designation, email, phoneNumber, l
 }
 
 const sendHiToWhatsApp = (whatsapp,btn) => {
-    const whatsappLink = `https://wa.me/${whatsapp}`
+    const whatsappLink = `https://wa.me/${whatsapp}?text=Hi`
     btn.href = whatsappLink
 }
 

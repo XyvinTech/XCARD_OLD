@@ -521,7 +521,7 @@ function generateSocials() {
 
   if (wabusiness && wabusiness.value) {
     largeDiv.innerHTML += `
-      <a target="_blank" href="https://wa.me/${wabusiness.value}" id="say-hello-btn" class="btn btn-secondary whatsapp-btn">
+      <a target="_blank" href="https://wa.me/${wabusiness.value}?text=Hi" id="say-hello-btn" class="btn btn-secondary whatsapp-btn">
       <img
         src="/profile/public/orange-black/assets/orange-dark/icons/whatsapp-org.svg"
         alt="whatsapp"
