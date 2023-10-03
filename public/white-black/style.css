@@ -350,6 +350,13 @@ body{
 .glider-track::-webkit-scrollbar{
     display: none;
 }
+.glider::-webkit-scrollbar {
+    height: 0 !important;
+  }
+  
+  .glider::-webkit-scrollbar-thumb {
+    box-shadow: none !important;
+  }
 .slider_service_card {
     width: 305px;
     height: 352px !important;
