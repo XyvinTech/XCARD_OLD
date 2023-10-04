@@ -1,18 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="17" height="16" viewBox="0 0 17 16" fill="none">
-  <g clip-path="url(#clip0_2_2895)">
-    <path
-      d="M11.167 14V12.6667C11.167 11.9594 10.886 11.2811 10.3859 10.781C9.88585 10.281 9.20757 10 8.50033 10H3.83366C3.12641 10 2.44814 10.281 1.94804 10.781C1.44794 11.2811 1.16699 11.9594 1.16699 12.6667V14"
-      stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-    <path d="M13.834 5.33301V9.33301" stroke="white" stroke-width="1.5" stroke-linecap="round"
-      stroke-linejoin="round" />
-    <path d="M15.834 7.33301H11.834" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-    <path
-      d="M6.16667 7.33333C7.63943 7.33333 8.83333 6.13943 8.83333 4.66667C8.83333 3.19391 7.63943 2 6.16667 2C4.69391 2 3.5 3.19391 3.5 4.66667C3.5 6.13943 4.69391 7.33333 6.16667 7.33333Z"
-      stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-  </g>
-  <defs>
-    <clipPath id="clip0_2_2895">
-      <rect width="16" height="16" fill="white" transform="translate(0.5)" />
-    </clipPath>
-  </defs>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="17" height="16" fill="none" viewBox="0 0 17 16"><g clip-path="url(#clip0_2_2895)"><path stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11.167 14V12.6667C11.167 11.9594 10.886 11.2811 10.3859 10.781C9.88585 10.281 9.20757 10 8.50033 10H3.83366C3.12641 10 2.44814 10.281 1.94804 10.781C1.44794 11.2811 1.16699 11.9594 1.16699 12.6667V14"/><path stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13.834 5.33301V9.33301"/><path stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.834 7.33301H11.834"/><path stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6.16667 7.33333C7.63943 7.33333 8.83333 6.13943 8.83333 4.66667C8.83333 3.19391 7.63943 2 6.16667 2C4.69391 2 3.5 3.19391 3.5 4.66667C3.5 6.13943 4.69391 7.33333 6.16667 7.33333Z"/></g><defs><clipPath id="clip0_2_2895"><rect width="16" height="16" fill="#fff" transform="translate(0.5)"/></clipPath></defs></svg>
