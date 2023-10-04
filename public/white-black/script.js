@@ -172,12 +172,12 @@ function createVCard(
 ) {
   const name_split = name.split(" ");
   const firstName = name_split[0];
-  const lastName = name_split[1] != undefined && name[1] != null ? name[1] : "";
+  const lastName = name_split.slice(1).join(" ");
 
   const vcardData = [
     "BEGIN:VCARD",
     "VERSION:3.0",
-    // `N:${lastName};${firstName};;`,
+    `N:${lastName};${firstName};;`,
     `FN:${name ?? ""}`,
     `EMAIL;TYPE=WORK:${email ?? ""}`,
     `ORG:${company ?? ""}`,
