@@ -156,7 +156,7 @@ function isValidEmail(email) {
   return emailRegex.test(email);
 }
 
-const createVCard = (
+function createVCard(
   websites,
   name,
   company,
@@ -166,7 +166,7 @@ const createVCard = (
   locationInfo,
   socials,
   whatsapp
-) => {
+) {
   const name_split = name.split(" ");
   const firstName = name_split[0];
   const lastName = name_split[1] != undefined && name[1] != null ? name[1] : "";
@@ -175,16 +175,22 @@ const createVCard = (
     "BEGIN:VCARD",
     "VERSION:3.0",
     // `N:${lastName};${firstName};;`,
-    `FN:${name}`,
-    `EMAIL;TYPE=WORK:${email}`,
-    `ORG:${company}`,
-    `TITLE:${designation}`,
-    `ADR;TYPE=WORK:;;${locationInfo.street};${locationInfo.pincode};${locationInfo.value}`,
-    `TEL;TYPE=CELL:${phoneNumber}`,
-    `URL:${window.location.href}`,
-    ...websites?.map((website) => `URL:${website.link}`),
+    `FN:${name ?? ""}`,
+    `EMAIL;TYPE=WORK:${email ?? ""}`,
+    `ORG:${company ?? ""}`,
+    `TITLE:${designation ?? ""}`,
+    `ADR;TYPE=WORK:;;${locationInfo.street ?? ""};${
+      locationInfo.pincode ?? ""
+    };${locationInfo.value ?? ""}`,
+    `TEL;TYPE=CELL:${phoneNumber ?? ""}`,
+    `URL:${window.location.href ?? ""}`,
+    Array.isArray(websites)
+      ? websites?.map((website) => `URL:${website.link}`).join("")
+      : "",
     `X-SOCIALPROFILE;TYPE=whatsapp:${whatsapp}`,
-    ...socials.map((social) => `URL:${social.value}`),
+    Array.isArray(socials)
+      ? socials?.map((social) => `URL:${social.value}`).join("")
+      : "",
     "END:VCARD",
   ].join("\n");
 
@@ -200,7 +206,8 @@ const createVCard = (
 
   // Release the object URL after the download has started
   URL.revokeObjectURL(url);
-};
+}
+
 
 const sendHiToWhatsApp = (whatsapp, btn) => {
   const whatsappLink = `https://wa.me/${whatsapp}?text=Hi`;
