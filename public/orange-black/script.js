@@ -170,7 +170,9 @@ function generateWebsites() {
     if (website.link && website.name) {
       content += `
       <li>
-        <a class="website-card" target="_blank" href="${website.link}">
+        <a class="website-card" target="_blank"  rel="noreferrer" href="${ensureHttps(
+          website.link
+        )}">
           <img src="/profile/public/orange-black/assets/orange-dark/icons/global.svg" alt="website" />
           <span class="text">${website.name}</span>
         </a>
@@ -435,8 +437,6 @@ function generateUpis() {
   });
 }
 
-// TODO:UPI ID
-
 function generateSocials() {
   const socialSection = document.getElementById("socials");
   if (!socials) {
@@ -625,7 +625,7 @@ function generateCertificates() {
 }
 
 function generateEnquiry() {
-  const id= data["_id"];
+  const id = data["_id"];
 
   const form = document.querySelector("#enquiry form");
   form.addEventListener("submit", async (e) => {
@@ -964,16 +964,22 @@ function createVCard(
     "BEGIN:VCARD",
     "VERSION:3.0",
     // `N:${lastName};${firstName};;`,
-    `FN:${name}`,
-    `EMAIL;TYPE=WORK:${email}`,
-    `ORG:${company}`,
-    `TITLE:${designation}`,
-    `ADR;TYPE=WORK:;;${locationInfo.street};${locationInfo.pincode};${locationInfo.value}`,
-    `TEL;TYPE=CELL:${phoneNumber}`,
-    `URL:${window.location.href}`,
-    ...websites?.map((website) => `URL:${website.link}`),
+    `FN:${name ?? ""}`,
+    `EMAIL;TYPE=WORK:${email ?? ""}`,
+    `ORG:${company ?? ""}`,
+    `TITLE:${designation ?? ""}`,
+    `ADR;TYPE=WORK:;;${locationInfo.street ?? ""};${
+      locationInfo.pincode ?? ""
+    };${locationInfo.value ?? ""}`,
+    `TEL;TYPE=CELL:${phoneNumber ?? ""}`,
+    `URL:${window.location.href ?? ""}`,
+    Array.isArray(websites)
+      ? websites?.map((website) => `URL:${website.link}`).join("")
+      : "",
     `X-SOCIALPROFILE;TYPE=whatsapp:${whatsapp}`,
-    ...socials.map((social) => `URL:${social.value}`),
+    Array.isArray(socials)
+      ? socials?.map((social) => `URL:${social.value}`).join("")
+      : "",
     "END:VCARD",
   ].join("\n");
 
@@ -1033,4 +1039,13 @@ function shorten(str) {
     str = str.substring(0, 50) + "...";
   }
   return str;
+}
+
+function ensureHttps(url) {
+  // Check if the URL starts with "http://" or "https://"
+  if (!url.startsWith("http://") && !url.startsWith("https://")) {
+    // If not, prepend "https://"
+    url = "https://" + url;
+  }
+  return url;
 }
