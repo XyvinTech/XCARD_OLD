@@ -87,10 +87,10 @@ export const deleteProfile = asyncHandler(async (req, res, next) => {
  * @schema  Public
  */
 export const viewProfile = asyncHandler(async (req, res, next) => {
-  console.log('viewProfile called');
+  console.log("viewProfile called");
   const profile = await Profile.findOneAndUpdate(
     { "card.cardId": req?.params?.id },
-    { $inc: { visitCount: 1 } },
+    { $inc: { visitCount: 1 } }
   );
   const profileTheme = profile?.card?.theme;
   /*
@@ -105,22 +105,21 @@ export const viewProfile = asyncHandler(async (req, res, next) => {
 
   */
 
-  if(profileTheme=='gold&black'){
-    res.render("gold-black", { data: profile });
-  } else if(profileTheme=='white&black'){
-    res.render("white-black", { data: profile })
-  } else if(profileTheme=='orange&black'){
-    res.render("orange-black", { data: profile })
-  } else if(profileTheme=='white&blue'){
-    res.render("white-blue", { data: profile })
-  } else if(profileTheme=='blue&black'){
-    res.render("blue-black", { data: profile })
-  }else if(profileTheme=='aero&black'){
-    res.render("sky-blue", { data: profile })
-  } else{
-    res.render("index", { data: profile })
-  }
-
+  // if(profileTheme=='gold&black'){
+  //   res.render("gold-black", { data: profile });
+  // } else if(profileTheme=='white&black'){
+  //   res.render("white-black", { data: profile })
+  // } else if(profileTheme=='orange&black'){
+  //   res.render("orange-black", { data: profile })
+  // } else if(profileTheme=='white&blue'){
+  //   res.render("white-blue", { data: profile })
+  // } else if(profileTheme=='blue&black'){
+  //   res.render("blue-black", { data: profile })
+  // }else if(profileTheme=='aero&black'){
+  //   res.render("sky-blue", { data: profile })
+  // } else{
+  res.render("index", { data: profile });
+  // }
 });
 /**
  * @desc    Public User EJS

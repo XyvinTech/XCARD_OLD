@@ -174,6 +174,14 @@ function createVCard(
   const firstName = name_split[0];
   const lastName = name_split.slice(1).join(" ");
 
+  const newWebsites = Array.isArray(websites)
+    ? websites.map((website) => `URL:${website.link}`)
+    : [];
+
+  const newSocials = Array.isArray(socials)
+    ? socials?.map((social) => `URL:${social.value}`)
+    : [];
+
   const vcardData = [
     "BEGIN:VCARD",
     "VERSION:3.0",
@@ -182,18 +190,14 @@ function createVCard(
     `EMAIL;TYPE=WORK:${email ?? ""}`,
     `ORG:${company ?? ""}`,
     `TITLE:${designation ?? ""}`,
-    `ADR;TYPE=WORK:;;${locationInfo.street ?? ""};${
-      locationInfo.pincode ?? ""
-    };${locationInfo.value ?? ""}`,
+    `ADR;TYPE=WORK:;;${
+      locationInfo.value.replace(/\n/g, ";") ?? locationInfo.street ?? ""
+    };${locationInfo.pincode ?? ""}`,
     `TEL;TYPE=CELL:${phoneNumber ?? ""}`,
     `URL:${window.location.href ?? ""}`,
-    Array.isArray(websites)
-      ? websites?.map((website) => `URL:${website.link}`).join("")
-      : "",
+    ...newWebsites,
     `X-SOCIALPROFILE;TYPE=whatsapp:${whatsapp}`,
-    Array.isArray(socials)
-      ? socials?.map((social) => `URL:${social.value}`).join("")
-      : "",
+    ...newSocials,
     "END:VCARD",
   ].join("\n");
 
@@ -210,6 +214,7 @@ function createVCard(
   // Release the object URL after the download has started
   URL.revokeObjectURL(url);
 }
+
 
 const sendHiToWhatsApp = (whatsapp, btn) => {
   const whatsappLink = `https://wa.me/${whatsapp}?text=Hi`;
