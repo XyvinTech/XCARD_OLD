@@ -757,7 +757,7 @@ function openModal(type, data) {
       data.discount ? '<span class="actual">₹' + data.price + "</span>" : ""
     }</p>`;
   }
-  content += `<a class="btn btn-primary w-full" target="_blank" href="${data.link}">View</a>`;
+  content += `<a class="btn btn-primary w-full" target="_blank" href="${data.link}">Know More</a>`;
 
   modal.innerHTML = content;
   parent.style.display = "flex";

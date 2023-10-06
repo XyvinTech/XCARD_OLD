@@ -739,7 +739,7 @@ function openModal(type, data) {
     }</p>`;
   }
   if (type !== "award") {
-    content += `<a class="btn btn-primary w-full" target="_blank" href="${data.link}">View</a>`;
+    content += `<a class="btn btn-primary w-full" target="_blank" href="${data.link}">Know More</a>`;
   }
 
   modal.innerHTML = content;
