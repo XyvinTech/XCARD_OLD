@@ -472,7 +472,7 @@ if (!serviceVisibility || services.length == 0) {
 
     const cardButtonElem = document.createElement("button");
     cardButtonElem.classList.add("card-button");
-    cardButtonElem.textContent = "View More";
+    cardButtonElem.textContent = "Know More";
     cardContentElem.appendChild(cardButtonElem);
     cardButtonElem.addEventListener("click", (e) => {
       openPopup(
@@ -502,7 +502,7 @@ if (!docsVisibility || documents.length == 0) {
   docsSectionIcons.classList.add("docs-icons");
   const docsHead = document.createElement("h3");
   docsHead.classList.add("products-head", "head");
-  docsHead.textContent = "Files";
+  docsHead.textContent = "Catalogues";
 
   documents?.forEach((doc) => {
     const docCard = document.createElement("div");
@@ -597,7 +597,7 @@ products?.forEach((product) => {
 
   const cardButtonElem = document.createElement("button");
   cardButtonElem.classList.add("card-button");
-  cardButtonElem.textContent = "View More";
+  cardButtonElem.textContent = "Know More";
   cardContentElem.appendChild(cardButtonElem);
   cardButtonElem.addEventListener("click", (e) => {
     if (product?.price) {
@@ -644,7 +644,7 @@ const awardSection = document.getElementById("award-section");
 // Create the products heading element
 const awardHead = document.createElement("h3");
 awardHead.classList.add("products-head", "head");
-awardHead.textContent = "Awards";
+awardHead.textContent = "Achievements";
 
 const awardIcons = document.createElement("div");
 awardIcons.classList.add("products-icons");
@@ -673,7 +673,7 @@ awards?.forEach((award) => {
 
   const cardButtonElem = document.createElement("button");
   cardButtonElem.classList.add("card-button");
-  cardButtonElem.textContent = "View More";
+  cardButtonElem.textContent = "Know More";
   cardContentElem.appendChild(cardButtonElem);
   cardButtonElem.addEventListener("click", (e) => {
     openPopup(
@@ -727,7 +727,7 @@ certif?.forEach((service) => {
 
   const cardButtonElem = document.createElement("button");
   cardButtonElem.classList.add("card-button");
-  cardButtonElem.textContent = "View More";
+  cardButtonElem.textContent = "Know More";
   cardContentElem.appendChild(cardButtonElem);
   cardButtonElem.addEventListener("click", (e) => {
     openPopup(
