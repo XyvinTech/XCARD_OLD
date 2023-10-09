@@ -546,7 +546,7 @@ function generateSocials() {
         src="/profile/public/sky-blue/assets/orange-dark/icons/whatsapp-org.svg"
         alt="whatsapp"
       />
-      <span>Say Hello</span>
+      <span>Let's Chat!</span>
     </a>
   `;
 
@@ -559,7 +559,7 @@ function generateSocials() {
         location.pincode ??
         "https://www.google.com/maps?q=" + query.replace(/\s+/g, "+")
       }">
-        <img src="/profile/public/sky-blue/assets/orange-dark/socials/location.svg" alt="wabusiness" />
+        <img src="/profile/public/sky-blue/assets/orange-dark/socials/location.svg" alt="location" />
       </a>
     </div>`;
     }
