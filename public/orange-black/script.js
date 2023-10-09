@@ -52,7 +52,6 @@ const bank =
     ? data.bank.bankDetails
     : null;
 
-// console.log(socials)
 
 function run() {
   generateProfile();
@@ -362,7 +361,6 @@ function generateCatalogues() {
   ul.innerHTML = "";
 
   documents.forEach((doc) => {
-    console.log(doc);
 
     let icon = "";
     if (viewable.includes(doc.image.fileName.split(".")[1])) {
@@ -530,36 +528,36 @@ function generateSocials() {
     </a>
   `;
 
-    if (location) {
-      const query = location.value ?? location.street ?? "";
-
-      smallDiv.innerHTML += `
-  <div class="card">
-    <a target="_blank" href="${
-      location.pincode ??
-      "https://www.google.com/maps?q=" + query.replace(/\s+/g, "+")
-    }">
-      <img src="/profile/public/orange-black/assets/orange-dark/socials/location.svg" alt="location" />
-    </a>
-  </div>`;
-    }
-
-    if (whatsapp && whatsapp.value?.trim() !== "") {
-      smallDiv.innerHTML += `
-    <div class="card">
-          <a target="_blank" href="https://wa.me/${whatsapp.value}">
-            <img src="/profile/public/orange-black/assets/orange-dark/socials/whatsapp.svg" alt="whatsapp" />
-          </a>
-      </div>
-    `;
-    }
-
     smallDiv.innerHTML += `
     <div class="card">
       <a target="_blank" href="https://wa.me/${wabusiness.value}">
         <img src="/profile/public/orange-black/assets/orange-dark/socials/wp_b.svg" alt="wabusiness" />
       </a>
     </div>`;
+  }
+
+  if (location) {
+    const query = location.value ?? location.street ?? "";
+
+    smallDiv.innerHTML += `
+    <div class="card">
+      <a target="_blank" href="${
+         location.pincode ??
+        "https://www.google.com/maps?q=" + query.replace(/\s+/g, "+")
+      }">
+        <img src="/profile/public/orange-black/assets/orange-dark/socials/location.svg" alt="location" />
+      </a>
+    </div>`;
+  }
+
+  if (whatsapp && whatsapp.value?.trim() !== "") {
+    smallDiv.innerHTML += `
+    <div class="card">
+        <a target="_blank" href="https://wa.me/${whatsapp.value}">
+          <img src="/profile/public/orange-black/assets/orange-dark/socials/whatsapp.svg" alt="whatsapp" />
+        </a>
+    </div>
+  `;
   }
 }
 

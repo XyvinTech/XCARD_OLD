@@ -431,7 +431,7 @@ ul {
 }
 
 .award-card {
-  background-image: url("../assets/orange-dark/award-bg.png");
+  background: linear-gradient(172deg, rgba(50, 194, 238, 0.40) 2.93%, rgba(5, 137, 179, 0.40) 93.58%);
   width: calc(50% - (var(--gap) / 2));
   padding: 0.63rem 0.65rem;
   background-repeat: no-repeat;
