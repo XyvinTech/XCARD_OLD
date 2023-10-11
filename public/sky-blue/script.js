@@ -382,7 +382,6 @@ function generateCatalogues() {
   ul.innerHTML = "";
 
   documents.forEach((doc) => {
-
     let icon = "";
     if (viewable.includes(doc.image.fileName.split(".")[1])) {
       icon = "eye.svg";
@@ -548,8 +547,6 @@ function generateSocials() {
       <span>Let's Chat!</span>
     </a>
   `;
-
-
 
     smallDiv.innerHTML += `
     <div class="card">
@@ -933,7 +930,9 @@ function contactCardImg(label) {
       return "dribble.svg";
     case "whatsapp":
       return "whatsapp.svg";
-    case "email" || "gmail":
+    case "email":
+      return "mail.svg";
+    case "gmail":
       return "mail.svg";
     case "whatsapp-business":
       return "wp_b.svg";
@@ -1000,33 +999,6 @@ function createVCard(
   URL.revokeObjectURL(url);
 }
 
-function contactCardImg(label) {
-  switch (label.toLowerCase()) {
-    case "instagram":
-      return "ig.svg";
-    case "linkedin":
-      return "linkedin.svg";
-    case "twitter":
-      return "x.svg";
-    case "facebook":
-      return "fb.svg";
-    case "x":
-      return "x.svg";
-    case "phone":
-      return "call.svg";
-    case "dribble":
-      return "dribble.svg";
-    case "whatsapp":
-      return "whatsapp.svg";
-    case "email" || "gmail":
-      return "ig.svg";
-    case "whatsapp-business":
-      return "wp_b.svg";
-    default:
-      return "global.svg";
-  }
-}
-
 function isPhoneNumber(value) {
   return /^-?\d+(\.\d+)?$/.test(value) && value.length <= 15;
 }
@@ -1043,4 +1015,3 @@ function ensureHttps(url) {
   }
   return url;
 }
-
