@@ -21,9 +21,7 @@
         <img class="user_bg" id="user_bg" src="" alt="user-bg">
         <div class="user_info">
             <div class="avatar_img">
-                <img id="avatar" class="avatar"
-                    src=""
-                    alt="avatar">
+                <img id="avatar" class="avatar" src="" alt="avatar">
             </div>
             <h1 id="user_name" class="user_name">
                 <!-- name -->
@@ -47,7 +45,8 @@
 
             <div class="contact_btns">
                 <button id="save_contact" class="btn btn_primary btn_dark">
-                    <p>Save contact</p> <img src="/profile/public/white-black/assets/icons/download.svg" alt="download-icon">
+                    <p>Save contact</p> <img src="/profile/public/white-black/assets/icons/download.svg"
+                        alt="download-icon">
                 </button>
             </div>
 
@@ -63,7 +62,7 @@
 
     <section id="contact_long_card_section" class="contact_section">
         <h4 class="gradient_text sub_heading">Contact me</h4>
-        
+
         <div id="contact_long_cards" class="contact_long_cards">
 
             <!-- <div class="contact_long_card">
@@ -237,7 +236,7 @@
         </div>
 
         <div id="service_glider" class="service_cards service_glider">
-            
+
         </div>
 
 
@@ -517,17 +516,20 @@
         var input = document.querySelector("#phone");
         window.intlTelInput(input, {
             separateDialCode: true,
-            initialCountry: "in",
+            initialCountry: "auto",
+            geoIpLookup: callback => {
+                fetch("https://ipapi.co/json")
+                    .then(res => res.json())
+                    .then(data => callback(data.country_code))
+                    .catch(() => callback("us"));
+            },
+
         });
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/glider-js@1/glider.min.js"></script>
 
-    <script
-    defer
-    src="/profile/public/white-black/script.js"
-    data="<%= JSON.stringify(data) %>"
-  ></script>
+    <script defer src="/profile/public/white-black/script.js" data="<%= JSON.stringify(data) %>"></script>
 
 </body>
 

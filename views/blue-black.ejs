@@ -7,11 +7,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glider-js@1/glider.min.css">
     <!-- font awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+        integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="/profile/public/blue-black/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&family=Outfit:wght@400;500;600&display=swap"
+        rel="stylesheet">
     <title>x-card</title>
 </head>
 
@@ -25,9 +29,7 @@
         <img class="user_bg" id="user_bg" src="" alt="user-bg">
         <div class="user_info">
             <div class="avatar_img">
-                <img id="avatar" class="avatar"
-                    src=""
-                    alt="avatar">
+                <img id="avatar" class="avatar" src="" alt="avatar">
             </div>
             <h1 id="user_name" class="user_name">
                 <!-- name -->
@@ -51,7 +53,8 @@
 
             <div class="contact_btns">
                 <button id="save_contact" class="btn btn_primary btn_dark">
-                    <p>Save contact</p> <img src="/profile/public/blue-black/assets/icons/download.svg" alt="download-icon">
+                    <p>Save contact</p> <img src="/profile/public/blue-black/assets/icons/download.svg"
+                        alt="download-icon">
                 </button>
             </div>
 
@@ -67,7 +70,7 @@
 
     <section id="contact_long_card_section" class="contact_section">
         <h4 class="gradient_text sub_heading">Contact me</h4>
-        
+
         <div id="contact_long_cards" class="contact_long_cards">
 
             <!-- <div class="contact_long_card">
@@ -241,7 +244,7 @@
         </div>
 
         <div id="service_glider" class="service_cards service_glider">
-            
+
         </div>
 
 
@@ -520,17 +523,20 @@
         var input = document.querySelector("#phone");
         window.intlTelInput(input, {
             separateDialCode: true,
-            initialCountry: "in",
+            initialCountry: "auto",
+            geoIpLookup: callback => {
+                fetch("https://ipapi.co/json")
+                    .then(res => res.json())
+                    .then(data => callback(data.country_code))
+                    .catch(() => callback("us"));
+            },
+
         });
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/glider-js@1/glider.min.js"></script>
 
-    <script
-    defer
-    src="/profile/public/blue-black/script.js"
-    data="<%= JSON.stringify(data) %>"
-  ></script>
+    <script defer src="/profile/public/blue-black/script.js" data="<%= JSON.stringify(data) %>"></script>
 
 </body>
 
