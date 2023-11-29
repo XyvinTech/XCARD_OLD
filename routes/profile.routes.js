@@ -1,7 +1,7 @@
-import express from "express";
-import * as profileController from "../controllers/profile.controller.js";
-import { authorize, protect } from "../middlewares/auth.middleware.js";
-import multer from "multer";
+import express from 'express';
+import * as profileController from '../controllers/profile.controller.js';
+import { authorize, protect } from '../middlewares/auth.middleware.js';
+import multer from 'multer';
 
 /**
  * @route  Profile Route
@@ -19,13 +19,17 @@ const upload = multer({
 });
 
 profileRouter
-  .route("/:id")
-  .get(protect, authorize("admin", "user"), profileController.getProfile)
-  .post(protect, authorize("admin"), profileController.updateProfile)
-  .delete(protect, authorize("admin"), profileController.deleteProfile);
+  .route('/:id')
+  .get(protect, authorize('admin', 'user'), profileController.getProfile)
+  .post(protect, authorize('admin'), profileController.updateProfile)
+  .delete(protect, authorize('admin'), profileController.deleteProfile);
 
 profileRouter
-  .route("/view/:id")
-  .get(protect, authorize("admin", "user"), profileController.getProfile);
+  .route('/view/:id')
+  .get(protect, authorize('admin', 'user'), profileController.getProfile);
+
+profileRouter
+  .route('/duplicate/:profileId')
+  .post(protect, authorize('admin'), profileController.duplicateProfile);
 
 export default profileRouter;
