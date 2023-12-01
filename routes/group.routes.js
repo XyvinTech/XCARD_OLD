@@ -34,7 +34,11 @@ groupRouter
 
 groupRouter
   .route('/:id/profile')
-  .get(protect, authorize('admin'), groupController.getAllProfilesInGroup);
+  .get(
+    protect,
+    authorize('admin', 'super'),
+    groupController.getAllProfilesInGroup
+  );
 
 groupRouter
   .route('/:id/profile/search')
@@ -55,6 +59,10 @@ groupRouter
 
 groupRouter
   .route('/profile/move')
-  .put(protect, authorize('admin'), groupController.moveProfileToGroup);
+  .put(
+    protect,
+    authorize('admin', 'super'),
+    groupController.moveProfileToGroup
+  );
 
 export default groupRouter;

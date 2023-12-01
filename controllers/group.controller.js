@@ -299,11 +299,15 @@ export const moveProfileToGroup = async (req, res, next) => {
   try {
     const { profileId, newGroupId } = req?.body;
 
-    const updatedProfile = await Profile.findByIdAndUpdate(
-      profileId,
-      { group: newGroupId },
-      { new: true }
-    );
+    let update = { group: newGroupId };
+    // if (userId) {
+    //   // Update user field only if userId is provided
+    //   update.user = userId;
+    // }
+
+    const updatedProfile = await Profile.findByIdAndUpdate(profileId, update, {
+      new: true,
+    });
 
     // Check if the profile was successfully updated
     if (!updatedProfile) {
