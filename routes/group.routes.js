@@ -65,4 +65,8 @@ groupRouter
     groupController.moveProfileToGroup
   );
 
+groupRouter
+  .route('/:groupId/delete')
+  .delete(protect, authorize('super'), groupController.deleteGroup);
+
 export default groupRouter;

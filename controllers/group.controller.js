@@ -14,7 +14,7 @@ import { Types } from 'mongoose';
 /**
  * @desc    Create new group
  * @route   POST /api/v1/group/create
- * @access  Private/Admin
+ * @access  Private/Admin/Super
  * @schema  Private
  */
 export const createGroup = asyncHandler(async (req, res, next) => {
@@ -329,3 +329,29 @@ export const moveProfileToGroup = async (req, res, next) => {
     next(error);
   }
 };
+
+/**
+ * @desc    Delete group
+ * @route   DELETE /api/v1/group/:id/profile/
+ * @access  Private/Super
+ * @schema  Private
+ */
+export const deleteGroup = asyncHandler(async (req, res, next) => {
+  try {
+    const { groupId } = req?.params;
+
+    // Find and delete the group
+    const group = await Group.findByIdAndDelete(groupId);
+    // Check if the group was found and deleted
+    if (!group) {
+      return res
+        .status(400)
+        .send({ success: false, message: 'Group not found' });
+    }
+    return res
+      .status(200)
+      .send({ success: true, message: 'Group deleted successfully' });
+  } catch (error) {
+    next(error);
+  }
+});
