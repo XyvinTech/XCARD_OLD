@@ -30,7 +30,7 @@ groupRouter.route('/admin/search').get(groupController.searchAllAdminGroup);
 
 groupRouter
   .route('/create')
-  .post(protect, authorize('admin'), groupController.createGroup);
+  .post(protect, authorize('admin', 'super'), groupController.createGroup);
 
 groupRouter
   .route('/:id/profile')

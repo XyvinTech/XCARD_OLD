@@ -18,11 +18,17 @@ import { Types } from 'mongoose';
  * @schema  Private
  */
 export const createGroup = asyncHandler(async (req, res, next) => {
-  const { name } = req?.body;
+  const { name, userId } = req?.body;
+  let adminId;
   if (!name) {
     return next(new ErrorResponse('Please provide group name', 400));
   }
-  const group = await Group.create({ name, groupAdmin: req?.user?.id });
+  if (userId) {
+    adminId = userId;
+  } else {
+    adminId = req?.user?.id;
+  }
+  const group = await Group.create({ name, groupAdmin: adminId });
   let message = { success: 'Group Created' };
   return res.status(201).send({ success: true, message, data: group });
 });
