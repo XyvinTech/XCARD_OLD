@@ -37,7 +37,7 @@ userRouter
   .route('/create')
   .post(
     protect,
-    authorize('admin'),
+    authorize('admin', 'super'),
     upload.array('file'),
     userController.createUserProfile
   );
