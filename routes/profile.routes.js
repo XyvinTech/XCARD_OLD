@@ -20,9 +20,17 @@ const upload = multer({
 
 profileRouter
   .route('/:id')
-  .get(protect, authorize('admin', 'user'), profileController.getProfile)
+  .get(
+    protect,
+    authorize('admin', 'user', 'super'),
+    profileController.getProfile
+  )
   .post(protect, authorize('admin'), profileController.updateProfile)
-  .delete(protect, authorize('admin'), profileController.deleteProfile);
+  .delete(
+    protect,
+    authorize('admin', 'super'),
+    profileController.deleteProfile
+  );
 
 profileRouter
   .route('/view/:id')

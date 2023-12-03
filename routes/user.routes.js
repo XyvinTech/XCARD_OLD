@@ -43,7 +43,11 @@ userRouter
   );
 userRouter
   .route('/getNotifications')
-  .get(protect, authorize('user', 'admin'), userController.getNotifications);
+  .get(
+    protect,
+    authorize('user', 'admin', 'super'),
+    userController.getNotifications
+  );
 
 userRouter
   .route('/createAdmin')
@@ -53,7 +57,7 @@ userRouter
   .route('/update')
   .post(
     protect,
-    authorize('admin', 'user'),
+    authorize('admin', 'user', 'super'),
     upload.array('file'),
     userController.updateUserProfile
   );

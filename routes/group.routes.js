@@ -67,6 +67,6 @@ groupRouter
 
 groupRouter
   .route('/:groupId/delete')
-  .delete(protect, authorize('super'), groupController.deleteGroup);
+  .delete(protect, authorize('super', 'admin'), groupController.deleteGroup);
 
 export default groupRouter;
