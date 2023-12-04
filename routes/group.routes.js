@@ -1,7 +1,7 @@
-import express from "express";
-import * as groupController from "../controllers/group.controller.js";
-import { protect, authorize } from "../middlewares/auth.middleware.js";
-import multer from "multer";
+import express from 'express';
+import * as groupController from '../controllers/group.controller.js';
+import { protect, authorize } from '../middlewares/auth.middleware.js';
+import multer from 'multer';
 
 /**
  * @route  Group Route
@@ -19,38 +19,54 @@ const upload = multer({
 });
 
 groupRouter
-  .route("/")
-  .get(protect, authorize("admin"), groupController.getAllGroup);
+  .route('/')
+  .get(protect, authorize('admin'), groupController.getAllGroup);
 
 groupRouter
-  .route("/admin")
-  .get(protect, authorize("super"), groupController.getAllAdminGroup);
+  .route('/admin')
+  .get(protect, authorize('super'), groupController.getAllAdminGroup);
 
-groupRouter.route("/admin/search").get(groupController.searchAllAdminGroup);
-
-groupRouter
-  .route("/create")
-  .post(protect, authorize("admin"), groupController.createGroup);
+groupRouter.route('/admin/search').get(groupController.searchAllAdminGroup);
 
 groupRouter
-  .route("/:id/profile")
-  .get(protect, authorize("admin"), groupController.getAllProfilesInGroup);
+  .route('/create')
+  .post(protect, authorize('admin', 'super'), groupController.createGroup);
 
 groupRouter
-  .route("/:id/profile/search")
-  .get(protect, authorize("admin"), groupController.searchProfile);
+  .route('/:id/profile')
+  .get(
+    protect,
+    authorize('admin', 'super'),
+    groupController.getAllProfilesInGroup
+  );
 
 groupRouter
-  .route("/edit/:id")
+  .route('/:id/profile/search')
+  .get(protect, authorize('admin'), groupController.searchProfile);
+
+groupRouter
+  .route('/edit/:id')
   .put(
     protect,
-    authorize("admin"),
-    upload.single("file"),
+    authorize('admin'),
+    upload.single('file'),
     groupController.editGroup
   );
 
 groupRouter
-  .route("/search")
-  .get(protect, authorize("admin"), groupController.searchGroup);
+  .route('/search')
+  .get(protect, authorize('admin'), groupController.searchGroup);
+
+groupRouter
+  .route('/profile/move')
+  .put(
+    protect,
+    authorize('admin', 'super'),
+    groupController.moveProfileToGroup
+  );
+
+groupRouter
+  .route('/:groupId/delete')
+  .delete(protect, authorize('super', 'admin'), groupController.deleteGroup);
 
 export default groupRouter;

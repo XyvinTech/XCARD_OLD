@@ -1,11 +1,11 @@
-import asyncHandler from "../middlewares/async.middleware.js";
-import admin from "firebase-admin";
-import User from "../models/User.js";
-import axios from "axios";
-import Profile from "../models/Profile.js";
-import ErrorResponse from "../utils/error.response.js";
-import { uploadFiles } from "../utils/file.upload.js";
-import getRandomFileName from "../helpers/filename.helper.js";
+import asyncHandler from '../middlewares/async.middleware.js';
+import admin from 'firebase-admin';
+import User from '../models/User.js';
+import axios from 'axios';
+import Profile from '../models/Profile.js';
+import ErrorResponse from '../utils/error.response.js';
+import { uploadFiles } from '../utils/file.upload.js';
+import getRandomFileName from '../helpers/filename.helper.js';
 
 /**
  * @desc    Get user profile by id
@@ -15,9 +15,9 @@ import getRandomFileName from "../helpers/filename.helper.js";
  */
 export const getProfile = asyncHandler(async (req, res, next) => {
   const profile = await Profile.findById(req?.params?.id).populate({
-    path: "group",
+    path: 'group',
   });
-  let message = { success: "Profile Fetched Successfuly" };
+  let message = { success: 'Profile Fetched Successfuly' };
   return res.status(200).send({ success: true, message, data: profile });
 });
 
@@ -31,13 +31,13 @@ export const updateProfile = asyncHandler(async (req, res, next) => {
   const profile = await Profile.findByIdAndUpdate(
     req?.params?.id,
     {
-      $inc: { "card.cardWrited": 1 },
+      $inc: { 'card.cardWrited': 1 },
     },
     { new: true }
   ).populate({
-    path: "group",
+    path: 'group',
   });
-  let message = { success: "Profile Writted Successfuly" };
+  let message = { success: 'Profile Writted Successfuly' };
   return res.status(200).send({ success: true, message, data: profile });
 });
 
@@ -50,7 +50,7 @@ export const updateProfile = asyncHandler(async (req, res, next) => {
 export const deleteProfile = asyncHandler(async (req, res, next) => {
   const { id } = req?.params;
   const checkProfile = await Profile.findById(id).populate({
-    path: "user",
+    path: 'user',
   });
   const userProfilesCount = await Profile.find({
     user: checkProfile?.user._id,
@@ -65,7 +65,7 @@ export const deleteProfile = asyncHandler(async (req, res, next) => {
         // Delete Mongo User Profile
         await User.findByIdAndDelete(checkProfile?.user?._id);
         await Profile.findByIdAndDelete(id);
-        let message = { success: "Profile Deleted" };
+        let message = { success: 'Profile Deleted' };
         return res.status(200).send({ success: true, message });
       })
       .catch((err) => {
@@ -76,7 +76,7 @@ export const deleteProfile = asyncHandler(async (req, res, next) => {
   }
   //TODO: Delete All Profile, Product Images
   await Profile.findByIdAndDelete(id);
-  let message = { success: "Profile Deleted" };
+  let message = { success: 'Profile Deleted' };
   return res.status(200).send({ success: true, message });
 });
 
@@ -87,9 +87,9 @@ export const deleteProfile = asyncHandler(async (req, res, next) => {
  * @schema  Public
  */
 export const viewProfile = asyncHandler(async (req, res, next) => {
-  console.log("viewProfile called");
+  console.log('viewProfile called');
   const profile = await Profile.findOneAndUpdate(
-    { "card.cardId": req?.params?.id },
+    { 'card.cardId': req?.params?.id },
     { $inc: { visitCount: 1 } }
   );
   const profileTheme = profile?.card?.theme;
@@ -105,22 +105,21 @@ export const viewProfile = asyncHandler(async (req, res, next) => {
 
   */
 
-  if (profileTheme == "gold&black") {
-    res.render("gold-black", { data: profile });
-  } else if (profileTheme == "white&black") {
-    res.render("white-black", { data: profile });
-  } else if (profileTheme == "orange&black") {
-    res.render("orange-black", { data: profile });
-  } else if (profileTheme == "white&blue") {
-    res.render("white-blue", { data: profile });
-  } else if (profileTheme == "blue&black") {
-    res.render("blue-black", { data: profile });
-  } else if (profileTheme == "aero&black") {
-    res.render("sky-blue", { data: profile });
+  if (profileTheme == 'gold&black') {
+    res.render('gold-black', { data: profile });
+  } else if (profileTheme == 'white&black') {
+    res.render('white-black', { data: profile });
+  } else if (profileTheme == 'orange&black') {
+    res.render('orange-black', { data: profile });
+  } else if (profileTheme == 'white&blue') {
+    res.render('white-blue', { data: profile });
+  } else if (profileTheme == 'blue&black') {
+    res.render('blue-black', { data: profile });
+  } else if (profileTheme == 'aero&black') {
+    res.render('sky-blue', { data: profile });
   } else {
-    res.render("index", { data: profile });
+    res.render('index', { data: profile });
   }
-
 });
 /**
  * @desc    Public User EJS
@@ -131,55 +130,101 @@ export const viewProfile = asyncHandler(async (req, res, next) => {
 export const submitForm = asyncHandler(async (req, res, next) => {
   try {
     const { id, name, phone, email, message } = req.body;
-    const profile = await Profile.findByIdAndUpdate({ _id: id }, {
-      $push: { "form.forms": { name: name, phone: phone, email: email, message: message } },
-      $inc: { "form.status": 1 }
-    },{new: true}).populate('user', 'fcm_token');
+    const profile = await Profile.findByIdAndUpdate(
+      { _id: id },
+      {
+        $push: {
+          'form.forms': {
+            name: name,
+            phone: phone,
+            email: email,
+            message: message,
+          },
+        },
+        $inc: { 'form.status': 1 },
+      },
+      { new: true }
+    ).populate('user', 'fcm_token');
     if (!profile || !profile.user) {
       throw new Error('Profile not found or user reference not available.');
     }
     let payload = {};
     const tokens = profile.user.fcm_token;
     const messaging = admin.messaging();
-    const notificationStatus = profile.form.status == null? 0: profile.form.status;
+    const notificationStatus =
+      profile.form.status == null ? 0 : profile.form.status;
     console.log(notificationStatus);
-  await tokens.forEach(async (element) => {
+    await tokens.forEach(async (element) => {
       payload = {
         token: element,
         notification: {
           title: name,
           body: `${email}\nPhone: ${phone}\n${message}`,
-          sound: 'default'
+          sound: 'default',
         },
         data: {
           status: `${notificationStatus}`,
-          ...req.body
+          ...req.body,
         },
         android: {
-          "priority": "high"
+          priority: 'high',
         },
         apns: {
           payload: {
             aps: {
-              "content-available": true
-            }
+              'content-available': true,
+            },
           },
-          fcm_options: {
-          }
-        }
+          fcm_options: {},
+        },
       };
-      await messaging.send(payload).then((message)=>{
+      await messaging.send(payload).then((message) => {
         console.log('message sent');
       });
-    })
+    });
     res.status(200).json({ message: 'Form submission successful' });
-
-
   } catch (e) {
-    console.log(e)
+    console.log(e);
     res.status(500).json({ e });
   }
 });
 
+export const duplicateProfile = async (req, res, next) => {
+  try {
+    const { profileId } = req.params;
+    const { phone } = req.body; // New phone number from the request body
 
+    // Find the profile to duplicate
+    const profileToDuplicate = await Profile.findById(profileId);
+    if (!profileToDuplicate) {
+      return res
+        .status(404)
+        .send({ success: false, message: 'Profile not found' });
+    }
 
+    // Convert to a plain object and remove the _id to ensure a new document is created
+    const duplicatedData = profileToDuplicate.toObject();
+    delete duplicatedData._id;
+
+    // Replace the phone number in the contacts
+    if (duplicatedData.contact && duplicatedData.contact.contacts) {
+      duplicatedData.contact.contacts = duplicatedData.contact.contacts.map(
+        (contact) => {
+          if (contact.type === 'phone') {
+            return { ...contact, value: phone }; // Set the new phone number
+          }
+          return contact;
+        }
+      );
+    }
+
+    // Create the new profile
+    const newProfile = new Profile(duplicatedData);
+    await newProfile.save();
+
+    // Send back the new profile data
+    res.status(201).send({ success: true, data: newProfile });
+  } catch (error) {
+    next(error);
+  }
+};
