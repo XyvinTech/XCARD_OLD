@@ -882,7 +882,7 @@ const isEmpty = (obj) => {
 const submitBtn = document.getElementById('form_submit');
 submitBtn.addEventListener('click', (e) => {
   e.preventDefault();
-  const postURL = 'https://card.visitingcard.store/profile/submitForm';
+  const postURL = 'https://app.visitingcard.store/profile/submitForm';
   const id = data['_id'];
   const nameInput = document.getElementById('frm_name');
   const emailInput = document.getElementById('email');
