@@ -4,7 +4,7 @@ const data = {
     designation: 'Chief financial officer',
     companyName: 'Acute Angle Ltd.',
     bio: 'jjjjjjjjmmmm',
-    profileLink: 'https://card.visitingcard.store/profile/hhhhjj-6cho9c2p',
+    profileLink: 'https://app.visitingcard.store/profile/hhhhjj-6cho9c2p',
     profilePicture: {
       type: 'profile',
       key: 'profiles/profiles-20230703T201352032Z8976640.jpeg',
