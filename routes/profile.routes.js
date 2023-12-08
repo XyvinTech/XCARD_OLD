@@ -38,6 +38,10 @@ profileRouter
 
 profileRouter
   .route('/duplicate/:profileId')
-  .post(protect, authorize('admin'), profileController.duplicateProfile);
+  .post(
+    protect,
+    authorize('admin', 'super'),
+    profileController.duplicateProfile
+  );
 
 export default profileRouter;
