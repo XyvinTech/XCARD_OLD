@@ -194,6 +194,7 @@ export const duplicateProfile = async (req, res, next) => {
     const { profileId } = req.params;
     const { phone } = req.body; // New phone number from the request body
 
+    let newProfile;
     // Find the profile to duplicate
     const profileToDuplicate = await Profile.findById(profileId);
     if (!profileToDuplicate) {
@@ -201,26 +202,79 @@ export const duplicateProfile = async (req, res, next) => {
         .status(404)
         .send({ success: false, message: 'Profile not found' });
     }
+    await admin
+      .auth()
+      .createUser({
+        phoneNumber: phone,
+        displayName: profileToDuplicate?.profile?.name,
+        disabled: false,
+      })
+      .then(async (userRecord) => {
+        //If new user enters create single user and profile.
+        const user = await User.create({
+          username: phone,
+          uid: userRecord?.uid,
+          role: 'user',
+          providerData: userRecord?.providerData,
+        });
 
-    // Convert to a plain object and remove the _id to ensure a new document is created
-    const duplicatedData = profileToDuplicate.toObject();
-    delete duplicatedData._id;
+        // Convert to a plain object and remove the _id to ensure a new document is created
+        const duplicatedData = profileToDuplicate.toObject();
+        delete duplicatedData._id;
 
-    // Replace the phone number in the contacts
-    if (duplicatedData.contact && duplicatedData.contact.contacts) {
-      duplicatedData.contact.contacts = duplicatedData.contact.contacts.map(
-        (contact) => {
-          if (contact.type === 'phone') {
-            return { ...contact, value: phone }; // Set the new phone number
-          }
-          return contact;
+        // Replace the phone number in the contacts
+        if (duplicatedData.contact && duplicatedData.contact.contacts) {
+          duplicatedData.contact.contacts = duplicatedData.contact.contacts.map(
+            (contact) => {
+              if (contact.type === 'phone') {
+                return { ...contact, value: phone }; // Set the new phone number
+              }
+              return contact;
+            }
+          );
         }
-      );
-    }
+        duplicatedData.user = user?.id;
 
-    // Create the new profile
-    const newProfile = new Profile(duplicatedData);
-    await newProfile.save();
+        // Create the new profile
+        newProfile = new Profile(duplicatedData);
+        await newProfile.save();
+      })
+      .catch(async (error) => {
+        //If User already exisits create second or third profile
+
+        if (error?.errorInfo?.code === 'auth/phone-number-already-exists') {
+          console.log('phone no already exist');
+          let user = await User.findOne({ username: phone });
+
+          if (user == null) {
+            const userRecord = await admin.auth().getUserByPhoneNumber(phone);
+            user = await User.create({
+              username: phone,
+              uid: userRecord?.uid,
+              role: 'user',
+              providerData: userRecord?.providerData,
+            });
+          }
+          const duplicatedData = profileToDuplicate.toObject();
+          delete duplicatedData._id;
+
+          // Replace the phone number in the contacts
+          if (duplicatedData.contact && duplicatedData.contact.contacts) {
+            duplicatedData.contact.contacts =
+              duplicatedData.contact.contacts.map((contact) => {
+                if (contact.type === 'phone') {
+                  return { ...contact, value: phone }; // Set the new phone number
+                }
+                return contact;
+              });
+          }
+          duplicatedData.user = user?.id;
+
+          // Create the new profile
+          newProfile = new Profile(duplicatedData);
+          await newProfile.save();
+        }
+      });
 
     // Send back the new profile data
     res.status(201).send({ success: true, data: newProfile });
