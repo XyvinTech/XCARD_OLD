@@ -42,7 +42,7 @@ groupRouter
 
 groupRouter
   .route('/:id/profile/search')
-  .get(protect, authorize('admin'), groupController.searchProfile);
+  .get(protect, authorize('admin', 'super'), groupController.searchProfile);
 
 groupRouter
   .route('/edit/:id')
