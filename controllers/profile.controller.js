@@ -4,8 +4,11 @@ import User from '../models/User.js';
 import axios from 'axios';
 import Profile from '../models/Profile.js';
 import ErrorResponse from '../utils/error.response.js';
-import { uploadFiles } from '../utils/file.upload.js';
+import { uploadFiles, uploadFile } from '../utils/file.upload.js';
 import getRandomFileName from '../helpers/filename.helper.js';
+import QRCode from 'qrcode';
+import { nanoid, customAlphabet } from 'nanoid';
+const randomId = customAlphabet('0123456789ABCDEFGHIJKLMNOP', 8);
 
 /**
  * @desc    Get user profile by id
@@ -202,6 +205,26 @@ export const duplicateProfile = async (req, res, next) => {
         .status(404)
         .send({ success: false, message: 'Profile not found' });
     }
+    // Generate cardId and profileLink
+    const cardId = `${profileToDuplicate.profile.name
+      .toLowerCase()
+      .split(' ')
+      .join('')}-${randomId().toLowerCase()}`;
+    const profileLink = `${process.env.HOST_URL_HTTPS}/profile/${cardId}`;
+
+    // Generate QR Code
+    const qrOptions = {
+      scale: 34,
+      color: { dark: '#BEFF6C', light: '#1C1C1E' },
+    }; // Adjust these options as needed
+    const qrCode = await QRCode.toBuffer(profileLink, qrOptions);
+    const qrFile = { buffer: qrCode, mimetype: 'image/jpeg' };
+    const qrImageUrl = await uploadFile(
+      qrFile,
+      'cards',
+      getRandomFileName('card-')
+    );
+
     await admin
       .auth()
       .createUser({
@@ -234,6 +257,21 @@ export const duplicateProfile = async (req, res, next) => {
           );
         }
         duplicatedData.user = user?.id;
+        duplicatedData.card = {
+          ...duplicatedData.card,
+          cardId,
+          theme: duplicatedData.card?.theme,
+        }; // Assuming 'theme' is part of the card object
+        duplicatedData.profile = {
+          ...duplicatedData.profile,
+          profileLink,
+          profileQR: qrImageUrl,
+        };
+        duplicatedData.visitCount = 0;
+        duplicatedData.form = {
+          status: 0,
+          forms: [],
+        };
 
         // Create the new profile
         newProfile = new Profile(duplicatedData);
@@ -269,6 +307,17 @@ export const duplicateProfile = async (req, res, next) => {
               });
           }
           duplicatedData.user = user?.id;
+          duplicatedData.card = {
+            ...duplicatedData.card,
+            cardId,
+            theme: duplicatedData.card?.theme,
+          }; // Assuming 'theme' is part of the card object
+          duplicatedData.profile = {
+            ...duplicatedData.profile,
+            profileLink,
+            profileQR: qrImageUrl,
+          };
+          duplicatedData.visitCount = 0;
 
           // Create the new profile
           newProfile = new Profile(duplicatedData);
@@ -279,6 +328,7 @@ export const duplicateProfile = async (req, res, next) => {
     // Send back the new profile data
     res.status(201).send({ success: true, data: newProfile });
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };
