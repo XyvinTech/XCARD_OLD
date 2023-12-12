@@ -318,6 +318,10 @@ export const duplicateProfile = async (req, res, next) => {
             profileQR: qrImageUrl,
           };
           duplicatedData.visitCount = 0;
+          duplicatedData.form = {
+            status: 0,
+            forms: [],
+          };
 
           // Create the new profile
           newProfile = new Profile(duplicatedData);
