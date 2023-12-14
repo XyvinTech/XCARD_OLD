@@ -142,7 +142,7 @@ userRouter
   .route('/createBulk')
   .post(
     protect,
-    authorize('admin'),
+    authorize('admin', 'super'),
     excel.single('file'),
     userController.createUserProfileBulk
   );
