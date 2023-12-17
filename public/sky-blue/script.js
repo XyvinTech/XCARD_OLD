@@ -1,28 +1,28 @@
 const viewable = [
-  "png",
-  "jpg",
-  "jpeg",
-  "gif",
-  "mp4",
-  "avi",
-  "mkv",
-  "mov",
-  "webm",
-  "mp3",
-  "ogg",
-  "wav",
-  "flac",
-  "aac",
-  "wma",
-  "m4a",
-  "opus",
-  "svg",
-  "ico",
-  "webp",
-  "bmp",
-  "3gp",
+  'png',
+  'jpg',
+  'jpeg',
+  'gif',
+  'mp4',
+  'avi',
+  'mkv',
+  'mov',
+  'webm',
+  'mp3',
+  'ogg',
+  'wav',
+  'flac',
+  'aac',
+  'wma',
+  'm4a',
+  'opus',
+  'svg',
+  'ico',
+  'webp',
+  'bmp',
+  '3gp',
 ];
-const data = JSON.parse(document.currentScript.getAttribute("data"));
+const data = JSON.parse(document.currentScript.getAttribute('data'));
 
 const profile = data.profile;
 const contacts =
@@ -91,25 +91,25 @@ function run() {
   setup();
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener('DOMContentLoaded', () => {
   run();
   setContent();
 });
 
 function generateProfile() {
-  const profileSection = document.getElementById("profile");
+  const profileSection = document.getElementById('profile');
   if (!profile) {
-    profileSection.style.display = "none";
+    profileSection.style.display = 'none';
     return;
   }
 
-  const card = profileSection.querySelector(".profile-card");
+  const card = profileSection.querySelector('.profile-card');
 
   card.innerHTML = `
   <img src="${
     profile.profileBanner?.public
       ? profile.profileBanner?.public
-      : "/profile/public/sky-blue/assets/orange-dark/card-bg.png"
+      : '/profile/public/sky-blue/assets/orange-dark/card-bg.png'
   }" alt="card-bg" />
   <div class="info">
     <img
@@ -117,19 +117,19 @@ function generateProfile() {
       src="${
         profile.profilePicture?.public
           ? profile.profilePicture?.public
-          : "/profile/public/sky-blue/assets/orange-dark/no_image.jpg"
+          : '/profile/public/sky-blue/assets/orange-dark/no_image.jpg'
       }"
       alt="profile-pic"
     />
-    <h1>${profile.name ?? "Fill Name"}</h1>
-    <h2>${profile.designation ?? "fill designation"} | ${
+    <h1>${profile.name ?? 'Fill Name'}</h1>
+    <h2>${profile.designation ?? 'fill designation'} | ${
     profile.companyName
   }</h2>
     <p>
-     ${profile.bio ?? ""}
+     ${profile.bio ?? ''}
     </p>
     <button class="btn btn-primary" target="_blank" href="${
-      profile.profileLink ?? "#"
+      profile.profileLink ?? '#'
     }">
      <img src="/profile/public/sky-blue/assets/orange-dark/icons/add-contact.svg" alt="add-contact">
       <span>Save Contact</span>
@@ -137,7 +137,7 @@ function generateProfile() {
   </div>
   `;
 
-  const button = card.querySelector("button");
+  const button = card.querySelector('button');
 
   let email = null;
   let phoneNumber = null;
@@ -146,23 +146,23 @@ function generateProfile() {
 
   if (contacts) {
     for (const contact of contacts) {
-      if (contact.type === "email") {
+      if (contact.type === 'email') {
         email = contact.value;
-      } else if (contact.type === "phone") {
+      } else if (contact.type === 'phone') {
         phoneNumber = contact.value;
-      } else if (contact.type === "location") {
+      } else if (contact.type === 'location') {
         locationInfo = {
           street: contact.street,
           pincode: contact.pincode,
           value: contact.value,
         };
-      } else if (contact.type === "wabusiness") {
+      } else if (contact.type === 'wabusiness') {
         whatsapp = contact.value;
       }
     }
   }
 
-  button.addEventListener("click", () =>
+  button.addEventListener('click', () =>
     createVCard(
       websites,
       profile.name,
@@ -178,15 +178,15 @@ function generateProfile() {
 }
 
 function generateWebsites() {
-  const websiteSection = document.getElementById("websites");
+  const websiteSection = document.getElementById('websites');
   if (!websites) {
-    websiteSection.style.display = "none";
+    websiteSection.style.display = 'none';
     return;
   }
 
-  const ul = websiteSection.querySelector("ul");
+  const ul = websiteSection.querySelector('ul');
 
-  let content = "";
+  let content = '';
   websites.forEach((website) => {
     if (website.link && website.name) {
       content += `
@@ -202,53 +202,53 @@ function generateWebsites() {
     }
   });
 
-  if (content != "") {
+  if (content != '') {
     ul.innerHTML = content;
   } else {
-    websiteSection.style.display = "none";
+    websiteSection.style.display = 'none';
   }
 }
 function generateAwards() {
-  const awardSection = document.getElementById("awards");
+  const awardSection = document.getElementById('awards');
   if (!awards) {
-    awardSection.style.display = "none";
+    awardSection.style.display = 'none';
     return;
   }
 
-  const ul = awardSection.querySelector("ul");
+  const ul = awardSection.querySelector('ul');
 
-  let content = "";
+  let content = '';
   awards.forEach((award) => {
     if (award.label) {
       content += `
       <li class="award-card">
         <img src="${
           award.image?.public ??
-          "/profile/public/sky-blue/assets/orange-dark/award_no_img.png"
+          '/profile/public/sky-blue/assets/orange-dark/award_no_img.png'
         }" alt="award" />
         <h3>${award.label}</h3>
-        ${award.value && "<p>" + award.value + "</p>"}
+        ${award.value && '<p>' + award.value + '</p>'}
       </li>
       `;
     }
   });
 
-  if (content != "") {
+  if (content != '') {
     ul.innerHTML = content;
   } else {
-    awardSection.style.display = "none";
+    awardSection.style.display = 'none';
   }
 }
 function generateServices() {
-  const serviceSection = document.getElementById("services");
+  const serviceSection = document.getElementById('services');
   if (!services) {
-    serviceSection.style.display = "none";
+    serviceSection.style.display = 'none';
     return;
   }
 
-  const ul = serviceSection.querySelector(".glider");
+  const ul = serviceSection.querySelector('.glider');
 
-  let content = "";
+  let content = '';
   services.forEach((service) => {
     if (service.label) {
       content += `
@@ -257,22 +257,22 @@ function generateServices() {
           <img src="${
             service.image?.public
               ? service.image.public
-              : "/profile/public/sky-blue/assets/orange-dark/service_no_img.png"
+              : '/profile/public/sky-blue/assets/orange-dark/service_no_img.png'
           }" alt="service" />
           <h3>${service.label}</h3>
-          <p>${service.description ?? ""}</p>
+          <p>${service.description ?? ''}</p>
         </button>
       </div>
       `;
     }
   });
 
-  if (content != "") {
+  if (content != '') {
     ul.innerHTML = content;
-    const serviceButtons = ul.querySelectorAll("button");
+    const serviceButtons = ul.querySelectorAll('button');
     serviceButtons.forEach((button, index) => {
-      button.addEventListener("click", () => {
-        openModal("service", {
+      button.addEventListener('click', () => {
+        openModal('service', {
           image: services[index].image?.public,
           heading: services[index].label,
           desc: services[index].description,
@@ -281,19 +281,19 @@ function generateServices() {
       });
     });
   } else {
-    serviceSection.style.display = "none";
+    serviceSection.style.display = 'none';
   }
 }
 function generateProducts() {
-  const productSection = document.getElementById("products");
+  const productSection = document.getElementById('products');
   if (!products) {
-    productSection.style.display = "none";
+    productSection.style.display = 'none';
     return;
   }
 
-  const ul = productSection.querySelector(".glider");
+  const ul = productSection.querySelector('.glider');
 
-  let content = "";
+  let content = '';
   products.forEach((product) => {
     if (product.name) {
       content += `
@@ -302,22 +302,22 @@ function generateProducts() {
           <img src="${
             product.image?.public
               ? product.image.public
-              : "/profile/public/sky-blue/assets/orange-dark/award_no_img.png.jpg"
+              : '/profile/public/sky-blue/assets/orange-dark/award_no_img.png.jpg'
           }" alt="" />
           <h3>${product.name}</h3>
-          <p>${product.description ?? ""}</p>
+          <p>${product.description ?? ''}</p>
         </button>
       </div>
       `;
     }
   });
 
-  if (content != "") {
+  if (content != '') {
     ul.innerHTML = content;
-    const productButtons = ul.querySelectorAll("button");
+    const productButtons = ul.querySelectorAll('button');
     productButtons.forEach((button, index) => {
-      button.addEventListener("click", () => {
-        openModal("product", {
+      button.addEventListener('click', () => {
+        openModal('product', {
           image: products[index].image?.public,
           heading: products[index].name,
           desc: products[index].description,
@@ -328,18 +328,18 @@ function generateProducts() {
       });
     });
   } else {
-    serviceSection.style.display = "none";
+    serviceSection.style.display = 'none';
   }
 }
 
 function generateBank() {
-  const bankSection = document.getElementById("bank");
+  const bankSection = document.getElementById('bank');
   if (!bank) {
-    bankSection.style.display = "none";
+    bankSection.style.display = 'none';
     return;
   }
 
-  const card = bankSection.querySelector(".main-card");
+  const card = bankSection.querySelector('.main-card');
 
   card.innerHTML = `
          <h2 class="bank-name">${bank.bank}</h2>
@@ -370,39 +370,39 @@ function generateBank() {
 }
 
 function generateCatalogues() {
-  const catalogueSection = document.querySelector("#catalogues");
+  const catalogueSection = document.querySelector('#catalogues');
 
   if (!documents) {
-    catalogueSection.style.display = "none";
+    catalogueSection.style.display = 'none';
     return;
   }
 
-  const ul = catalogueSection.querySelector("ul");
+  const ul = catalogueSection.querySelector('ul');
 
-  ul.innerHTML = "";
+  ul.innerHTML = '';
 
   documents.forEach((doc) => {
-    let icon = "";
-    if (viewable.includes(doc.image.fileName.split(".")[1])) {
-      icon = "eye.svg";
+    let icon = '';
+    if (viewable.includes(doc.image.fileName.split('.')[1])) {
+      icon = 'eye.svg';
       isViewableData = true;
     } else {
-      icon = "download.svg";
+      icon = 'download.svg';
       isViewableData = false;
     }
 
     if (doc.image?.public) {
-      const splittedFileName = doc.image?.fileName.split(".");
-      let label = "";
+      const splittedFileName = doc.image?.fileName.split('.');
+      let label = '';
 
       if (splittedFileName.length > 0) {
         label =
-          doc.label === ""
-            ? splittedFileName.slice(0, splittedFileName.length - 1).join("")
+          doc.label === ''
+            ? splittedFileName.slice(0, splittedFileName.length - 1).join('')
             : doc.label;
       }
 
-      const li = document.createElement("li");
+      const li = document.createElement('li');
       li.innerHTML += `
     <div class="website-card">
       <div class="content">
@@ -413,7 +413,7 @@ function generateCatalogues() {
     </div>
     `;
       ul.appendChild(li);
-      li.addEventListener("click", () => {
+      li.addEventListener('click', () => {
         downloadDocument(
           doc.image?.public,
           doc.image?.fileName,
@@ -424,19 +424,19 @@ function generateCatalogues() {
   });
 }
 function generateUpis() {
-  const upiSection = document.querySelector("#upi");
+  const upiSection = document.querySelector('#upi');
 
   if (!upis) {
-    upiSection.style.display = "none";
+    upiSection.style.display = 'none';
     return;
   }
 
-  const ul = upiSection.querySelector("ul");
+  const ul = upiSection.querySelector('ul');
 
-  ul.innerHTML = "";
+  ul.innerHTML = '';
 
   upis.forEach((upi) => {
-    const li = document.createElement("li");
+    const li = document.createElement('li');
     li.innerHTML += `
       <div class="website-card">
       <div class="content">
@@ -449,38 +449,38 @@ function generateUpis() {
     </div>
     `;
     ul.appendChild(li);
-    li.addEventListener("click", () => {
+    li.addEventListener('click', () => {
       copyToClipboard(upi.id, li);
     });
   });
 }
 
 function generateSocials() {
-  const socialSection = document.getElementById("socials");
+  const socialSection = document.getElementById('socials');
   if (!socials) {
-    socialSection.style.display = "none";
+    socialSection.style.display = 'none';
     return;
   }
 
   const large = [
-    "phone",
-    "whatsapp",
-    "email",
-    "gmail",
-    "location",
-    "wabusiness",
+    'phone',
+    'whatsapp',
+    'email',
+    'gmail',
+    'location',
+    'wabusiness',
   ];
-  const smallDiv = socialSection.querySelector(".small-cards");
-  const largeDiv = socialSection.querySelector(".large-cards");
+  const smallDiv = socialSection.querySelector('.small-cards');
+  const largeDiv = socialSection.querySelector('.large-cards');
 
-  largeDiv.innerHTML = "";
-  smallDiv.innerHTML = "";
+  largeDiv.innerHTML = '';
+  smallDiv.innerHTML = '';
 
   socials.forEach((social) => {
-    const card = document.createElement("div");
-    card.classList.add("card");
+    const card = document.createElement('div');
+    card.classList.add('card');
 
-    if (social.value === "") return;
+    if (social.value === '') return;
 
     if (!large.includes(social.type)) {
       card.innerHTML = `
@@ -511,13 +511,16 @@ function generateSocials() {
     }
   });
 
-  const wabusiness = contacts.find((contact) => contact.type === "wabusiness");
-  const phone = contacts.find((contact) => contact.type === "phone");
-  const email = contacts.find((contact) => contact.type === "email");
-  const location = contacts.find((contact) => contact.type === "location");
-  const whatsapp = contacts.find((contact) => contact.type === "whatsapp");
+  const wabusiness =
+    contacts?.find((contact) => contact.type === 'wabusiness') ?? null;
+  const phone = contacts?.find((contact) => contact.type === 'phone') ?? null;
+  const email = contacts?.find((contact) => contact.type === 'email') ?? null;
+  const location =
+    contacts?.find((contact) => contact.type === 'location') ?? null;
+  const whatsapp =
+    contacts?.find((contact) => contact.type === 'whatsapp') ?? null;
 
-  if (phone && phone.value?.trim() !== "") {
+  if (phone && phone.value?.trim() !== '') {
     smallDiv.innerHTML += `
     <div class="card">
           <a target="_blank" href="tel:${phone.value}">
@@ -527,7 +530,7 @@ function generateSocials() {
     `;
   }
 
-  if (email && email.value?.trim() !== "") {
+  if (email && email.value?.trim() !== '') {
     smallDiv.innerHTML += `
     <div class="card">
           <a target="_blank" href="mailto:${email.value}">
@@ -557,20 +560,20 @@ function generateSocials() {
   }
 
   if (location) {
-    const query = location.value ?? location.street ?? "";
+    const query = location.value ?? location.street ?? '';
 
     smallDiv.innerHTML += `
   <div class="card">
     <a target="_blank" href="${
       location.pincode ??
-      "https://www.google.com/maps?q=" + query.replace(/\s+/g, "+")
+      'https://www.google.com/maps?q=' + query.replace(/\s+/g, '+')
     }">
       <img src="/profile/public/sky-blue/assets/orange-dark/socials/location.svg" alt="location" />
     </a>
   </div>`;
   }
 
-  if (whatsapp && whatsapp.value?.trim() !== "") {
+  if (whatsapp && whatsapp.value?.trim() !== '') {
     smallDiv.innerHTML += `
   <div class="card">
         <a target="_blank" href="https://wa.me/${whatsapp.value}">
@@ -581,17 +584,17 @@ function generateSocials() {
   }
 }
 function generateVideos() {
-  const videoSection = document.querySelector("#videos");
+  const videoSection = document.querySelector('#videos');
   if (!videos) {
-    videoSection.style.display = "none";
+    videoSection.style.display = 'none';
     return;
   }
 
-  const videoGlider = videoSection.querySelector(".video-glider");
-  videoGlider.innerHTML = "";
+  const videoGlider = videoSection.querySelector('.video-glider');
+  videoGlider.innerHTML = '';
 
   videos.forEach((video) => {
-    const videoLink = video.link.split("/");
+    const videoLink = video.link.split('/');
     videoGlider.innerHTML += `
     <div style="height: 11.375rem">
       <iframe
@@ -610,25 +613,25 @@ function generateVideos() {
 }
 
 function generateCertificates() {
-  const certificateSection = document.querySelector("#certificates");
+  const certificateSection = document.querySelector('#certificates');
   if (!certificates) {
-    certificateSection.style.display = "none";
+    certificateSection.style.display = 'none';
     return;
   }
 
-  const ul = certificateSection.querySelector("ul");
+  const ul = certificateSection.querySelector('ul');
 
-  ul.innerHTML = "";
+  ul.innerHTML = '';
 
   certificates.forEach((cert) => {
-    const li = document.createElement("li");
+    const li = document.createElement('li');
 
     li.innerHTML = `
     <li>
               <img
                 src="${
                   cert.image?.public ??
-                  "/profile/public/sky-blue/assets/orange-dark/certificate.png"
+                  '/profile/public/sky-blue/assets/orange-dark/certificate.png'
                 }"
                 alt="certificate"
               />
@@ -642,37 +645,37 @@ function generateCertificates() {
 }
 
 function generateEnquiry() {
-  const id = data["_id"];
+  const id = data['_id'];
 
-  const form = document.querySelector("#enquiry form");
-  form.addEventListener("submit", async (e) => {
+  const form = document.querySelector('#enquiry form');
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const name_input = document.getElementById("name");
-    const phone = document.getElementById("phone");
-    const email_input = document.getElementById("email");
-    const textarea = document.getElementById("message");
-    const country_code = document.querySelector(".iti__selected-flag");
-    const phone_input_wrapper = document.getElementById("phone_wrapper");
-    phone_input_wrapper.style.borderRadius = "8px";
+    const name_input = document.getElementById('name');
+    const phone = document.getElementById('phone');
+    const email_input = document.getElementById('email');
+    const textarea = document.getElementById('message');
+    const country_code = document.querySelector('.iti__selected-flag');
+    const phone_input_wrapper = document.getElementById('phone_wrapper');
+    phone_input_wrapper.style.borderRadius = '8px';
 
     if (!name_input.value) {
-      name_input.style.border = "1px solid red";
+      name_input.style.border = '1px solid red';
     }
     if (!isPhoneNumber(phone.value)) {
-      phone_input_wrapper.style.border = "1px solid red";
+      phone_input_wrapper.style.border = '1px solid red';
     }
     if (!isValidEmail(email_input.value)) {
-      email_input.style.border = "1px solid red";
+      email_input.style.border = '1px solid red';
     }
 
-    name_input.addEventListener("input", () => {
-      name_input.style.border = "none";
+    name_input.addEventListener('input', () => {
+      name_input.style.border = 'none';
     });
-    phone.addEventListener("input", () => {
-      phone_input_wrapper.style.border = "none";
+    phone.addEventListener('input', () => {
+      phone_input_wrapper.style.border = 'none';
     });
-    email_input.addEventListener("input", () => {
-      email_input.style.border = "none";
+    email_input.addEventListener('input', () => {
+      email_input.style.border = 'none';
     });
 
     if (
@@ -680,7 +683,7 @@ function generateEnquiry() {
       isPhoneNumber(phone.value) &&
       isValidEmail(email_input.value)
     ) {
-      let code = country_code.title.split(" ");
+      let code = country_code.title.split(' ');
       code = code[code.length - 1];
       const data = {
         id: id,
@@ -691,41 +694,41 @@ function generateEnquiry() {
         message: textarea.value,
       };
 
-      const btn = e.target.querySelector("button");
+      const btn = e.target.querySelector('button');
 
       btn.innerHTML = `<img src="/profile/public/sky-blue/assets/orange-dark/icons/loader.svg" class="loading" style="width:1.25rem;height:1.25rem" />`;
       btn.disabled = true;
-      const info = document.querySelector(".form-info");
-      const p = info.querySelector("#form-info");
-      info.style.display = "none";
+      const info = document.querySelector('.form-info');
+      const p = info.querySelector('#form-info');
+      info.style.display = 'none';
 
       try {
-        const res = await fetch("/profile/submitForm", {
-          method: "POST",
+        const res = await fetch('/profile/submitForm', {
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
           body: JSON.stringify(data),
         });
 
-        info.style.display = "block";
+        info.style.display = 'block';
 
         if (res) {
-          name_input.value = "";
-          phone.value = "";
-          email_input.value = "";
-          textarea.value = "";
-          p.innerText = "Submitted successfully";
-          p.style.color = "green";
+          name_input.value = '';
+          phone.value = '';
+          email_input.value = '';
+          textarea.value = '';
+          p.innerText = 'Submitted successfully';
+          p.style.color = 'green';
         } else {
-          p.innerText = "Something went wrong";
-          p.style.color = "tomato";
+          p.innerText = 'Something went wrong';
+          p.style.color = 'tomato';
         }
       } catch (err) {
         console.error(err);
       }
 
-      btn.innerHTML = "Submit";
+      btn.innerHTML = 'Submit';
       btn.disabled = false;
       e.target.reset();
     }
@@ -733,34 +736,34 @@ function generateEnquiry() {
 }
 
 function closeModal() {
-  const parent = document.querySelector(".modal");
-  parent.classList.remove("active");
-  parent.style.display = "none";
+  const parent = document.querySelector('.modal');
+  parent.classList.remove('active');
+  parent.style.display = 'none';
 }
 
 function openModal(type, data) {
-  const parent = document.querySelector(".modal");
-  const modal = document.querySelector(".modal > .modal-content");
+  const parent = document.querySelector('.modal');
+  const modal = document.querySelector('.modal > .modal-content');
   let content = `<button class="close-button"><img src="/profile/public/sky-blue/assets/orange-dark/icons/close.svg" alt="close"></button>
   <img class="w-full" src="${
-    data.image ?? "/profile/public/sky-blue/assets/orange-dark/service.png"
+    data.image ?? '/profile/public/sky-blue/assets/orange-dark/service.png'
   }" alt="image"> <h2>${data.heading}</h2>
   <p class="description">${data.desc}</p>`;
 
-  if (type === "product" && data.price) {
+  if (type === 'product' && data.price) {
     content += `<p class="price"><span class="discount">₹${
       data.discount ? data.discount : data.price
     }</span>${
-      data.discount ? '<span class="actual">₹' + data.price + "</span>" : ""
+      data.discount ? '<span class="actual">₹' + data.price + '</span>' : ''
     }</p>`;
   }
   content += `<a class="btn btn-primary w-full" target="_blank" href="${data.link}">Know More</a>`;
 
   modal.innerHTML = content;
-  parent.style.display = "flex";
-  parent.classList.add("animate");
-  const modalCloseBtn = modal.querySelector(".close-button");
-  modalCloseBtn.addEventListener("click", () => {
+  parent.style.display = 'flex';
+  parent.classList.add('animate');
+  const modalCloseBtn = modal.querySelector('.close-button');
+  modalCloseBtn.addEventListener('click', () => {
     closeModal();
   });
 }
@@ -768,18 +771,18 @@ function openModal(type, data) {
 function setup() {
   // Service Cards Glider
 
-  const glider = new Glider(document.querySelector(".service-glider"), {
+  const glider = new Glider(document.querySelector('.service-glider'), {
     slidesToScroll: 1,
     slidesToShow: 1.8,
     draggable: true,
-    dots: ".dots-service",
+    dots: '.dots-service',
   });
 
-  const serviceCards = document.querySelectorAll("#services .service-card");
+  const serviceCards = document.querySelectorAll('#services .service-card');
 
   const cardMap = new Map();
 
-  const currentCard = document.querySelector("#current-services");
+  const currentCard = document.querySelector('#current-services');
 
   const serviceObserver = new IntersectionObserver(
     (entries) => {
@@ -794,7 +797,7 @@ function setup() {
     }
   );
 
-  document.querySelector("#total-services").textContent = serviceCards.length;
+  document.querySelector('#total-services').textContent = serviceCards.length;
 
   serviceCards.forEach((serviceCard, index) => {
     cardMap.set(serviceCard, index + 1);
@@ -803,26 +806,26 @@ function setup() {
 
   // Video glider
 
-  const videoGlider = new Glider(document.querySelector(".video-glider"), {
+  const videoGlider = new Glider(document.querySelector('.video-glider'), {
     slidesToScroll: 1,
     slidesToShow: 1.1,
     draggable: true,
-    dots: ".dots-video",
+    dots: '.dots-video',
   });
 
   // Product Glider
 
-  const productGlider = new Glider(document.querySelector(".product-glider"), {
+  const productGlider = new Glider(document.querySelector('.product-glider'), {
     slidesToScroll: 1,
     slidesToShow: 1.8,
     draggable: true,
-    dots: ".dots-product",
+    dots: '.dots-product',
   });
 
-  const productCards = document.querySelectorAll("#products .service-card");
+  const productCards = document.querySelectorAll('#products .service-card');
 
-  document.querySelector("#total-products").textContent = productCards.length;
-  const currentProduct = document.querySelector("#current-products");
+  document.querySelector('#total-products').textContent = productCards.length;
+  const currentProduct = document.querySelector('#current-products');
 
   const productObserver = new IntersectionObserver(
     (entries) => {
@@ -844,20 +847,20 @@ function setup() {
 }
 
 function setContent() {
-  const main = document.querySelector("main");
-  const loader = document.getElementById("loader");
+  const main = document.querySelector('main');
+  const loader = document.getElementById('loader');
 
-  loader.style.display = "none";
-  main.style.opacity = "1";
+  loader.style.display = 'none';
+  main.style.opacity = '1';
 }
 
 // Utils
 
 function handleImage(imageUrl) {
   if (imageUrl === null) {
-    imageUrl = "/profile/public/sky-blue/assets/images/no_image.jpg";
-  } else if (imageUrl.public === null || imageUrl.public === "") {
-    imageUrl = "/profile/public/sky-blue/assets/images/no_image.jpg";
+    imageUrl = '/profile/public/sky-blue/assets/images/no_image.jpg';
+  } else if (imageUrl.public === null || imageUrl.public === '') {
+    imageUrl = '/profile/public/sky-blue/assets/images/no_image.jpg';
   } else {
     imageUrl = imageUrl.public;
   }
@@ -888,11 +891,11 @@ function copyToClipboard(text, li) {
     navigator.clipboard
       .writeText(text)
       .then(() => {
-        const img = li.querySelector(".action img");
+        const img = li.querySelector('.action img');
         setTimeout(() => {
           if (img) {
             img.src =
-              "/profile/public/sky-blue/assets/orange-dark/icons/tick.svg";
+              '/profile/public/sky-blue/assets/orange-dark/icons/tick.svg';
           }
         }, 500);
 
@@ -900,46 +903,46 @@ function copyToClipboard(text, li) {
         setTimeout(() => {
           if (img) {
             img.src =
-              "/profile/public/sky-blue/assets/orange-dark/icons/copy.svg";
+              '/profile/public/sky-blue/assets/orange-dark/icons/copy.svg';
           }
         }, 2500);
       })
       .catch((err) => {
-        console.error("Failed to copy:", err);
+        console.error('Failed to copy:', err);
       });
   } catch (err) {
-    console.error("Clipboard API not supported:", err);
+    console.error('Clipboard API not supported:', err);
   }
 }
 
 function contactCardImg(label) {
   switch (label.toLowerCase()) {
-    case "instagram":
-      return "ig.svg";
-    case "linkedin":
-      return "linkedin.svg";
-    case "twitter":
-      return "x.svg";
-    case "facebook":
-      return "fb.svg";
-    case "x":
-      return "x.svg";
-    case "phone":
-      return "call.svg";
-    case "dribble":
-      return "dribble.svg";
-    case "whatsapp":
-      return "whatsapp.svg";
-    case "email":
-      return "mail.svg";
-    case "gmail":
-      return "mail.svg";
-    case "whatsapp-business":
-      return "wp_b.svg";
-    case "youtube":
-      return "youtube.svg";
+    case 'instagram':
+      return 'ig.svg';
+    case 'linkedin':
+      return 'linkedin.svg';
+    case 'twitter':
+      return 'x.svg';
+    case 'facebook':
+      return 'fb.svg';
+    case 'x':
+      return 'x.svg';
+    case 'phone':
+      return 'call.svg';
+    case 'dribble':
+      return 'dribble.svg';
+    case 'whatsapp':
+      return 'whatsapp.svg';
+    case 'email':
+      return 'mail.svg';
+    case 'gmail':
+      return 'mail.svg';
+    case 'whatsapp-business':
+      return 'wp_b.svg';
+    case 'youtube':
+      return 'youtube.svg';
     default:
-      return "global.svg";
+      return 'global.svg';
   }
 }
 
@@ -954,9 +957,9 @@ function createVCard(
   socials,
   whatsapp
 ) {
-  const name_split = name.split(" ");
+  const name_split = name.split(' ');
   const firstName = name_split[0];
-  const lastName = name_split.slice(1).join(" ");
+  const lastName = name_split.slice(1).join(' ');
 
   const newWebsites = Array.isArray(websites)
     ? websites.map((website) => `URL:${website.link}`)
@@ -967,28 +970,28 @@ function createVCard(
     : [];
 
   const vcardData = [
-    "BEGIN:VCARD",
-    "VERSION:3.0",
+    'BEGIN:VCARD',
+    'VERSION:3.0',
     `N:${lastName};${firstName};;`,
-    `FN:${name ?? ""}`,
-    `EMAIL;TYPE=WORK:${email ?? ""}`,
-    `ORG:${company ?? ""}`,
-    `TITLE:${designation ?? ""}`,
+    `FN:${name ?? ''}`,
+    `EMAIL;TYPE=WORK:${email ?? ''}`,
+    `ORG:${company ?? ''}`,
+    `TITLE:${designation ?? ''}`,
     `ADR;TYPE=WORK:;;${
-      locationInfo.value.replace(/\n/g, ";") ?? locationInfo.street ?? ""
-    };${locationInfo.pincode ?? ""}`,
-    `TEL;TYPE=CELL:${phoneNumber ?? ""}`,
-    `URL:${window.location.href ?? ""}`,
+      locationInfo.value.replace(/\n/g, ';') ?? locationInfo.street ?? ''
+    };${locationInfo.pincode ?? ''}`,
+    `TEL;TYPE=CELL:${phoneNumber ?? ''}`,
+    `URL:${window.location.href ?? ''}`,
     ...newWebsites,
     `X-SOCIALPROFILE;TYPE=whatsapp:${whatsapp}`,
     ...newSocials,
-    "END:VCARD",
-  ].join("\n");
+    'END:VCARD',
+  ].join('\n');
 
-  const blob = new Blob([vcardData], { type: "text/vcard" });
+  const blob = new Blob([vcardData], { type: 'text/vcard' });
   const url = URL.createObjectURL(blob);
 
-  const downloadLink = document.createElement("a");
+  const downloadLink = document.createElement('a');
   downloadLink.href = url;
   downloadLink.download = `${name}.vcf`;
   document.body.appendChild(downloadLink);
@@ -1009,9 +1012,9 @@ function isValidEmail(email) {
 
 function ensureHttps(url) {
   // Check if the URL starts with "http://" or "https://"
-  if (!url.startsWith("http://") && !url.startsWith("https://")) {
+  if (!url.startsWith('http://') && !url.startsWith('https://')) {
     // If not, prepend "https://"
-    url = "https://" + url;
+    url = 'https://' + url;
   }
   return url;
 }
