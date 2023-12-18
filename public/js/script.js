@@ -350,6 +350,7 @@ let contactVisible = data?.contact?.status;
 
 if (!contactVisible || contactsData.length === 0) {
   document.getElementsByClassName('contacts-section')[0].style.display = 'none';
+  document.getElementsByClassName('save')[0].style.display = 'none';
 }
 
 const contactsIconsDiv = document.getElementById('contacts-icons');
