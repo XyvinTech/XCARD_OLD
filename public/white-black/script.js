@@ -1,30 +1,30 @@
 const viewable = [
-  "png",
-  "jpg",
-  "jpeg",
-  "gif",
-  "mp4",
-  "avi",
-  "mkv",
-  "mov",
-  "webm",
-  "mp3",
-  "ogg",
-  "wav",
-  "flac",
-  "aac",
-  "wma",
-  "m4a",
-  "opus",
-  "svg",
-  "ico",
-  "webp",
-  "bmp",
-  "3gp",
+  'png',
+  'jpg',
+  'jpeg',
+  'gif',
+  'mp4',
+  'avi',
+  'mkv',
+  'mov',
+  'webm',
+  'mp3',
+  'ogg',
+  'wav',
+  'flac',
+  'aac',
+  'wma',
+  'm4a',
+  'opus',
+  'svg',
+  'ico',
+  'webp',
+  'bmp',
+  '3gp',
 ];
 
-const data = JSON.parse(document.currentScript.getAttribute("data"));
-const id = data["_id"];
+const data = JSON.parse(document.currentScript.getAttribute('data'));
+const id = data['_id'];
 
 const fetchUserData = async () => {
   // change to backend api
@@ -34,7 +34,7 @@ const fetchUserData = async () => {
 const handleImage = (imageUrl, no_image) => {
   if (imageUrl === null) {
     imageUrl = no_image;
-  } else if (imageUrl.public === null || imageUrl.public === "") {
+  } else if (imageUrl.public === null || imageUrl.public === '') {
     imageUrl = no_image;
   } else {
     imageUrl = imageUrl.public;
@@ -44,16 +44,16 @@ const handleImage = (imageUrl, no_image) => {
 
 function viewDocument(fileName) {
   const certificate_image_section = document.getElementById(
-    "certificate_image_section"
+    'certificate_image_section'
   );
   const certificate_popup_img = document.getElementById(
-    "certificate_popup_img"
+    'certificate_popup_img'
   );
-  const popup_close_btn = document.getElementById("popup_close_btn");
+  const popup_close_btn = document.getElementById('popup_close_btn');
   certificate_popup_img.src = fileName;
-  certificate_image_section.classList.remove("d_none");
+  certificate_image_section.classList.remove('d_none');
   popup_close_btn.onclick = () => {
-    certificate_image_section.classList.add("d_none");
+    certificate_image_section.classList.add('d_none');
   };
 }
 
@@ -94,59 +94,59 @@ function copyToClipboard(button, text, type) {
         const img = document.getElementById(`${text.toLowerCase()}_copy_icon`);
         setTimeout(() => {
           if (img) {
-            img.src = "/profile/public/white-black/assets/icons/tick.svg";
+            img.src = '/profile/public/white-black/assets/icons/tick.svg';
           }
         }, 500);
 
         // After 2.5 seconds, change the button image back to "copy.svg"
         setTimeout(() => {
           if (img) {
-            img.src = "/profile/public/white-black/assets/icons/copy.svg";
+            img.src = '/profile/public/white-black/assets/icons/copy.svg';
           }
         }, 2500);
       })
       .catch((err) => {
-        console.error("Failed to copy:", err);
+        console.error('Failed to copy:', err);
       });
   } catch (err) {
-    console.error("Clipboard API not supported:", err);
+    console.error('Clipboard API not supported:', err);
   }
 }
 
 const contactCardImg = (type) => {
   switch (type.toLowerCase()) {
-    case "instagram":
-      return "ig.svg";
-    case "linkedin":
-      return "linkedin.svg";
-    case "twitter":
-      return "x.svg";
-    case "x":
-      return "x.svg";
-    case "facebook":
-      return "fb.svg";
-    case "phone":
-      return "call.svg";
-    case "dribble":
-      return "dribble.svg";
-    case "whatsapp":
-      return "whatsapp_blk.svg";
-    case "email":
-      return "email.svg";
-    case "gmail":
-      return "email.svg";
-    case "gmail":
-      return "email.svg";
-    case "wabusiness":
-      return "wp_b.svg";
-    case "location":
-      return "location.svg";
-    case "youtube":
-      return "youtube.svg";
-    case "other":
-      return "link.svg";
+    case 'instagram':
+      return 'ig.svg';
+    case 'linkedin':
+      return 'linkedin.svg';
+    case 'twitter':
+      return 'x.svg';
+    case 'x':
+      return 'x.svg';
+    case 'facebook':
+      return 'fb.svg';
+    case 'phone':
+      return 'call.svg';
+    case 'dribble':
+      return 'dribble.svg';
+    case 'whatsapp':
+      return 'whatsapp_blk.svg';
+    case 'email':
+      return 'email.svg';
+    case 'gmail':
+      return 'email.svg';
+    case 'gmail':
+      return 'email.svg';
+    case 'wabusiness':
+      return 'wp_b.svg';
+    case 'location':
+      return 'location.svg';
+    case 'youtube':
+      return 'youtube.svg';
+    case 'other':
+      return 'link.svg';
     default:
-      return "link.svg";
+      return 'link.svg';
   }
 };
 
@@ -157,7 +157,6 @@ function isValidEmail(email) {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
 }
-
 
 function createVCard(
   websites,
@@ -170,9 +169,9 @@ function createVCard(
   socials,
   whatsapp
 ) {
-  const name_split = name.split(" ");
+  const name_split = name.split(' ');
   const firstName = name_split[0];
-  const lastName = name_split.slice(1).join(" ");
+  const lastName = name_split.slice(1).join(' ');
 
   const newWebsites = Array.isArray(websites)
     ? websites.map((website) => `URL:${website.link}`)
@@ -183,28 +182,28 @@ function createVCard(
     : [];
 
   const vcardData = [
-    "BEGIN:VCARD",
-    "VERSION:3.0",
+    'BEGIN:VCARD',
+    'VERSION:3.0',
     `N:${lastName};${firstName};;`,
-    `FN:${name ?? ""}`,
-    `EMAIL;TYPE=WORK:${email ?? ""}`,
-    `ORG:${company ?? ""}`,
-    `TITLE:${designation ?? ""}`,
+    `FN:${name ?? ''}`,
+    `EMAIL;TYPE=WORK:${email ?? ''}`,
+    `ORG:${company ?? ''}`,
+    `TITLE:${designation ?? ''}`,
     `ADR;TYPE=WORK:;;${
-      locationInfo.value.replace(/\n/g, ";") ?? locationInfo.street ?? ""
-    };${locationInfo.pincode ?? ""}`,
-    `TEL;TYPE=CELL:${phoneNumber ?? ""}`,
-    `URL:${window.location.href ?? ""}`,
+      locationInfo.value.replace(/\n/g, ';') ?? locationInfo.street ?? ''
+    };${locationInfo.pincode ?? ''}`,
+    `TEL;TYPE=CELL:${phoneNumber ?? ''}`,
+    `URL:${window.location.href ?? ''}`,
     ...newWebsites,
     `X-SOCIALPROFILE;TYPE=whatsapp:${whatsapp}`,
     ...newSocials,
-    "END:VCARD",
-  ].join("\n");
+    'END:VCARD',
+  ].join('\n');
 
-  const blob = new Blob([vcardData], { type: "text/vcard" });
+  const blob = new Blob([vcardData], { type: 'text/vcard' });
   const url = URL.createObjectURL(blob);
 
-  const downloadLink = document.createElement("a");
+  const downloadLink = document.createElement('a');
   downloadLink.href = url;
   downloadLink.download = `${name}.vcf`;
   document.body.appendChild(downloadLink);
@@ -214,7 +213,6 @@ function createVCard(
   // Release the object URL after the download has started
   URL.revokeObjectURL(url);
 }
-
 
 const sendHiToWhatsApp = (whatsapp, btn) => {
   const whatsappLink = `https://wa.me/${whatsapp}?text=Hi`;
@@ -230,77 +228,77 @@ const showProductPopup = (
   link
 ) => {
   const product_popup_section = document.getElementById(
-    "product_popup_section"
+    'product_popup_section'
   );
   const product_popup_close_btn = document.getElementById(
-    "product_popup_close_btn"
+    'product_popup_close_btn'
   );
-  const product_popup_img = document.getElementById("product_popup_img");
+  const product_popup_img = document.getElementById('product_popup_img');
   const product_popup_heading = document.getElementById(
-    "product_popup_heading"
+    'product_popup_heading'
   );
-  const product_fake_price = document.getElementById("product_fake_price");
+  const product_fake_price = document.getElementById('product_fake_price');
   const product_popup_orginal_price = document.getElementById(
-    "product_popup_orginal_price"
+    'product_popup_orginal_price'
   );
-  const product_popup_desc = document.getElementById("product_popup_desc");
-  const product_popup_btn = document.getElementById("product_popup_btn");
+  const product_popup_desc = document.getElementById('product_popup_desc');
+  const product_popup_btn = document.getElementById('product_popup_btn');
 
   product_popup_img.src = imageUrl;
   product_popup_heading.innerText = productName;
-  product_fake_price.innerText = fakePrice === null ? "" : `₹${fakePrice}`;
+  product_fake_price.innerText = fakePrice === null ? '' : `₹${fakePrice}`;
   product_popup_orginal_price.innerText =
-    originalPrice === null ? "" : `₹${originalPrice}`;
+    originalPrice === null ? '' : `₹${originalPrice}`;
   product_popup_desc.innerText = description;
   product_popup_btn.href = link;
 
-  product_popup_section.classList.remove("d_none");
+  product_popup_section.classList.remove('d_none');
   product_popup_close_btn.onclick = () => {
-    product_popup_section.classList.add("d_none");
+    product_popup_section.classList.add('d_none');
   };
 };
 
 const showServicePopup = (name, description, imageUrl, link) => {
   const service_popup_section = document.getElementById(
-    "service_popup_section"
+    'service_popup_section'
   );
   const service_popup_close_btn = document.getElementById(
-    "service_popup_close_btn"
+    'service_popup_close_btn'
   );
-  const service_popup_img = document.getElementById("service_popup_img");
+  const service_popup_img = document.getElementById('service_popup_img');
   const service_popup_heading = document.getElementById(
-    "service_popup_heading"
+    'service_popup_heading'
   );
-  const service_popup_desc = document.getElementById("service_popup_desc");
-  const service_popup_btn = document.getElementById("service_popup_btn");
+  const service_popup_desc = document.getElementById('service_popup_desc');
+  const service_popup_btn = document.getElementById('service_popup_btn');
 
   service_popup_img.src = imageUrl;
   service_popup_heading.innerText = name;
   service_popup_desc.innerText = description;
   service_popup_btn.href = link;
 
-  service_popup_section.classList.remove("d_none");
+  service_popup_section.classList.remove('d_none');
   service_popup_close_btn.onclick = () => {
-    service_popup_section.classList.add("d_none");
+    service_popup_section.classList.add('d_none');
   };
 };
 
 const showAwardPopup = (heading, description, imageUrl) => {
-  const award_popup_section = document.getElementById("award_popup_section");
+  const award_popup_section = document.getElementById('award_popup_section');
   const award_popup_close_btn = document.getElementById(
-    "award_popup_close_btn"
+    'award_popup_close_btn'
   );
-  const award_popup_img = document.getElementById("award_popup_img");
-  const award_popup_heading = document.getElementById("award_popup_heading");
-  const award_popup_desc = document.getElementById("award_popup_desc");
+  const award_popup_img = document.getElementById('award_popup_img');
+  const award_popup_heading = document.getElementById('award_popup_heading');
+  const award_popup_desc = document.getElementById('award_popup_desc');
 
   award_popup_img.src = imageUrl;
   award_popup_heading.innerText = heading;
   award_popup_desc.innerText = description;
 
-  award_popup_section.classList.remove("d_none");
+  award_popup_section.classList.remove('d_none');
   award_popup_close_btn.onclick = () => {
-    award_popup_section.classList.add("d_none");
+    award_popup_section.classList.add('d_none');
   };
 };
 
@@ -309,24 +307,38 @@ function generateContactCard(link, label) {
         <div class="contact_card">
             <a href=${link}>
                 <img src="/profile/public/white-black/assets/icons/${contactCardImg(
-    label
-  )}" alt="">
+                  label
+                )}" alt="">
             </a>
         </div>
     `;
 }
 
+function generateContactMeLabel(status) {
+  if (
+    status === null ||
+    status === undefined ||
+    status === '' ||
+    status === false
+  ) {
+    return '';
+  }
+  return `
+          <h4 id="contact_me_label" class="gradient_text sub_heading">Contact me</h4>
+      `;
+}
+
 function generateLongContactCard(label, type, link, value) {
-  if (value === null || value === undefined || value === "") {
-    return "";
+  if (value === null || value === undefined || value === '') {
+    return '';
   }
 
   return `
         <div class="contact_long_card">
             <a class="contact_link" href="${link}">
                 <img src="/profile/public/white-black/assets/icons/${contactCardImg(
-    type
-  )}" alt="">
+                  type
+                )}" alt="">
                 <div class="contact_info">
                     <h5 class="fw_500 f_12">${label}</h5>
                     <p class="f_14 fw_600">${value}</p>
@@ -364,10 +376,12 @@ function generateProductCard(
             <div class="product_details">
                 <div class="product_name">${productName}</div>
                 <div class="product_price">
-                    <p class="fake_price f_16 fw_400">${fakePrice === null ? "" : `₹${fakePrice}`
-    }</p>
-                    <p class="orginal_price f_16 fw_600">${originalPrice === null ? "" : `₹${originalPrice}`
-    }</p>
+                    <p class="fake_price f_16 fw_400">${
+                      fakePrice === null ? '' : `₹${fakePrice}`
+                    }</p>
+                    <p class="orginal_price f_16 fw_600">${
+                      originalPrice === null ? '' : `₹${originalPrice}`
+                    }</p>
                 </div>
             </div>
         </div>
@@ -375,23 +389,23 @@ function generateProductCard(
 }
 
 function createServiceCard(serviceName, serviceDescription, imageUrl, link) {
-  const service_desc = serviceDescription || ""; // Use empty string if serviceDescription is undefined
+  const service_desc = serviceDescription || ''; // Use empty string if serviceDescription is undefined
   const service_no_img =
-    "/profile/public/white-black/assets/images/service_no_img.png";
-  const card = document.createElement("div");
-  card.classList.add("slider_service_card");
+    '/profile/public/white-black/assets/images/service_no_img.png';
+  const card = document.createElement('div');
+  card.classList.add('slider_service_card');
   card.innerHTML = `
         <img class="service_img" src="${handleImage(
-    imageUrl,
-    service_no_img
-  )}" alt="${serviceName}">
+          imageUrl,
+          service_no_img
+        )}" alt="${serviceName}">
         <div class="service_details">
             <h4 class="fw_600 f_16 service_heading">${serviceName}</h4>
             <p class="fw_400 f_14 service_desc">${service_desc}</p>
         </div>
     `;
 
-  card.addEventListener("click", function () {
+  card.addEventListener('click', function () {
     showServicePopup(
       serviceName,
       service_desc,
@@ -405,16 +419,16 @@ function createServiceCard(serviceName, serviceDescription, imageUrl, link) {
 
 function generateAwardCard(awardTitle, organizationName, imageUrl) {
   const award_no_img =
-    "/profile/public/white-black/assets/images/award_no_img.png";
+    '/profile/public/white-black/assets/images/award_no_img.png';
   return `
         <div onclick="showAwardPopup('${awardTitle}', '${organizationName}', '${handleImage(
     imageUrl,
     award_no_img
   )}')" class="award_card">
             <img class="award_img" src="${handleImage(
-    imageUrl,
-    award_no_img
-  )}" alt="product">
+              imageUrl,
+              award_no_img
+            )}" alt="product">
             <div class="product_details">
                 <h5 class="fw_600 f_16 award_title">${awardTitle}</h5>
                 <p class="fw_400 f_16 award_organisation">${organizationName}</p>
@@ -424,16 +438,16 @@ function generateAwardCard(awardTitle, organizationName, imageUrl) {
 }
 
 function generateDocumentCard(doc) {
-  const documentName = doc.label === "" ? doc.image.fileName : doc.label;
-  let icon = "";
+  const documentName = doc.label === '' ? doc.image.fileName : doc.label;
+  let icon = '';
   const data = doc.image;
   let isViewableData;
 
-  if (viewable.includes(data.fileName.split(".")[1])) {
-    icon = "eye.svg";
+  if (viewable.includes(data.fileName.split('.')[1])) {
+    icon = 'eye.svg';
     isViewableData = true;
   } else {
-    icon = "download_gray.svg";
+    icon = 'download_gray.svg';
     isViewableData = false;
   }
 
@@ -443,10 +457,11 @@ function generateDocumentCard(doc) {
                 <img src="/profile/public/white-black/assets/icons/document.svg" alt="file">
                 <p class="document_name fw_400 f_14">${documentName}</p>
             </div>
-            <button class="btn" onclick="${isViewableData
-      ? `viewDocument('${data.public}')`
-      : `downloadDocument('${data.public}', '${data.fileName}', '${data.mimeType}')`
-    }">
+            <button class="btn" onclick="${
+              isViewableData
+                ? `viewDocument('${data.public}')`
+                : `downloadDocument('${data.public}', '${data.fileName}', '${data.mimeType}')`
+            }">
                 <img src="/profile/public/white-black/assets/icons/${icon}" alt="download">
             </button>
         </div>
@@ -455,13 +470,13 @@ function generateDocumentCard(doc) {
 
 function generateCertificateCard(certificateTitle, organizationName, imageUrl) {
   const certificate_no_img =
-    "/profile/public/white-black/assets/images/certificate.png";
+    '/profile/public/white-black/assets/images/certificate.png';
   return `
         <div class="certificate_card">
             <img src="${handleImage(
-    imageUrl,
-    certificate_no_img
-  )}" alt="certificate">
+              imageUrl,
+              certificate_no_img
+            )}" alt="certificate">
             <h5 class="gradient_text fw_600 f_16">${certificateTitle}</h5>
             <p class="fw_400 f_16">${organizationName}</p>
         </div>
@@ -469,8 +484,8 @@ function generateCertificateCard(certificateTitle, organizationName, imageUrl) {
 }
 
 function generateBankDetail(type, data) {
-  if (data === null || data === "") {
-    return "";
+  if (data === null || data === '') {
+    return '';
   }
   return `
         <div class="bank_detail">
@@ -486,10 +501,10 @@ function generateBankDetail(type, data) {
 }
 
 function generateYouTubePlayer(link) {
-  if (link === "" || link === null) {
-    return "";
+  if (link === '' || link === null) {
+    return '';
   }
-  const videoId = link.split("/")[3];
+  const videoId = link.split('/')[3];
   return `
       <div class="youtube_player">
         <iframe class="yt_iframe" src="https://www.youtube.com/embed/${videoId}?controls=1" frameborder="0" allowfullscreen></iframe>
@@ -497,45 +512,46 @@ function generateYouTubePlayer(link) {
     `;
 }
 
-document.addEventListener("DOMContentLoaded", async () => {
-  const contact_cards = document.getElementById("contact_cards");
-  const contact_long_cards = document.getElementById("contact_long_cards");
-  const user_contact_sites = document.getElementById("user_contact_sites");
+document.addEventListener('DOMContentLoaded', async () => {
+  const contact_cards = document.getElementById('contact_cards');
+  const contact_long_cards = document.getElementById('contact_long_cards');
+  const contact_me_label = document.getElementById('contact_me_label');
+  const user_contact_sites = document.getElementById('user_contact_sites');
   const products_card_section = document.getElementById(
-    "products_card_section"
+    'products_card_section'
   );
-  const awards_cards = document.getElementById("awards_cards");
-  const documents_cards = document.getElementById("documents_cards");
-  const certificate_cards = document.getElementById("certificate_cards");
-  const bank_detail_cards = document.getElementById("bank_detail_cards");
+  const awards_cards = document.getElementById('awards_cards');
+  const documents_cards = document.getElementById('documents_cards');
+  const certificate_cards = document.getElementById('certificate_cards');
+  const bank_detail_cards = document.getElementById('bank_detail_cards');
   const youtube_player_section = document.getElementById(
-    "youtube_player_section"
+    'youtube_player_section'
   );
 
   // user details
-  const user_bg = document.getElementById("user_bg");
-  const avatar = document.getElementById("avatar");
-  const user_name = document.getElementById("user_name");
-  const user_designation = document.getElementById("user_designation");
-  const bio = document.getElementById("bio");
-  const user_company = document.getElementById("user_company");
+  const user_bg = document.getElementById('user_bg');
+  const avatar = document.getElementById('avatar');
+  const user_name = document.getElementById('user_name');
+  const user_designation = document.getElementById('user_designation');
+  const bio = document.getElementById('bio');
+  const user_company = document.getElementById('user_company');
 
   // enquery form
-  const enquiry_btn = document.getElementById("enquiry_btn");
+  const enquiry_btn = document.getElementById('enquiry_btn');
   console.log(enquiry_btn);
 
   // contact
-  const save_contact = document.getElementById("save_contact");
-  const lets_chat_btn = document.getElementById("chatButton");
+  const save_contact = document.getElementById('save_contact');
+  const lets_chat_btn = document.getElementById('chatButton');
   const bottom_fixed_btn_link = document.getElementById(
-    "bottom_fixed_btn_link"
+    'bottom_fixed_btn_link'
   );
 
   const data = await fetchUserData();
 
   if (data) {
-    const loader = document.getElementById("loader");
-    loader.style.display = "none";
+    const loader = document.getElementById('loader');
+    loader.style.display = 'none';
   }
 
   // profile details
@@ -565,7 +581,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       );
     });
   } else {
-    document.getElementById("user_contact_sites").classList.add("d_none");
+    document.getElementById('user_contact_sites').classList.add('d_none');
   }
 
   // products
@@ -581,11 +597,11 @@ document.addEventListener("DOMContentLoaded", async () => {
       );
     });
   } else {
-    document.getElementById("products_section").classList.add("d_none");
+    document.getElementById('products_section').classList.add('d_none');
   }
 
   // services
-  const serviceGlider = document.querySelector(".service_glider");
+  const serviceGlider = document.querySelector('.service_glider');
   if (data.service && data.service.status && data.service.services.length > 0) {
     const services = data.service.services;
 
@@ -599,7 +615,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       serviceGlider.appendChild(card);
     });
   } else {
-    document.getElementById("services_section").classList.add("d_none");
+    document.getElementById('services_section').classList.add('d_none');
   }
 
   // awards
@@ -612,7 +628,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       );
     });
   } else {
-    document.getElementById("awards_section").classList.add("d_none");
+    document.getElementById('awards_section').classList.add('d_none');
   }
 
   // documents
@@ -625,7 +641,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       documents_cards.innerHTML += generateDocumentCard(document);
     });
   } else {
-    document.getElementById("documents_section").classList.add("d_none");
+    document.getElementById('documents_section').classList.add('d_none');
   }
 
   // certificates
@@ -642,33 +658,33 @@ document.addEventListener("DOMContentLoaded", async () => {
       );
     });
   } else {
-    document.getElementById("certificate_section").classList.add("d_none");
+    document.getElementById('certificate_section').classList.add('d_none');
   }
 
   // bank details
   if (data.bank && data.bank.status && data.bank.bankDetails != null) {
     const bankDetails = data.bank.bankDetails;
-    bank_detail_cards.innerHTML += generateBankDetail("Name", bankDetails.name);
+    bank_detail_cards.innerHTML += generateBankDetail('Name', bankDetails.name);
     bank_detail_cards.innerHTML += generateBankDetail(
-      "Account Number",
+      'Account Number',
       bankDetails.accnumber
     );
-    bank_detail_cards.innerHTML += generateBankDetail("Bank", bankDetails.bank);
+    bank_detail_cards.innerHTML += generateBankDetail('Bank', bankDetails.bank);
     bank_detail_cards.innerHTML += generateBankDetail(
-      "IFSE Code",
+      'IFSE Code',
       bankDetails.ifsc
     );
     bank_detail_cards.innerHTML += generateBankDetail(
-      "Branch",
+      'Branch',
       bankDetails.branch
     );
-    bank_detail_cards.innerHTML += generateBankDetail("VAT", bankDetails.vat);
+    bank_detail_cards.innerHTML += generateBankDetail('VAT', bankDetails.vat);
     bank_detail_cards.innerHTML += generateBankDetail(
-      "Swift",
+      'Swift',
       bankDetails.swift
     );
   } else {
-    document.getElementById("bank_details_section").classList.add("d_none");
+    document.getElementById('bank_details_section').classList.add('d_none');
   }
 
   // youtube player
@@ -677,7 +693,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       youtube_player_section.innerHTML += generateYouTubePlayer(video.link);
     });
   } else {
-    document.getElementById("youtube_player_section").classList.add("d_none");
+    document.getElementById('youtube_player_section').classList.add('d_none');
   }
 
   let email = null;
@@ -688,31 +704,33 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (data.contact && data.contact.status && data.contact.contacts.length > 0) {
     const valueForSocials = (type, value) => {
       switch (type) {
-        case "wabusiness":
-        case "whatsapp":
+        case 'wabusiness':
+        case 'whatsapp':
           return `https://wa.me/${value}`;
-        case "phone":
+        case 'phone':
           return `tel:${value}`;
-        case "email":
+        case 'email':
           return `mailto:${value}`;
-        case "location":
+        case 'location':
           return `https://www.google.com/maps?q=${value}`;
         default:
           return;
       }
     };
+    contact_me_label.innerHTML += generateContactMeLabel(data.contact.status);
+
     for (const contact of data.contact.contacts) {
-      if (contact.type === "email") {
+      if (contact.type === 'email') {
         email = contact.value;
-      } else if (contact.type === "phone") {
+      } else if (contact.type === 'phone') {
         phoneNumber = contact.value;
-      } else if (contact.type === "location") {
+      } else if (contact.type === 'location') {
         locationInfo = {
           street: contact.street,
           pincode: contact.pincode,
           value: contact.value,
         };
-      } else if (contact.type === "wabusiness") {
+      } else if (contact.type === 'wabusiness') {
         whatsapp = contact.value;
       }
       contact_long_cards.innerHTML += generateLongContactCard(
@@ -723,9 +741,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       );
     }
 
-    if (whatsapp === null || whatsapp === undefined || whatsapp === "") {
-      lets_chat_btn.style.display = "none";
-      document.getElementsByTagName("body")[0].style.marginBottom = "0px";
+    if (whatsapp === null || whatsapp === undefined || whatsapp === '') {
+      lets_chat_btn.style.display = 'none';
+      document.getElementsByTagName('body')[0].style.marginBottom = '0px';
     }
   }
 
@@ -735,13 +753,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Custom sorting function
     socials.sort((a, b) => {
-      if (a.type === "phone") {
+      if (a.type === 'phone') {
         return -1; // "phone" comes before other types
-      } else if (b.type === "phone") {
+      } else if (b.type === 'phone') {
         return 1; // "phone" comes before other types
-      } else if (a.type === "whatsapp") {
+      } else if (a.type === 'whatsapp') {
         return -1; // "whatsapp" comes after "phone"
-      } else if (b.type === "whatsapp") {
+      } else if (b.type === 'whatsapp') {
         return 1; // "whatsapp" comes after "phone"
       } else {
         return 0; // Keep the original order for other types
@@ -757,10 +775,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     });
   } else {
-    document.getElementById("contact_section").classList.add("d_none");
+    document.getElementById('contact_section').classList.add('d_none');
   }
 
-  save_contact.addEventListener("click", () => {
+  save_contact.addEventListener('click', () => {
     createVCard(
       websites,
       name,
@@ -774,40 +792,39 @@ document.addEventListener("DOMContentLoaded", async () => {
     );
   });
 
-
-  lets_chat_btn.addEventListener("click", () => {
+  lets_chat_btn.addEventListener('click', () => {
     sendHiToWhatsApp(whatsapp, bottom_fixed_btn_link);
   });
 
-  enquiry_btn.addEventListener("click", async (e) => {
+  enquiry_btn.addEventListener('click', async (e) => {
     e.preventDefault();
 
-    const name_input = document.getElementById("name_input");
-    const phone = document.getElementById("phone");
-    const email_input = document.getElementById("email_input");
-    const textarea = document.getElementById("textarea");
-    const country_code = document.querySelector(".iti__selected-flag");
-    const phone_input_wrapper = document.getElementById("phone_input_wrapper");
-    phone_input_wrapper.style.borderRadius = "8px";
+    const name_input = document.getElementById('name_input');
+    const phone = document.getElementById('phone');
+    const email_input = document.getElementById('email_input');
+    const textarea = document.getElementById('textarea');
+    const country_code = document.querySelector('.iti__selected-flag');
+    const phone_input_wrapper = document.getElementById('phone_input_wrapper');
+    phone_input_wrapper.style.borderRadius = '8px';
 
     if (!name_input.value) {
-      name_input.style.border = "1px solid red";
+      name_input.style.border = '1px solid red';
     }
     if (!isPhoneNumber(phone.value)) {
-      phone_input_wrapper.style.border = "1px solid red";
+      phone_input_wrapper.style.border = '1px solid red';
     }
     if (!isValidEmail(email_input.value)) {
-      email_input.style.border = "1px solid red";
+      email_input.style.border = '1px solid red';
     }
 
-    name_input.addEventListener("input", () => {
-      name_input.style.border = "1px solid rgba(255, 255, 255, 0.20)";
+    name_input.addEventListener('input', () => {
+      name_input.style.border = '1px solid rgba(255, 255, 255, 0.20)';
     });
-    phone.addEventListener("input", () => {
-      phone_input_wrapper.style.border = "1px solid rgba(255, 255, 255, 0.20)";
+    phone.addEventListener('input', () => {
+      phone_input_wrapper.style.border = '1px solid rgba(255, 255, 255, 0.20)';
     });
-    email_input.addEventListener("input", () => {
-      email_input.style.border = "1px solid rgba(255, 255, 255, 0.20)";
+    email_input.addEventListener('input', () => {
+      email_input.style.border = '1px solid rgba(255, 255, 255, 0.20)';
     });
 
     if (
@@ -815,7 +832,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       isPhoneNumber(phone.value) &&
       isValidEmail(email_input.value)
     ) {
-      let code = country_code.title.split(" ");
+      let code = country_code.title.split(' ');
       code = code[code.length - 1];
       const data = {
         id: id,
@@ -826,44 +843,44 @@ document.addEventListener("DOMContentLoaded", async () => {
         message: textarea.value,
       };
       try {
-        const res = await fetch("/profile/submitForm", {
-          method: "POST",
+        const res = await fetch('/profile/submitForm', {
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
           body: JSON.stringify(data),
         });
         const json = await res.json();
 
         if (json) {
-          enquiry_btn.innerHTML = "Submitted";
+          enquiry_btn.innerHTML = 'Submitted';
         }
       } catch (e) {
         enquiry_btn.innerHTML = "Can't submit form";
       }
 
-      name_input.value = "";
-      phone.value = "";
-      email_input.value = "";
-      textarea.value = "";
+      name_input.value = '';
+      phone.value = '';
+      email_input.value = '';
+      textarea.value = '';
     }
   });
 
-  window.addEventListener("scroll", function () {
+  window.addEventListener('scroll', function () {
     const scrollPosition = window.scrollY;
     const threshold = (40 * window.innerHeight) / 100; // 40vh in pixels
 
     if (scrollPosition > threshold) {
-      lets_chat_btn.classList.add("visible");
+      lets_chat_btn.classList.add('visible');
     } else {
-      lets_chat_btn.classList.remove("visible");
+      lets_chat_btn.classList.remove('visible');
     }
   });
 
-  new Glider(document.querySelector(".service_glider"), {
+  new Glider(document.querySelector('.service_glider'), {
     slidesToShow: 1,
     draggable: true,
-    dots: "#dots",
+    dots: '#dots',
 
     scrollLock: false,
     // scrollLockDelay: 2000,
@@ -883,16 +900,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     duration: 800, // Adjust the duration for your preferred speed (in milliseconds)
 
     arrows: {
-      prev: ".service_glider_prev",
-      next: ".service_glider_next",
+      prev: '.service_glider_prev',
+      next: '.service_glider_next',
     },
   });
 
   // awards_slider
-  new Glider(document.querySelector(".awards_slider"), {
+  new Glider(document.querySelector('.awards_slider'), {
     slidesToShow: 2,
     draggable: true,
-    dots: "#dots",
+    dots: '#dots',
 
     scrollLock: false,
 
@@ -905,8 +922,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     duration: 1, // Adjust the duration for your preferred speed (in milliseconds)
 
     arrows: {
-      prev: ".awards_glider_prev",
-      next: ".awards_glider_next",
+      prev: '.awards_glider_prev',
+      next: '.awards_glider_next',
     },
   });
 });
