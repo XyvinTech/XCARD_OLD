@@ -67,6 +67,22 @@ function run() {
   generateEnquiry();
   setup();
 }
+function scrollToTop() {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth',
+  });
+}
+function handleScroll() {
+  var scrollButton = document.getElementById('scrollButton');
+  if (window.pageYOffset > 200) {
+    scrollButton.style.display = 'block';
+  } else {
+    scrollButton.style.display = 'none';
+  }
+}
+
+window.addEventListener('scroll', handleScroll);
 
 document.addEventListener('DOMContentLoaded', () => {
   run();
