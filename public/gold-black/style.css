@@ -1,5 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600&display=swap');
 
+
+
 :root{
     --bg-linear-gradinent:linear-gradient(127deg, #000 1.48%, #1E1E1E 101.05%);
     --text-gradient:var(--Golds, linear-gradient(155deg, #CBA84E 0%, #FBF19A 100.12%));
@@ -7,6 +9,14 @@
     --card-bg:#222;
     --avatar-size:120px;
     --border-radius:8px;
+
+    --scorollBorder: #ffffff;
+    --scrollIcon: #333;
+    --scrollBg: linear-gradient(
+      138.61deg,
+      #ffffff -7.97%,
+      rgba(255, 255, 255, 0) 122.9%
+    );
 }
 
 *{
@@ -742,6 +752,24 @@ footer{
     animation: spin 500ms infinite linear;
 }
   
+#scrollButton {
+    display: none;
+    position: fixed;
+    bottom: 100px;
+    right: 50px;
+    z-index: 99;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--scrollBg);
+    backdrop-filter: blur(2px);
+    border-color: var(--scrollBorder);
+}
+#scrollButton > i {
+    color: var(--scrollIcon);
+    font-size: 1.8em;
+}
+
 @keyframes spin {
     from {
       transform: rotate(0deg);
