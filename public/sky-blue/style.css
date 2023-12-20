@@ -17,6 +17,14 @@
   --text-clr: #ffffff;
 
   --font-outfit: "Outfit", Arial, sans-serif;
+
+  --scrollBorder: #4f4f4f;
+  --scrollIcon: #fff;
+  --scrollBg: linear-gradient(
+    138.61deg,
+    #686868 -7.97%,
+    rgba(157, 157, 157, 0) 122.9%
+  );
 }
 
 body {
@@ -714,6 +722,24 @@ ul {
   width: 2rem;
   aspect-ratio: 1;
   animation: spin 500ms infinite linear;
+}
+
+#scrollButton {
+  display: none;
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  z-index: 99;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--scrollBg);
+  backdrop-filter: blur(2px);
+  border-color: var(--scrollBorder);
+}
+#scrollButton > i {
+  color: var(--scrollIcon);
+  font-size: 1.8em;
 }
 
 @keyframes spin {
