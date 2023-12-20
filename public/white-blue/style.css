@@ -9,6 +9,14 @@
 
   --card-box-shadow: 0px 1px 1px 0px rgba(255, 255, 255, 0.35) inset,
     0px -1px 1px 0px rgba(0, 0, 0, 0.4) inset;
+
+  --scrollBorder: #4f4f4f;
+  --scrollIcon: #fff;
+  --scrollBg: linear-gradient(
+    138.61deg,
+    #686868 -7.97%,
+    rgba(157, 157, 157, 0) 122.9%
+  );
 }
 
 * {
@@ -871,6 +879,24 @@ footer {
 #chatButton.visible {
   opacity: 1;
   transform: translateY(0);
+}
+
+#scrollButton {
+  display: none;
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  z-index: 99;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--scrollBg);
+  backdrop-filter: blur(2px);
+  border-color: var(--scrollBorder);
+}
+#scrollButton > i {
+  color: var(--scrollIcon);
+  font-size: 1.8em;
 }
 
 /* Loader */
