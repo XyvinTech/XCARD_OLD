@@ -512,6 +512,13 @@ function generateYouTubePlayer(link) {
     `;
 }
 
+function scrollToTop() {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth',
+  });
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
   const contact_cards = document.getElementById('contact_cards');
   const contact_long_cards = document.getElementById('contact_long_cards');
@@ -865,13 +872,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       textarea.value = '';
     }
   });
-
-  function scrollToTop() {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth',
-    });
-  }
 
   function handleScroll() {
     var scrollButton = document.getElementById('scrollButton');
