@@ -881,31 +881,38 @@ const isEmpty = (obj) => {
 };
 
 const submitBtn = document.getElementById('form_submit');
+const id = data['_id'];
+
 submitBtn.addEventListener('click', (e) => {
   e.preventDefault();
   const postURL = 'https://app.visitingcard.store/profile/submitForm';
-  const id = data['_id'];
   const nameInput = document.getElementById('frm_name');
   const emailInput = document.getElementById('email');
   const phoneInput = document.getElementById('phone');
   const messageInput = document.getElementById('message');
+  const country_code = document.querySelector('.iti__selected-flag');
+
+  let code = country_code.title.split(' ');
+  code = code[code.length - 1];
   const name = nameInput.value;
   const email = emailInput.value;
   const phone = phoneInput.value;
   const message = messageInput.value;
+  const data = {
+    id: id,
+    name: name,
+    phone: code + phone,
+    email: email,
+
+    message: message,
+  };
 
   fetch(postURL, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({
-      id,
-      name,
-      email,
-      phone,
-      message,
-    }),
+    body: JSON.stringify(data),
   })
     .then((response) => {
       if (response.ok) {

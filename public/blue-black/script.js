@@ -927,7 +927,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       const data = {
         id: id,
         name: name_input.value,
-        phone: phone.value,
+        phone: code + phone.value,
         email: email_input.value,
 
         message: textarea.value,
