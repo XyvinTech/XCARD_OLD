@@ -25,7 +25,7 @@ profileRouter
     authorize('admin', 'user', 'super'),
     profileController.getProfile
   )
-  .post(protect, authorize('admin'), profileController.updateProfile)
+  .post(protect, authorize('admin', 'super'), profileController.updateProfile)
   .delete(
     protect,
     authorize('admin', 'super'),
