@@ -641,7 +641,7 @@ const awardSection = document.getElementById('award-section');
 // Create the products heading element
 const awardHead = document.createElement('h3');
 awardHead.classList.add('products-head', 'head');
-awardHead.textContent = 'Achievements';
+awardHead.textContent = 'Gallery';
 
 const awardIcons = document.createElement('div');
 awardIcons.classList.add('products-icons');
