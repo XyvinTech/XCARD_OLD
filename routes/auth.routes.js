@@ -18,6 +18,7 @@ authRouter
   );
 authRouter.route("/checkuser").post(authController.checkUser);
 authRouter.route("/login").post(authController.loginUser);
+authRouter.route("/login-email").post(authController.loginWithEmail);
 authRouter.route("/logout").post(authController.logoutUser);
 
 export default authRouter;

@@ -33,7 +33,7 @@ import { query } from "express";
  * @schema  Private
  */
 export const createUserProfile = asyncHandler(async (req, res, next) => {
-  const { phone, update, theme } = req?.body;
+  const { phone, update, theme ,email} = req?.body;
   const all = JSON.parse(update);
 
   const {
@@ -76,12 +76,15 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
       await admin
         .auth()
         .createUser({
+          email:email,
+          password: 'India@123', // User's password
           phoneNumber: phone,
           displayName: profile?.name,
           disabled: false,
         })
         .then(async (userRecord) => {
           //If new user enters create single user and profile.
+          console.log('--------------------------------------',userRecord)
           const user = await User.create({
             username: phone,
             uid: userRecord?.uid,
