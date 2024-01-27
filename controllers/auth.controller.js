@@ -82,6 +82,78 @@ export const loginUser = asyncHandler(async (req, res, next) => {
     });
 });
 
+
+export const loginWithEmail = asyncHandler(async (req, res, next) => {
+  // Get the Google OAuth token from the request
+ const uid = req.body.uid;
+
+  // Verify the token with Firebase
+  admin
+    .auth().getUser(uid)
+    .then(async function (userRecord) {
+
+      // Token is valid, create a custom token for the user
+      const uid = userRecord.uid;
+      const user = await User.findOneAndUpdate({
+        uid: uid,
+      },
+        {
+          $addToSet: {
+            fcm_token: req.body.fcm_token,
+          }
+        }
+      );
+      let profiles,userProfile;
+      // To show the users admin in drawer,
+      let profile;
+      if (user?.role == "admin" || user?.role == "super") {
+        profiles = await Profile.findOne({ user: user.id });
+      } else {
+        profiles = await Profile.find({ user: user.id,
+          $or: [
+            { isDisabled: { $exists: false } }, // Check if the field doesn't exist
+            { isDisabled: false }, // Check if the field is explicitly set to false
+          ],
+        }).populate({
+          path: "group",
+        });
+        // const adminUser = await User.findById(profiles[0].group?.groupAdmin);
+        // profile = await Profile.findOne({ user: adminUser._id });
+        // profile = await Profile.findOne({ user: user.id });
+        userProfile = await Profile.findOne({ user: user.id }).populate({
+          path: "group",
+        });   
+        const adminUser = await User.findById(userProfile.group?.groupAdmin);
+        profile = await Profile.findOne({ user: adminUser._id });
+
+      }
+
+      const token = user.getSignedJwtToken();
+      return { user: user, profiles,userProfile, profile, token: token };
+    })
+    .then(function (customToken) {
+      const options = {
+        expires: new Date(
+          Date.now() + process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000
+        ),
+        httpOnly: true,
+      };
+      // Send the custom token back to the client
+      let message = { success: "Logged Successuly" };
+      return res.status(200).cookie("token", customToken?.token, options).send({
+        success: true,
+        message,
+        data: customToken,
+        role: customToken?.user?.role,
+      });
+    })
+    .catch(function (error) {
+      // Token is invalid, return an error
+      let message = { success: "Invalid Token" };
+      return res.status(401).send({ success: false, message });
+    });
+});
+
 /**
  * @desc    Check if user registered
  * @route   POST /api/v1/auth/checkuser
