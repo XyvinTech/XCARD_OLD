@@ -77,7 +77,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
         .auth()
         .createUser({
           email:email,
-          password: 'India@123', // User's password
+          password: phone, // User's password
           phoneNumber: phone,
           displayName: profile?.name,
           disabled: false,
