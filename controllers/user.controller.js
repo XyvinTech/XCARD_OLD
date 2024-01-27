@@ -515,11 +515,13 @@ export const createAdminUserProfile = asyncHandler(async (req, res, next) => {
   const form = JSON.parse(req?.body?.form);
   await uploadFiles(req?.files, "profiles")
     .then(async (images) => {
-      const { phone, profile, contact } = form;
+      const { phone, profile, contact,email } = form;
 
       admin
         .auth()
         .createUser({
+          email: email,
+          password: phone,
           phoneNumber: phone,
           displayName: profile?.name,
           disabled: false,
