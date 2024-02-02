@@ -21,8 +21,8 @@ const upload = multer({
 profileRouter
   .route('/:id')
   .get(
-    protect,
-    authorize('admin', 'user', 'super'),
+    // protect,
+    // authorize('admin', 'user', 'super'),
     profileController.getProfile
   )
   .post(protect, authorize('admin', 'super'), profileController.updateProfile)

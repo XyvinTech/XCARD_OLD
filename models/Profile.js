@@ -2,7 +2,6 @@ import mongoose from "mongoose";
 import User from "./User.js";
 const ProfileSchema = new mongoose.Schema(
   {
-
     user: {
       type: mongoose.Schema.ObjectId,
       ref: "User",
@@ -17,7 +16,19 @@ const ProfileSchema = new mongoose.Schema(
     card: {
       cardId: { type: String },
       cardWrited: { type: Number, default: 0 },
-      theme: { type: String, enum: ["gold&black", "white&black", "violet&green", "orange&black",'aero&black', "white&blue", "blue&black"], default: "orange&black"}
+      theme: {
+        type: String,
+        enum: [
+          "gold&black",
+          "white&black",
+          "violet&green",
+          "orange&black",
+          "aero&black",
+          "white&blue",
+          "blue&black",
+        ],
+        default: "orange&black",
+      },
     },
     profile: {
       name: { type: String },
@@ -152,7 +163,7 @@ const ProfileSchema = new mongoose.Schema(
             image: Object,
             value: String,
             description: String,
-          }
+          },
         ],
         default: [],
       },
@@ -165,14 +176,14 @@ const ProfileSchema = new mongoose.Schema(
             label: String,
             image: Object,
             value: String,
-          }
+          },
         ],
         default: [],
       },
     },
     video: {
       status: { type: Boolean, default: false },
-      videos: { type: [{ link: String, }], default: [] },
+      videos: { type: [{ link: String }], default: [] },
       // link: {
       //   link: { type: String, default: "" },
       //   _id: {
@@ -192,6 +203,7 @@ const ProfileSchema = new mongoose.Schema(
             image: Object,
             price: Number,
             offerPrice: Number,
+            category: String,
           },
         ],
         default: [],
@@ -205,6 +217,10 @@ const ProfileSchema = new mongoose.Schema(
     //   status: { type: Boolean, default: false },
     //   certificates: { type: [{ label: String, value: String }], default: [] },
     // },
+    category: {
+      status: { type: Boolean, default: false },
+      categories: { type: [{ name: String }], default: [] },
+    },
     award: {
       status: { type: Boolean, default: false },
       awards: {
@@ -213,7 +229,7 @@ const ProfileSchema = new mongoose.Schema(
             label: String,
             image: Object,
             value: String,
-          }
+          },
         ],
         default: [],
       },
@@ -227,7 +243,7 @@ const ProfileSchema = new mongoose.Schema(
             label: String,
             image: Object,
             value: String,
-          }
+          },
         ],
         default: [],
       },
@@ -242,7 +258,7 @@ const ProfileSchema = new mongoose.Schema(
             email: String,
             message: String,
             createdAt: { type: Date, default: Date.now },
-          }
+          },
         ],
         default: [],
       },
