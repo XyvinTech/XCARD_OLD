@@ -1301,11 +1301,11 @@ export const deleteFirebaseUser = asyncHandler(async (req, res, next) => {
  * @schema  Private
  */
 export const updateUserProfile = asyncHandler(async (req, res, next) => {
-  console.log('')
+  console.log('--------------------------',req?.query?.user)
   await uploadFiles(req?.files, "profiles")
     .then(async (images) => {
 
-      const { name, designation, companyName, bio, theme } = req?.body;
+      const { name, designation, companyName, bio, theme,labelUpdates } = req?.body;
       //TODO: Delete old profile picture from Firebase Storage
       const updateArray = JSON?.parse(req?.body?.update) ?? [];
       const updateStatusArray = JSON?.parse(req?.body?.status) ?? [];
@@ -1315,6 +1315,39 @@ export const updateUserProfile = asyncHandler(async (req, res, next) => {
       if (Array?.isArray(updateStatusArray) && updateStatusArray?.length > 0) {
         await statusEngine(req, updateStatusArray);
       }
+      console.log(labelUpdates);
+      var parsedLabelUpdates =labelUpdates;
+      if (typeof parsedLabelUpdates === 'string') {
+        try {
+          parsedLabelUpdates = JSON.parse(labelUpdates);
+        } catch (error) {
+          console.error("Parsing error:", error);
+          // Handle parsing error, perhaps set labelUpdates to null or []
+          parsedLabelUpdates = null; // or []
+        }
+      }
+   // New label updates handling
+   if (Array.isArray(parsedLabelUpdates) && parsedLabelUpdates.length > 0) {
+    const labelSetOperations = {};
+    parsedLabelUpdates.forEach(update => {
+      const sectionKey = Object.keys(update)[0]; // Gets the section name, e.g., 'contact'
+      const labelValue = update[sectionKey]; // Gets the new label value
+      labelSetOperations[`${sectionKey}.label`] = labelValue; // Builds the $set operation
+    });
+
+    if (Object.keys(labelSetOperations).length > 0) {
+      await Profile.findOneAndUpdate(
+        {
+          user: req?.query?.user ?? req?.user?.id,
+          _id: req?.query?.profile,
+        },
+        {
+          $set: labelSetOperations,
+        },
+        { new: true }
+      );
+    }
+  }
 
       const profile = await Profile.findOneAndUpdate(
         {
