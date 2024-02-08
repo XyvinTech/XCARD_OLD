@@ -1,30 +1,30 @@
-import asyncHandler from "../middlewares/async.middleware.js";
-import admin from "firebase-admin";
-import User from "../models/User.js";
-import Profile from "../models/Profile.js";
-import ErrorResponse from "../utils/error.response.js";
+import asyncHandler from '../middlewares/async.middleware.js';
+import admin from 'firebase-admin';
+import User from '../models/User.js';
+import Profile from '../models/Profile.js';
+import ErrorResponse from '../utils/error.response.js';
 import {
   uploadBufferFile,
   deleteBufferFile,
   uploadFile,
   uploadFiles,
-  deleteFileByUrl
-} from "../utils/file.upload.js";
-import { nanoid, customAlphabet } from "nanoid";
-const randomId = customAlphabet("0123456789ABCDEFGHIJKLMNOP", 8);
-import QRCode from "qrcode";
-import getRandomFileName from "../helpers/filename.helper.js";
-import xlsx from "xlsx";
-import fs from "fs";
-import { Stream } from "stream";
-import getFileFromUrl from "../helpers/getfilefromurl.helper.js";
-import { Buffer } from "node:buffer";
-import getSocialMedia from "../helpers/socialmediaregex.helper.js";
-import { Types } from "mongoose";
-import Group from "../models/Group.js";
-import Setting from "../models/Setting.js";
-import Nodemailer from "nodemailer";
-import { query } from "express";
+  deleteFileByUrl,
+} from '../utils/file.upload.js';
+import { nanoid, customAlphabet } from 'nanoid';
+const randomId = customAlphabet('0123456789ABCDEFGHIJKLMNOP', 8);
+import QRCode from 'qrcode';
+import getRandomFileName from '../helpers/filename.helper.js';
+import xlsx from 'xlsx';
+import fs from 'fs';
+import { Stream } from 'stream';
+import getFileFromUrl from '../helpers/getfilefromurl.helper.js';
+import { Buffer } from 'node:buffer';
+import getSocialMedia from '../helpers/socialmediaregex.helper.js';
+import { Types } from 'mongoose';
+import Group from '../models/Group.js';
+import Setting from '../models/Setting.js';
+import Nodemailer from 'nodemailer';
+import { query } from 'express';
 
 /**
  * @desc    Create new user profile
@@ -33,7 +33,7 @@ import { query } from "express";
  * @schema  Private
  */
 export const createUserProfile = asyncHandler(async (req, res, next) => {
-  const { phone, update, theme ,email} = req?.body;
+  const { phone, update, theme, email } = req?.body;
   const all = JSON.parse(update);
 
   const {
@@ -41,6 +41,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
     contact,
     social,
     website,
+    category,
     video,
     service,
     document,
@@ -53,30 +54,30 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
   delete bank?.bankDetails?._id;
   delete video?.link?._id;
   delete enquiry?.email?._id;
-  console.log('inside create profile')
-  
-  await uploadFiles(req?.files, "profiles", req?.body?.asFunction)
+  console.log('inside create profile');
+
+  await uploadFiles(req?.files, 'profiles', req?.body?.asFunction)
     .then(async (images) => {
       const options = {
         scale: 34,
         color: {
-          dark: "#BEFF6C", // dark color
-          light: "#1C1C1E", // light color
+          dark: '#BEFF6C', // dark color
+          light: '#1C1C1E', // light color
         },
       };
       const cardId =
-        `${profile?.name.toLowerCase().split(" ").join("")}-` +
+        `${profile?.name.toLowerCase().split(' ').join('')}-` +
         randomId().toLowerCase();
       const profileLink = `${process.env.HOST_URL_HTTPS}/profile/${cardId}`;
       const qrCode = await QRCode.toBuffer(profileLink, options);
       const qrFile = {
         buffer: qrCode,
-        mimetype: "image/jpeg",
+        mimetype: 'image/jpeg',
       };
       await admin
         .auth()
         .createUser({
-          email:email,
+          email: email,
           password: phone, // User's password
           phoneNumber: phone,
           displayName: profile?.name,
@@ -84,18 +85,18 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
         })
         .then(async (userRecord) => {
           //If new user enters create single user and profile.
-          console.log('--------------------------------------',userRecord)
+          console.log('--------------------------------------', userRecord);
           const user = await User.create({
             username: phone,
             uid: userRecord?.uid,
-            role: "user",
+            role: 'user',
             providerData: userRecord?.providerData,
           });
           // TODO: Create Unique Card Id, Create Unique Profile Link, Create Custom QR Image and Upload to Firebase
           const qrImageUrl = await uploadFile(
             qrFile,
-            "cards",
-            getRandomFileName("card-")
+            'cards',
+            getRandomFileName('card-')
           );
           // Upload Product Images
           const modifiedProduct = await Promise.all(
@@ -103,8 +104,8 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
               const { _id, ...all } = item;
               const upload = await uploadBufferFile(
                 { ...all.image, buffer: item?.image?.base64 },
-                "products",
-                getRandomFileName("product-"),
+                'products',
+                getRandomFileName('product-'),
                 'product'
               );
               return { ...all, image: upload };
@@ -114,12 +115,15 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
           const modifiedService = await Promise.all(
             service?.services?.map(async (item) => {
               const { _id, ...all } = item;
-              const upload = item.image == null ? null : await uploadBufferFile(
-                { ...all.image, buffer: item?.image?.base64 },
-                "services",
-                getRandomFileName("service-"),
-                'service'
-              );
+              const upload =
+                item.image == null
+                  ? null
+                  : await uploadBufferFile(
+                      { ...all.image, buffer: item?.image?.base64 },
+                      'services',
+                      getRandomFileName('service-'),
+                      'service'
+                    );
               return { ...all, image: upload };
             })
           );
@@ -140,12 +144,15 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
           const modifiedAward = await Promise.all(
             award?.awards?.map(async (item) => {
               const { _id, ...all } = item;
-              const upload = item.image == null ? null : await uploadBufferFile(
-                { ...all.image, buffer: item?.image?.base64 },
-                "awards",
-                getRandomFileName("award-"),
-                'award'
-              );
+              const upload =
+                item.image == null
+                  ? null
+                  : await uploadBufferFile(
+                      { ...all.image, buffer: item?.image?.base64 },
+                      'awards',
+                      getRandomFileName('award-'),
+                      'award'
+                    );
               return { ...all, image: upload };
             })
           );
@@ -153,12 +160,15 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
           const modifiedCertificate = await Promise.all(
             certificate?.certificates?.map(async (item) => {
               const { _id, ...all } = item;
-              const upload = item.image == null ? null : await uploadBufferFile(
-                { ...all.image, buffer: item?.image?.base64 },
-                "certificates",
-                getRandomFileName("certificate-"),
-                'certificate'
-              );
+              const upload =
+                item.image == null
+                  ? null
+                  : await uploadBufferFile(
+                      { ...all.image, buffer: item?.image?.base64 },
+                      'certificates',
+                      getRandomFileName('certificate-'),
+                      'certificate'
+                    );
               return { ...all, image: upload };
             })
           );
@@ -173,8 +183,12 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
             profile: {
               ...profile,
               profileLink,
-              profilePicture: !images ? null : images?.find((obj) => obj.type === "profile"),
-              profileBanner: !images ? null : images?.find((obj) => obj.type === "banner"),
+              profilePicture: !images
+                ? null
+                : images?.find((obj) => obj.type === 'profile'),
+              profileBanner: !images
+                ? null
+                : images?.find((obj) => obj.type === 'banner'),
               profileQR: qrImageUrl,
             },
             contact: {
@@ -184,7 +198,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
                 const filteredObj = Object.fromEntries(
                   Object.entries(obj).filter(([key, value]) => value !== null)
                 );
-                delete filteredObj["_id"]; // remove the _id key from the filtered object
+                delete filteredObj['_id']; // remove the _id key from the filtered object
                 return filteredObj;
               }),
             },
@@ -195,11 +209,11 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
                 const filteredObj = Object.fromEntries(
                   Object.entries(obj).filter(([key, value]) => value !== null)
                 );
-                delete filteredObj["_id"];
-                if (obj.type === "other") {
+                delete filteredObj['_id'];
+                if (obj.type === 'other') {
                   const getSocial = getSocialMedia(filteredObj?.value);
                   return {
-                    label: getSocial === "Other" ? "Social Media" : getSocial,
+                    label: getSocial === 'Other' ? 'Social Media' : getSocial,
                     type: getSocial.toLowerCase(),
                     value: filteredObj.value,
                   };
@@ -215,7 +229,18 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
                 const filteredObj = Object.fromEntries(
                   Object.entries(obj).filter(([key, value]) => value !== null)
                 );
-                delete filteredObj["_id"]; // remove the _id key from the filtered object
+                delete filteredObj['_id']; // remove the _id key from the filtered object
+                return filteredObj;
+              }),
+            },
+            category: {
+              ...category,
+              status: category?.categorys?.length > 0 ? true : false,
+              categorys: category?.categorys.map((obj) => {
+                const filteredObj = Object.fromEntries(
+                  Object.entries(obj).filter(([key, value]) => value !== null)
+                );
+                delete filteredObj['_id']; // remove the _id key from the filtered object
                 return filteredObj;
               }),
             },
@@ -236,7 +261,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
                 const filteredObj = Object.fromEntries(
                   Object.entries(obj).filter(([key, value]) => value !== null)
                 );
-                delete filteredObj["_id"]; // remove the _id key from the filtered object
+                delete filteredObj['_id']; // remove the _id key from the filtered object
                 return filteredObj;
               }),
             },
@@ -271,15 +296,19 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
               email: enquiry?.email,
             },
           });
-          let message = { success: "User Profile Created" };
+          let message = { success: 'User Profile Created' };
           console.log(message);
-          if (!req?.body?.asFunction) return res.status(201).send({ success: true, message, data: user });
+          if (!req?.body?.asFunction)
+            return res.status(201).send({ success: true, message, data: user });
         })
         .catch(async (error) => {
           //If User already exisits create second or third profile
-
-          if (error?.errorInfo?.code === "auth/phone-number-already-exists") {
-            console.log('phone no already exist')
+          console.log('user already exists', error?.errorInfo?.code);
+          if (
+            error?.errorInfo?.code === 'auth/phone-number-already-exists' ||
+            error?.errorInfo?.code === 'auth/email-already-exists'
+          ) {
+            console.log('phone no already exist');
             let user = await User.findOne({ username: phone });
 
             if (user == null) {
@@ -287,30 +316,30 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
               user = await User.create({
                 username: phone,
                 uid: userRecord?.uid,
-                role: "user",
+                role: 'user',
                 providerData: userRecord?.providerData,
               });
             }
             const options = {
               scale: 34,
               color: {
-                dark: "#BEFF6C", // dark color
-                light: "#1C1C1E", // light color
+                dark: '#BEFF6C', // dark color
+                light: '#1C1C1E', // light color
               },
             };
             const cardId =
-              `${profile?.name.toLowerCase().split(" ").join("")}-` +
+              `${profile?.name.toLowerCase().split(' ').join('')}-` +
               randomId().toLowerCase();
             const profileLink = `${process.env.HOST_URL_HTTPS}/profile/${cardId}`;
             const qrCode = await QRCode.toBuffer(profileLink, options);
             const qrFile = {
               buffer: qrCode,
-              mimetype: "image/jpeg",
+              mimetype: 'image/jpeg',
             };
             const qrImageUrl = await uploadFile(
               qrFile,
-              "cards",
-              getRandomFileName("card-")
+              'cards',
+              getRandomFileName('card-')
             );
             // Upload Product Images
             const modifiedProduct = await Promise.all(
@@ -319,8 +348,8 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
 
                 const upload = await uploadBufferFile(
                   { ...all.image, buffer: item?.image?.base64 },
-                  "products",
-                  getRandomFileName("product-"),
+                  'products',
+                  getRandomFileName('product-'),
                   'product'
                 );
                 return { ...all, image: upload };
@@ -331,12 +360,15 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
             const modifiedService = await Promise.all(
               service?.services?.map(async (item) => {
                 const { _id, ...all } = item;
-                const upload = item.image == null ? null : await uploadBufferFile(
-                  { ...all.image, buffer: item?.image?.base64 },
-                  "services",
-                  getRandomFileName("service-"),
-                  'service'
-                );
+                const upload =
+                  item.image == null
+                    ? null
+                    : await uploadBufferFile(
+                        { ...all.image, buffer: item?.image?.base64 },
+                        'services',
+                        getRandomFileName('service-'),
+                        'service'
+                      );
                 return { ...all, image: upload };
               })
             );
@@ -358,12 +390,15 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
             const modifiedAward = await Promise.all(
               award?.awards?.map(async (item) => {
                 const { _id, ...all } = item;
-                const upload = item.image == null ? null : await uploadBufferFile(
-                  { ...all.image, buffer: item?.image?.base64 },
-                  "awards",
-                  getRandomFileName("award-"),
-                  'award'
-                );
+                const upload =
+                  item.image == null
+                    ? null
+                    : await uploadBufferFile(
+                        { ...all.image, buffer: item?.image?.base64 },
+                        'awards',
+                        getRandomFileName('award-'),
+                        'award'
+                      );
                 return { ...all, image: upload };
               })
             );
@@ -371,12 +406,15 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
             const modifiedCertificate = await Promise.all(
               certificate?.certificates?.map(async (item) => {
                 const { _id, ...all } = item;
-                const upload = item.image == null ? null : await uploadBufferFile(
-                  { ...all.image, buffer: item?.image?.base64 },
-                  "certificates",
-                  getRandomFileName("certificate-"),
-                  'certificate'
-                );
+                const upload =
+                  item.image == null
+                    ? null
+                    : await uploadBufferFile(
+                        { ...all.image, buffer: item?.image?.base64 },
+                        'certificates',
+                        getRandomFileName('certificate-'),
+                        'certificate'
+                      );
                 return { ...all, image: upload };
               })
             );
@@ -390,8 +428,12 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
               profile: {
                 ...profile,
                 profileLink,
-                profilePicture: !images ? null : images?.find((obj) => obj.type === "profile"),
-                profileBanner: !images ? null : images?.find((obj) => obj.type === "banner"),
+                profilePicture: !images
+                  ? null
+                  : images?.find((obj) => obj.type === 'profile'),
+                profileBanner: !images
+                  ? null
+                  : images?.find((obj) => obj.type === 'banner'),
                 profileQR: qrImageUrl,
               },
               contact: {
@@ -401,7 +443,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
                   const filteredObj = Object.fromEntries(
                     Object.entries(obj).filter(([key, value]) => value !== null)
                   );
-                  delete filteredObj["_id"]; // remove the _id key from the filtered object
+                  delete filteredObj['_id']; // remove the _id key from the filtered object
                   return filteredObj;
                 }),
               },
@@ -412,7 +454,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
                   const filteredObj = Object.fromEntries(
                     Object.entries(obj).filter(([key, value]) => value !== null)
                   );
-                  delete filteredObj["_id"]; // remove the _id key from the filtered object
+                  delete filteredObj['_id']; // remove the _id key from the filtered object
                   return filteredObj;
                 }),
               },
@@ -423,10 +465,23 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
                   const filteredObj = Object.fromEntries(
                     Object.entries(obj).filter(([key, value]) => value !== null)
                   );
-                  delete filteredObj["_id"]; // remove the _id key from the filtered object
+                  delete filteredObj['_id']; // remove the _id key from the filtered object
                   return filteredObj;
                 }),
               },
+
+              category: {
+                ...category,
+                status: category?.categorys?.length > 0 ? true : false,
+                categorys: category?.categorys.map((obj) => {
+                  const filteredObj = Object.fromEntries(
+                    Object.entries(obj).filter(([key, value]) => value !== null)
+                  );
+                  delete filteredObj['_id']; // remove the _id key from the filtered object
+                  return filteredObj;
+                }),
+              },
+
               service: {
                 ...service,
                 status: modifiedService.length > 0 ? true : false,
@@ -444,7 +499,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
                   const filteredObj = Object.fromEntries(
                     Object.entries(obj).filter(([key, value]) => value !== null)
                   );
-                  delete filteredObj["_id"]; // remove the _id key from the filtered object
+                  delete filteredObj['_id']; // remove the _id key from the filtered object
                   return filteredObj;
                 }),
               },
@@ -475,7 +530,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
                   const filteredObj = Object.fromEntries(
                     Object.entries(obj).filter(([key, value]) => value !== null)
                   );
-                  delete filteredObj["_id"]; // remove the _id key from the filtered object
+                  delete filteredObj['_id']; // remove the _id key from the filtered object
                   return filteredObj;
                 }),
               },
@@ -485,23 +540,27 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
                 email: enquiry?.email,
               },
             });
-            let message = { success: "User Profile Created" };
+            let message = { success: 'User Profile Created' };
             console.log(message);
-            if (!req?.body?.asFunction) return res.status(201).send({ success: true, message, data: user });
+            if (!req?.body?.asFunction)
+              return res
+                .status(201)
+                .send({ success: true, message, data: user });
           }
 
-          if (!req?.body?.asFunction) return next(
-            new ErrorResponse(
-              `Something went wrong ${error?.errorInfo?.code ?? error}`,
-              400
-            )
-          );
+          if (!req?.body?.asFunction)
+            return next(
+              new ErrorResponse(
+                `Something went wrong ${error?.errorInfo?.code ?? error}`,
+                400
+              )
+            );
         });
-
     })
     .catch((err) => {
       console.log(err);
-      if (!req?.body?.asFunction) return next(new ErrorResponse(`File upload failed ${err}`, 400));
+      if (!req?.body?.asFunction)
+        return next(new ErrorResponse(`File upload failed ${err}`, 400));
     });
 });
 
@@ -513,9 +572,9 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
  */
 export const createAdminUserProfile = asyncHandler(async (req, res, next) => {
   const form = JSON.parse(req?.body?.form);
-  await uploadFiles(req?.files, "profiles")
+  await uploadFiles(req?.files, 'profiles')
     .then(async (images) => {
-      const { phone, profile, contact,email } = form;
+      const { phone, profile, contact, email } = form;
 
       admin
         .auth()
@@ -531,7 +590,7 @@ export const createAdminUserProfile = asyncHandler(async (req, res, next) => {
           const user = await User.create({
             username: phone,
             uid: userRecord?.uid,
-            role: "admin",
+            role: 'admin',
             providerData: userRecord?.providerData,
           });
           await Profile.create({
@@ -548,24 +607,24 @@ export const createAdminUserProfile = asyncHandler(async (req, res, next) => {
                 const filteredObj = Object.fromEntries(
                   Object.entries(obj).filter(([key, value]) => value !== null)
                 );
-                delete filteredObj["_id"]; // remove the _id key from the filtered object
+                delete filteredObj['_id']; // remove the _id key from the filtered object
                 return filteredObj;
               }),
             },
           });
 
-          let message = { success: "Admin User Profile Created" };
+          let message = { success: 'Admin User Profile Created' };
           return res.status(201).send({ success: true, message, data: user });
         })
         .catch(async (error) => {
-          if (error?.errorInfo?.code === "auth/phone-number-already-exists") {
+          if (error?.errorInfo?.code === 'auth/phone-number-already-exists') {
             let user = await User.findOne({ username: phone });
             if (!user) {
               const userRecord = await admin.auth().getUserByPhoneNumber(phone);
               const user = await User.create({
                 username: phone,
                 uid: userRecord?.uid,
-                role: "admin",
+                role: 'admin',
                 providerData: userRecord?.providerData,
               });
               await Profile.create({
@@ -580,16 +639,20 @@ export const createAdminUserProfile = asyncHandler(async (req, res, next) => {
                   status: true,
                   contacts: contact?.contacts.map((obj) => {
                     const filteredObj = Object.fromEntries(
-                      Object.entries(obj).filter(([key, value]) => value !== null)
+                      Object.entries(obj).filter(
+                        ([key, value]) => value !== null
+                      )
                     );
-                    delete filteredObj["_id"]; // remove the _id key from the filtered object
+                    delete filteredObj['_id']; // remove the _id key from the filtered object
                     return filteredObj;
                   }),
                 },
               });
 
-              let message = { success: "Admin User Profile Created" };
-              return res.status(201).send({ success: true, message, data: user });
+              let message = { success: 'Admin User Profile Created' };
+              return res
+                .status(201)
+                .send({ success: true, message, data: user });
             }
           }
           return next(
@@ -614,56 +677,56 @@ export const getAllAdmin = asyncHandler(async (req, res, next) => {
   const profile = await Profile.aggregate([
     {
       $lookup: {
-        from: "users",
-        localField: "user",
-        foreignField: "_id",
-        as: "user",
+        from: 'users',
+        localField: 'user',
+        foreignField: '_id',
+        as: 'user',
       },
     },
     {
       $unwind: {
-        path: "$user",
+        path: '$user',
         preserveNullAndEmptyArrays: true,
       },
     },
     {
       $match: {
-        "user.role": "admin",
+        'user.role': 'admin',
       },
     },
     {
       $lookup: {
-        from: "groups",
-        localField: "user._id",
-        foreignField: "groupAdmin",
-        as: "groups",
+        from: 'groups',
+        localField: 'user._id',
+        foreignField: 'groupAdmin',
+        as: 'groups',
       },
     },
     {
       $lookup: {
-        from: "profiles",
+        from: 'profiles',
         let: {
-          groupIdList: "$groups._id",
+          groupIdList: '$groups._id',
         },
         pipeline: [
           {
             $match: {
               $expr: {
-                $in: ["$group", "$$groupIdList"],
+                $in: ['$group', '$$groupIdList'],
               },
             },
           },
         ],
-        as: "profiles",
+        as: 'profiles',
       },
     },
     {
       $addFields: {
         groupCount: {
-          $size: "$groups",
+          $size: '$groups',
         },
         profileCount: {
-          $size: "$profiles",
+          $size: '$profiles',
         },
       },
     },
@@ -674,7 +737,7 @@ export const getAllAdmin = asyncHandler(async (req, res, next) => {
       },
     },
   ]);
-  let message = { success: "All Admin Users with Counts" };
+  let message = { success: 'All Admin Users with Counts' };
   return res.status(200).send({ success: true, message, profile });
 });
 
@@ -690,57 +753,57 @@ export const searchAllAdmin = asyncHandler(async (req, res, next) => {
   const profile = await Profile.aggregate([
     {
       $lookup: {
-        from: "users",
-        localField: "user",
-        foreignField: "_id",
-        as: "user",
+        from: 'users',
+        localField: 'user',
+        foreignField: '_id',
+        as: 'user',
       },
     },
     {
       $unwind: {
-        path: "$user",
+        path: '$user',
         preserveNullAndEmptyArrays: true,
       },
     },
     {
       $match: {
-        "user.role": "admin",
-        "profile.name": { $regex: searchQuery, $options: "i" },
+        'user.role': 'admin',
+        'profile.name': { $regex: searchQuery, $options: 'i' },
       },
     },
     {
       $lookup: {
-        from: "groups",
-        localField: "user._id",
-        foreignField: "groupAdmin",
-        as: "groups",
+        from: 'groups',
+        localField: 'user._id',
+        foreignField: 'groupAdmin',
+        as: 'groups',
       },
     },
     {
       $lookup: {
-        from: "profiles",
+        from: 'profiles',
         let: {
-          groupIdList: "$groups._id",
+          groupIdList: '$groups._id',
         },
         pipeline: [
           {
             $match: {
               $expr: {
-                $in: ["$group", "$$groupIdList"],
+                $in: ['$group', '$$groupIdList'],
               },
             },
           },
         ],
-        as: "profiles",
+        as: 'profiles',
       },
     },
     {
       $addFields: {
         groupCount: {
-          $size: "$groups",
+          $size: '$groups',
         },
         profileCount: {
-          $size: "$profiles",
+          $size: '$profiles',
         },
       },
     },
@@ -751,7 +814,7 @@ export const searchAllAdmin = asyncHandler(async (req, res, next) => {
       },
     },
   ]);
-  let message = { success: "Search Results" };
+  let message = { success: 'Search Results' };
   return res.status(200).send({ success: true, message, profile });
 });
 
@@ -764,30 +827,30 @@ export const searchAllAdmin = asyncHandler(async (req, res, next) => {
 
 export const getAllProfilesOfAdmin = asyncHandler(async (req, res, next) => {
   if (!req?.query?.admin) {
-    return next(new ErrorResponse("Please provide admin id", 400));
+    return next(new ErrorResponse('Please provide admin id', 400));
   }
   const profiles = await Profile.aggregate([
     {
       $lookup: {
-        from: "groups",
-        localField: "group",
-        foreignField: "_id",
-        as: "group",
+        from: 'groups',
+        localField: 'group',
+        foreignField: '_id',
+        as: 'group',
       },
     },
     {
       $unwind: {
-        path: "$group",
+        path: '$group',
         preserveNullAndEmptyArrays: false,
       },
     },
     {
       $match: {
-        "group.groupAdmin": new Types.ObjectId(req?.query?.admin),
+        'group.groupAdmin': new Types.ObjectId(req?.query?.admin),
       },
     },
   ]);
-  let message = { success: "All Admin Users" };
+  let message = { success: 'All Admin Users' };
   return res.status(200).send({ success: true, message, profiles });
 });
 
@@ -801,31 +864,31 @@ export const getAllProfilesOfAdmin = asyncHandler(async (req, res, next) => {
 export const searchAllProfilesOfAdmin = asyncHandler(async (req, res, next) => {
   const searchQuery = req.query.query;
   if (!req?.query?.admin) {
-    return next(new ErrorResponse("Please provide admin id", 400));
+    return next(new ErrorResponse('Please provide admin id', 400));
   }
   const profiles = await Profile.aggregate([
     {
       $lookup: {
-        from: "groups",
-        localField: "group",
-        foreignField: "_id",
-        as: "group",
+        from: 'groups',
+        localField: 'group',
+        foreignField: '_id',
+        as: 'group',
       },
     },
     {
       $unwind: {
-        path: "$group",
+        path: '$group',
         preserveNullAndEmptyArrays: false,
       },
     },
     {
       $match: {
-        "group.groupAdmin": new Types.ObjectId(req?.query?.admin),
-        "profile.name": { $regex: searchQuery, $options: "i" },
+        'group.groupAdmin': new Types.ObjectId(req?.query?.admin),
+        'profile.name': { $regex: searchQuery, $options: 'i' },
       },
     },
   ]);
-  let message = { success: "All Admin Users" };
+  let message = { success: 'All Admin Users' };
   return res.status(200).send({ success: true, message, profiles });
 });
 
@@ -852,10 +915,10 @@ export const exportAdminData = asyncHandler(async (req, res, next) => {
       },
       {
         $lookup: {
-          from: "profiles",
-          localField: "_id",
-          foreignField: "group",
-          as: "profiles",
+          from: 'profiles',
+          localField: '_id',
+          foreignField: 'group',
+          as: 'profiles',
         },
       },
       {
@@ -866,7 +929,7 @@ export const exportAdminData = asyncHandler(async (req, res, next) => {
           createdAt: 1,
           updatedAt: 1,
           userCount: {
-            $size: "$profiles",
+            $size: '$profiles',
           },
         },
       },
@@ -879,38 +942,38 @@ export const exportAdminData = asyncHandler(async (req, res, next) => {
     const profiles = await Profile.aggregate([
       {
         $lookup: {
-          from: "groups",
-          localField: "group",
-          foreignField: "_id",
-          as: "group",
+          from: 'groups',
+          localField: 'group',
+          foreignField: '_id',
+          as: 'group',
         },
       },
       {
         $unwind: {
-          path: "$group",
+          path: '$group',
           preserveNullAndEmptyArrays: false,
         },
       },
       {
         $match: {
-          "group.groupAdmin": new Types.ObjectId(req?.query?.admin),
+          'group.groupAdmin': new Types.ObjectId(req?.query?.admin),
         },
       },
       {
         $sort: {
-          "group.name": 1,
+          'group.name': 1,
         },
       },
     ]);
 
     const adminPhone = admin?.contact?.contacts?.filter(
-      (item) => item.type === "phone"
+      (item) => item.type === 'phone'
     )[0]?.value;
     const adminEmail = admin?.contact?.contacts?.filter(
-      (item) => item.type === "email"
+      (item) => item.type === 'email'
     )[0]?.value;
     const superadminEmail = superadmin?.contact?.contacts?.filter(
-      (item) => item.type === "email"
+      (item) => item.type === 'email'
     )[0]?.value;
     // Extract the specific fields from the data
     const extractedAdmin = [
@@ -931,32 +994,32 @@ export const exportAdminData = asyncHandler(async (req, res, next) => {
     const extractedData = profiles?.map((item) => {
       let bank;
       const phone = item?.contact?.contacts?.filter(
-        (item) => item.type === "phone"
+        (item) => item.type === 'phone'
       )[0]?.value;
       const email = item?.contact?.contacts?.filter(
-        (item) => item.type === "email"
+        (item) => item.type === 'email'
       )[0]?.value;
       const social = item?.social?.socials
-        ?.filter((obj) => obj?.value != null && obj?.value != "")
+        ?.filter((obj) => obj?.value != null && obj?.value != '')
         ?.map((obj, inx) => {
           return `Social ${inx + 1} ${obj?.value}`;
         })
-        .join(", ");
+        .join(', ');
       const website = item?.website?.websites
-        ?.filter((obj) => obj?.link != null && obj?.link != "")
+        ?.filter((obj) => obj?.link != null && obj?.link != '')
         ?.map((obj, inx) => {
           return `Website ${inx + 1} ${obj?.link}`;
         })
-        .join(", ");
-      const skippedField = "_id";
+        .join(', ');
+      const skippedField = '_id';
       if (item?.bank) {
         bank = Object?.entries(item?.bank?.bankDetails)
           ?.map(function ([key, value]) {
-            if (value == null || value == "" || value == undefined) return;
-            else return key === skippedField ? "" : `${key}: ${value}`;
+            if (value == null || value == '' || value == undefined) return;
+            else return key === skippedField ? '' : `${key}: ${value}`;
           })
           ?.filter(Boolean)
-          ?.join(", ");
+          ?.join(', ');
       }
       return {
         Name: item?.profile?.name,
@@ -967,7 +1030,7 @@ export const exportAdminData = asyncHandler(async (req, res, next) => {
         Email: email,
         Social: social,
         Website: website,
-        Bank: bank ?? "",
+        Bank: bank ?? '',
         Created: item.createdAt,
       };
     });
@@ -976,13 +1039,13 @@ export const exportAdminData = asyncHandler(async (req, res, next) => {
     const worksheet1 = xlsx.utils.json_to_sheet(extractedGroup);
     const worksheet2 = xlsx.utils.json_to_sheet(extractedData);
     const workbook = xlsx.utils.book_new();
-    xlsx.utils.book_append_sheet(workbook, worksheet, "Admin");
-    xlsx.utils.book_append_sheet(workbook, worksheet1, "Groups");
-    xlsx.utils.book_append_sheet(workbook, worksheet2, "Profiles");
+    xlsx.utils.book_append_sheet(workbook, worksheet, 'Admin');
+    xlsx.utils.book_append_sheet(workbook, worksheet1, 'Groups');
+    xlsx.utils.book_append_sheet(workbook, worksheet2, 'Profiles');
     // Generate the Excel file
     const excelBuffer = xlsx.write(workbook, {
-      type: "buffer",
-      bookType: "xlsx",
+      type: 'buffer',
+      bookType: 'xlsx',
     });
 
     // Create a Nodemailer transporter
@@ -999,7 +1062,7 @@ export const exportAdminData = asyncHandler(async (req, res, next) => {
       from: process.env.NODE_MAILER_USER,
       to: superadminEmail,
       subject: `${admin?.profile?.name} Exported Data`,
-      text: "Please find attached excel file.",
+      text: 'Please find attached excel file.',
       attachments: [
         {
           filename: `${admin?.profile?.name.toLowerCase()}-exported-data.xlsx`,
@@ -1015,7 +1078,7 @@ export const exportAdminData = asyncHandler(async (req, res, next) => {
     console.log(error);
     res
       .status(500)
-      .json({ message: "An error occurred while sending the email" });
+      .json({ message: 'An error occurred while sending the email' });
   }
 });
 
@@ -1030,56 +1093,56 @@ export const getAdminAnalytics = asyncHandler(async (req, res, next) => {
   const profile = await Profile.aggregate([
     {
       $lookup: {
-        from: "users",
-        localField: "user",
-        foreignField: "_id",
-        as: "user",
+        from: 'users',
+        localField: 'user',
+        foreignField: '_id',
+        as: 'user',
       },
     },
     {
       $unwind: {
-        path: "$user",
+        path: '$user',
         preserveNullAndEmptyArrays: true,
       },
     },
     {
       $match: {
-        "user.role": "admin",
+        'user.role': 'admin',
       },
     },
     {
       $lookup: {
-        from: "groups",
-        localField: "user._id",
-        foreignField: "groupAdmin",
-        as: "groups",
+        from: 'groups',
+        localField: 'user._id',
+        foreignField: 'groupAdmin',
+        as: 'groups',
       },
     },
     {
       $lookup: {
-        from: "profiles",
+        from: 'profiles',
         let: {
-          groupIdList: "$groups._id",
+          groupIdList: '$groups._id',
         },
         pipeline: [
           {
             $match: {
               $expr: {
-                $in: ["$group", "$$groupIdList"],
+                $in: ['$group', '$$groupIdList'],
               },
             },
           },
         ],
-        as: "profiles",
+        as: 'profiles',
       },
     },
     {
       $addFields: {
         groupCount: {
-          $size: "$groups",
+          $size: '$groups',
         },
         profileCount: {
-          $size: "$profiles",
+          $size: '$profiles',
         },
       },
     },
@@ -1090,7 +1153,7 @@ export const getAdminAnalytics = asyncHandler(async (req, res, next) => {
       },
     },
   ]);
-  let message = { success: "All Admin Users with Counts" };
+  let message = { success: 'All Admin Users with Counts' };
   return res.status(200).send({ success: true, message, profile });
 });
 
@@ -1105,57 +1168,57 @@ export const getSingleAdminAnalytics = asyncHandler(async (req, res, next) => {
   const [profile] = await Profile.aggregate([
     {
       $lookup: {
-        from: "users",
-        localField: "user",
-        foreignField: "_id",
-        as: "user",
+        from: 'users',
+        localField: 'user',
+        foreignField: '_id',
+        as: 'user',
       },
     },
     {
       $unwind: {
-        path: "$user",
+        path: '$user',
         preserveNullAndEmptyArrays: true,
       },
     },
     {
       $match: {
-        "user.role": "admin",
-        "user._id": new Types.ObjectId(req?.query?.admin),
+        'user.role': 'admin',
+        'user._id': new Types.ObjectId(req?.query?.admin),
       },
     },
     {
       $lookup: {
-        from: "groups",
-        localField: "user._id",
-        foreignField: "groupAdmin",
-        as: "groups",
+        from: 'groups',
+        localField: 'user._id',
+        foreignField: 'groupAdmin',
+        as: 'groups',
       },
     },
     {
       $lookup: {
-        from: "profiles",
+        from: 'profiles',
         let: {
-          groupIdList: "$groups._id",
+          groupIdList: '$groups._id',
         },
         pipeline: [
           {
             $match: {
               $expr: {
-                $in: ["$group", "$$groupIdList"],
+                $in: ['$group', '$$groupIdList'],
               },
             },
           },
         ],
-        as: "profiles",
+        as: 'profiles',
       },
     },
     {
       $addFields: {
         groupCount: {
-          $size: "$groups",
+          $size: '$groups',
         },
         profileCount: {
-          $size: "$profiles",
+          $size: '$profiles',
         },
       },
     },
@@ -1166,7 +1229,7 @@ export const getSingleAdminAnalytics = asyncHandler(async (req, res, next) => {
       },
     },
   ]);
-  let message = { success: "All Admin Users with Counts" };
+  let message = { success: 'All Admin Users with Counts' };
   return res.status(200).send({ success: true, message, profile });
 });
 
@@ -1181,7 +1244,7 @@ export const getAdminCountAnalytics = asyncHandler(async (req, res, next) => {
   const counts = await User.aggregate([
     {
       $match: {
-        role: "admin",
+        role: 'admin',
       },
     },
     {
@@ -1194,12 +1257,12 @@ export const getAdminCountAnalytics = asyncHandler(async (req, res, next) => {
     },
     {
       $addFields: {
-        name: "Total Admins",
+        name: 'Total Admins',
       },
     },
     {
       $unionWith: {
-        coll: "groups",
+        coll: 'groups',
         pipeline: [
           {
             $group: {
@@ -1211,7 +1274,7 @@ export const getAdminCountAnalytics = asyncHandler(async (req, res, next) => {
           },
           {
             $addFields: {
-              name: "Total Groups",
+              name: 'Total Groups',
             },
           },
         ],
@@ -1219,11 +1282,11 @@ export const getAdminCountAnalytics = asyncHandler(async (req, res, next) => {
     },
     {
       $unionWith: {
-        coll: "users",
+        coll: 'users',
         pipeline: [
           {
             $match: {
-              role: "user",
+              role: 'user',
             },
           },
           {
@@ -1236,14 +1299,14 @@ export const getAdminCountAnalytics = asyncHandler(async (req, res, next) => {
           },
           {
             $addFields: {
-              name: "Total Profiles",
+              name: 'Total Profiles',
             },
           },
         ],
       },
     },
   ]);
-  let message = { success: "All User Counts" };
+  let message = { success: 'All User Counts' };
   return res.status(200).send({ success: true, message, counts: counts });
 });
 
@@ -1260,7 +1323,7 @@ export const deleteUser = asyncHandler(async (req, res, next) => {
   const userid = await User.findByIdAndDelete(user);
   admin.auth().deleteUser(userid?.uid);
   await Profile.deleteMany({ user: userid });
-  let message = { success: "User Account Deleted" };
+  let message = { success: 'User Account Deleted' };
   return res.status(200).send({ success: true, message });
 });
 
@@ -1285,13 +1348,13 @@ export const deleteFirebaseUser = asyncHandler(async (req, res, next) => {
     .then(() => {
       return res.status(200).send({
         success: true,
-        message: "All Firebase users deleted successfully",
+        message: 'All Firebase users deleted successfully',
       });
     })
     .catch((error) => {
       return res
         .status(400)
-        .send({ success: false, message: "Error deleting Firebase users" });
+        .send({ success: false, message: 'Error deleting Firebase users' });
     });
 });
 /**
@@ -1301,13 +1364,15 @@ export const deleteFirebaseUser = asyncHandler(async (req, res, next) => {
  * @schema  Private
  */
 export const updateUserProfile = asyncHandler(async (req, res, next) => {
-  console.log('--------------------------',req?.query?.user)
-  await uploadFiles(req?.files, "profiles")
+  console.log('');
+  await uploadFiles(req?.files, 'profiles')
     .then(async (images) => {
-
-      const { name, designation, companyName, bio, theme,labelUpdates } = req?.body;
+      const { name, designation, companyName, bio, theme, labelUpdates } =
+        req?.body;
       //TODO: Delete old profile picture from Firebase Storage
       const updateArray = JSON?.parse(req?.body?.update) ?? [];
+      console.log('updateUserProfile-------->', updateArray);
+
       const updateStatusArray = JSON?.parse(req?.body?.status) ?? [];
       if (Array?.isArray(updateArray) && updateArray?.length > 0) {
         await mixinEngine(req, updateArray);
@@ -1316,38 +1381,38 @@ export const updateUserProfile = asyncHandler(async (req, res, next) => {
         await statusEngine(req, updateStatusArray);
       }
       console.log(labelUpdates);
-      var parsedLabelUpdates =labelUpdates;
+      var parsedLabelUpdates = labelUpdates;
       if (typeof parsedLabelUpdates === 'string') {
         try {
           parsedLabelUpdates = JSON.parse(labelUpdates);
         } catch (error) {
-          console.error("Parsing error:", error);
+          console.error('Parsing error:', error);
           // Handle parsing error, perhaps set labelUpdates to null or []
           parsedLabelUpdates = null; // or []
         }
       }
-   // New label updates handling
-   if (Array.isArray(parsedLabelUpdates) && parsedLabelUpdates.length > 0) {
-    const labelSetOperations = {};
-    parsedLabelUpdates.forEach(update => {
-      const sectionKey = Object.keys(update)[0]; // Gets the section name, e.g., 'contact'
-      const labelValue = update[sectionKey]; // Gets the new label value
-      labelSetOperations[`${sectionKey}.label`] = labelValue; // Builds the $set operation
-    });
+      // New label updates handling
+      if (Array.isArray(parsedLabelUpdates) && parsedLabelUpdates.length > 0) {
+        const labelSetOperations = {};
+        parsedLabelUpdates.forEach((update) => {
+          const sectionKey = Object.keys(update)[0]; // Gets the section name, e.g., 'contact'
+          const labelValue = update[sectionKey]; // Gets the new label value
+          labelSetOperations[`${sectionKey}.label`] = labelValue; // Builds the $set operation
+        });
 
-    if (Object.keys(labelSetOperations).length > 0) {
-      await Profile.findOneAndUpdate(
-        {
-          user: req?.query?.user ?? req?.user?.id,
-          _id: req?.query?.profile,
-        },
-        {
-          $set: labelSetOperations,
-        },
-        { new: true }
-      );
-    }
-  }
+        if (Object.keys(labelSetOperations).length > 0) {
+          await Profile.findOneAndUpdate(
+            {
+              user: req?.query?.user ?? req?.user?.id,
+              _id: req?.query?.profile,
+            },
+            {
+              $set: labelSetOperations,
+            },
+            { new: true }
+          );
+        }
+      }
 
       const profile = await Profile.findOneAndUpdate(
         {
@@ -1356,26 +1421,26 @@ export const updateUserProfile = asyncHandler(async (req, res, next) => {
         },
         {
           $set: {
-            "card.theme": theme,
-            "profile.name": name,
-            "profile.designation": designation,
-            "profile.companyName": companyName,
-            "profile.bio": bio,
-            "profile.profileBanner": images?.find(
-              (obj) => obj.type === "banner"
+            'card.theme': theme,
+            'profile.name': name,
+            'profile.designation': designation,
+            'profile.companyName': companyName,
+            'profile.bio': bio,
+            'profile.profileBanner': images?.find(
+              (obj) => obj.type === 'banner'
             ),
-            "profile.profilePicture": images?.find(
-              (obj) => obj.type === "profile"
+            'profile.profilePicture': images?.find(
+              (obj) => obj.type === 'profile'
             ),
           },
         },
         { upsert: true, new: true }
       );
-      let message = { success: "User Profile Updated" };
+      let message = { success: 'User Profile Updated' };
       return res.status(200).send({ success: true, message, data: profile });
     })
     .catch((err) => {
-      console.log(err)
+      console.log(err);
       return next(new ErrorResponse(`File upload failed ${err}`, 400));
     });
 });
@@ -1393,11 +1458,11 @@ export const updateAdminUserProfile = asyncHandler(async (req, res, next) => {
     if (req?.file)
       image = await uploadFile(
         req?.file,
-        "profiles",
-        getRandomFileName("profile-")
+        'profiles',
+        getRandomFileName('profile-')
       );
     function isObject(value) {
-      return typeof value === "object" && value !== null;
+      return typeof value === 'object' && value !== null;
     }
     //TODO: Delete old profile picture from Firebase Storage
     const updateArray = JSON?.parse(req?.body?.update) ?? [];
@@ -1412,8 +1477,8 @@ export const updateAdminUserProfile = asyncHandler(async (req, res, next) => {
           $set: {
             username: req?.body?.phone,
             uid: req?.body.uid,
-            "providerData.0.uid": req?.body?.phone,
-            "providerData.0.phoneNumber": req?.body?.phone,
+            'providerData.0.uid': req?.body?.phone,
+            'providerData.0.phoneNumber': req?.body?.phone,
           },
         },
         { new: true }
@@ -1422,7 +1487,7 @@ export const updateAdminUserProfile = asyncHandler(async (req, res, next) => {
         { user: req?.query?.admin ? req?.query?.admin : req?.user?.id },
         {
           $set: {
-            "contact.contacts.0.value": req?.body?.phone,
+            'contact.contacts.0.value': req?.body?.phone,
           },
         }
       );
@@ -1447,7 +1512,7 @@ export const updateAdminUserProfile = asyncHandler(async (req, res, next) => {
       const profile = await Profile.findOne({
         user: req?.query?.admin ? req?.query?.admin : req?.user?.id,
       });
-      let message = { success: "Admin User Profile Updated" };
+      let message = { success: 'Admin User Profile Updated' };
       return res.status(200).send({ success: true, message, data: profile });
     } else {
       let phone;
@@ -1456,14 +1521,14 @@ export const updateAdminUserProfile = asyncHandler(async (req, res, next) => {
         { user: req?.query?.admin ? req?.query?.admin : req?.user?.id },
         {
           $set: {
-            "profile.name": req?.body?.companyName,
-            "profile.companyName": req?.body?.companyName,
-            "profile.bio": req?.body?.bio,
+            'profile.name': req?.body?.companyName,
+            'profile.companyName': req?.body?.companyName,
+            'profile.bio': req?.body?.bio,
           },
         },
         { new: true }
       );
-      let message = { success: "Admin User Profile Updated" };
+      let message = { success: 'Admin User Profile Updated' };
       const profile = await Profile.findOne({
         user: req?.query?.admin ? req?.query?.admin : req?.user?.id,
       });
@@ -1490,13 +1555,13 @@ export const updateUserContact = asyncHandler(async (req, res, next) => {
         $set: {
           username: phone,
           uid: req?.body?.uid,
-          "providerData.0.uid": phone,
-          "providerData.0.phoneNumber": phone,
+          'providerData.0.uid': phone,
+          'providerData.0.phoneNumber': phone,
         },
       },
       { new: true }
     );
-    let message = { success: "Successfully updated user contact" };
+    let message = { success: 'Successfully updated user contact' };
     //UPDATE USER ENDED
     return res.status(200).send({ success: true, message, user });
   } catch (err) {
@@ -1517,7 +1582,7 @@ export const enableDisableUser = asyncHandler(async (req, res, next) => {
     if (!phone)
       return res
         .status(400)
-        .send({ success: false, message: "Please enter phone number" });
+        .send({ success: false, message: 'Please enter phone number' });
     const user = await User.findOneAndUpdate(
       { username: phone },
       {
@@ -1527,7 +1592,7 @@ export const enableDisableUser = asyncHandler(async (req, res, next) => {
       },
       { new: true }
     );
-    let message = { success: "Successfully updated user contact" };
+    let message = { success: 'Successfully updated user contact' };
     //UPDATE USER ENDED
     return res.status(200).send({ success: true, message, user });
   } catch (err) {
@@ -1558,7 +1623,7 @@ export const enableDisableProfile = asyncHandler(async (req, res, next) => {
       },
       { new: true }
     );
-    let message = { success: "Successfully updated profile" };
+    let message = { success: 'Successfully updated profile' };
     //UPDATE USER ENDED
     return res.status(200).send({ success: true, message, user });
   } catch (err) {
@@ -1575,10 +1640,10 @@ export const enableDisableProfile = asyncHandler(async (req, res, next) => {
  */
 export const updateSuperAdminUserProfile = asyncHandler(
   async (req, res, next) => {
-    await uploadFile(req?.file, "profiles", getRandomFileName("profile-"))
+    await uploadFile(req?.file, 'profiles', getRandomFileName('profile-'))
       .then(async (image) => {
         function isObject(value) {
-          return typeof value === "object" && value !== null;
+          return typeof value === 'object' && value !== null;
         }
         //TODO: Delete old profile picture from Firebase Storage
         const updateArray = JSON?.parse(req?.body?.update) ?? [];
@@ -1600,7 +1665,7 @@ export const updateSuperAdminUserProfile = asyncHandler(
             },
             { new: true }
           );
-          let message = { success: "Admin User Profile Updated" };
+          let message = { success: 'Admin User Profile Updated' };
           return res
             .status(200)
             .send({ success: true, message, data: profile });
@@ -1609,14 +1674,14 @@ export const updateSuperAdminUserProfile = asyncHandler(
             { user: req?.query?.admin ? req?.query?.admin : req?.user?.id },
             {
               $set: {
-                "profile.name": req?.body?.companyName,
-                "profile.companyName": req?.body?.companyName,
-                "profile.bio": req?.body?.bio,
+                'profile.name': req?.body?.companyName,
+                'profile.companyName': req?.body?.companyName,
+                'profile.bio': req?.body?.bio,
               },
             },
             { new: true }
           );
-          let message = { success: "Admin User Profile Updated" };
+          let message = { success: 'Admin User Profile Updated' };
           return res
             .status(200)
             .send({ success: true, message, data: profile });
@@ -1629,24 +1694,26 @@ export const updateSuperAdminUserProfile = asyncHandler(
 );
 
 async function mixinEngine(req, array) {
-
   const validAddSection = [
-    "social",
-    "website",
-    "service",
-    "document",
-    "award",
-    "certificate",
-    "product",
+    'social',
+    'website',
+    'category',
+    'service',
+    'document',
+    'award',
+    'certificate',
+    'product',
   ];
   const validEditSection = [
     ...validAddSection,
-    "contact",
-    "bank",
-    "video",
-    "enquiry",
+    'contact',
+    'bank',
+    'video',
+    'enquiry',
   ];
-  const validDeleteSection = [...validAddSection, "video"];
+
+  console.log('validEditSection-------------->', validEditSection);
+  const validDeleteSection = [...validAddSection, 'video'];
   const add = [];
   const addProduct = [];
   const editProduct = [];
@@ -1662,82 +1729,129 @@ async function mixinEngine(req, array) {
   const del = [];
   //Sort All the actions and send to different mixins
   for (let index = 0; index < array.length; index++) {
-
     const element = array[index];
-    if (element.action === "add") {
-      if (validAddSection.includes(element.section) && element.section === "product") { addProduct.push(element); }
-      else if (validAddSection.includes(element.section) && element.section === "service") { addService.push(element); }
-      else if (validAddSection.includes(element.section) && element.section === "document") { addDocument.push(element); }
-      else if (validAddSection.includes(element.section) && element.section === "award") { addAward.push(element); }
-      else if (validAddSection.includes(element.section) && element.section === "certificate") { addCertificate.push(element); }
-      else add.push(element);
+    if (element.action === 'add') {
+      if (
+        validAddSection.includes(element.section) &&
+        element.section === 'product'
+      ) {
+        addProduct.push(element);
+      } else if (
+        validAddSection.includes(element.section) &&
+        element.section === 'service'
+      ) {
+        addService.push(element);
+      } else if (
+        validAddSection.includes(element.section) &&
+        element.section === 'document'
+      ) {
+        addDocument.push(element);
+      } else if (
+        validAddSection.includes(element.section) &&
+        element.section === 'award'
+      ) {
+        addAward.push(element);
+      } else if (
+        validAddSection.includes(element.section) &&
+        element.section === 'certificate'
+      ) {
+        addCertificate.push(element);
+      } else add.push(element);
     }
-    if (element.action === "edit") {
-      if (validEditSection.includes(element.section) && element.section === "product") { editProduct.push(element); }
-      else if (validEditSection.includes(element.section) && element.section === "service") { editService.push(element); }
-      else if (validEditSection.includes(element.section) && element.section === "document") { editDocument.push(element); }
-      else if (validEditSection.includes(element.section) && element.section === "award") { editAward.push(element); }
-      else if (validEditSection.includes(element.section) && element.section === "certificate") { editCertificate.push(element); }
-      else edit.push(element);
+    if (element.action === 'edit') {
+      if (
+        validEditSection.includes(element.section) &&
+        element.section === 'product'
+      ) {
+        editProduct.push(element);
+      } else if (
+        validEditSection.includes(element.section) &&
+        element.section === 'service'
+      ) {
+        editService.push(element);
+      } else if (
+        validEditSection.includes(element.section) &&
+        element.section === 'document'
+      ) {
+        editDocument.push(element);
+      } else if (
+        validEditSection.includes(element.section) &&
+        element.section === 'award'
+      ) {
+        editAward.push(element);
+      } else if (
+        validEditSection.includes(element.section) &&
+        element.section === 'certificate'
+      ) {
+        editCertificate.push(element);
+      } else edit.push(element);
     }
-    if (element.action === "delete") {
+    if (element.action === 'delete') {
       validDeleteSection.includes(element.section) && del.push(element);
     }
   }
 
   add.length > 0 && mixinEngineAdd(req, add);
-  del.length > 0 && await mixinEngineDelete(req, del);
+  del.length > 0 && (await mixinEngineDelete(req, del));
   edit.length > 0 && mixinEngineEdit(req, edit);
   // Only for product
-  addProduct.length > 0 && await mixinEngineAddProduct(req, addProduct);
-  editProduct.length > 0 && await mixinEngineEditProduct(req, editProduct);
+  addProduct.length > 0 && (await mixinEngineAddProduct(req, addProduct));
+  editProduct.length > 0 && (await mixinEngineEditProduct(req, editProduct));
 
   //Only for service
-  addService.length > 0 && await mixinEngineAddService(req, addService, 'service');
-  editService.length > 0 && await mixinEngineEditService(req, editService, 'service');
+  addService.length > 0 &&
+    (await mixinEngineAddService(req, addService, 'service'));
+  editService.length > 0 &&
+    (await mixinEngineEditService(req, editService, 'service'));
 
   //Only for document
-  addDocument.length > 0 && await mixinEngineAddService(req, addDocument, 'document');
-  editDocument.length > 0 && await mixinEngineEditService(req, editDocument, 'document');
+  addDocument.length > 0 &&
+    (await mixinEngineAddService(req, addDocument, 'document'));
+  editDocument.length > 0 &&
+    (await mixinEngineEditService(req, editDocument, 'document'));
 
   //Only for award
-  addAward.length > 0 && await mixinEngineAddService(req, addAward, 'award');
-  editAward.length > 0 && await mixinEngineEditService(req, editAward, 'award');
+  addAward.length > 0 && (await mixinEngineAddService(req, addAward, 'award'));
+  editAward.length > 0 &&
+    (await mixinEngineEditService(req, editAward, 'award'));
 
   //Only for certificate
-  addCertificate.length > 0 && await mixinEngineAddService(req, addCertificate, 'certificate');
-  editCertificate.length > 0 && await mixinEngineEditService(req, editCertificate, 'certificate');
+  addCertificate.length > 0 &&
+    (await mixinEngineAddService(req, addCertificate, 'certificate'));
+  editCertificate.length > 0 &&
+    (await mixinEngineEditService(req, editCertificate, 'certificate'));
 }
 
 async function mixinEngineAdmin(req, array) {
   const validAddSection = [
-    "contact",
-    "website",
-    "service",
-    "award",
-    "certificate",
-    "product",
+    'contact',
+    'website',
+    'category',
+    'service',
+    'award',
+    'certificate',
+    'product',
   ];
   const validEditSection = [
     ...validAddSection,
     // "contact",
-    "bank",
-    "video",
-    "enquiry",
+    'bank',
+    'video',
+    'enquiry',
   ];
   const add = [];
   const edit = [];
   //Sort All the actions and send to different mixins
   for (let index = 0; index < array.length; index++) {
     const element = array[index];
-    if (element.action === "add") {
+    if (element.action === 'add') {
       validAddSection.includes(element.section) && add.push(element);
     }
-    if (element.action === "edit") {
+    if (element.action === 'edit') {
       validEditSection.includes(element.section) && edit.push(element);
     }
   }
-
+  console.log('edit size---->', edit);
   add.length > 0 && mixinEngineAdminAdd(req, add);
   edit.length > 0 && mixinEngineAdminEdit(req, edit);
 }
@@ -1747,7 +1861,7 @@ async function statusEngine(req, array) {
   //Sort All the actions and send to different mixins
   for (let index = 0; index < array.length; index++) {
     const element = array[index];
-    if (element.action === "status") {
+    if (element.action === 'status') {
       status.push(element);
     }
   }
@@ -1799,10 +1913,10 @@ async function mixinEngineAdd(req, array) {
     let update;
     let query;
     // Only for social section
-    if (item?.section == "social") {
+    if (item?.section == 'social') {
       const getSocial = getSocialMedia(rest?.value);
       const socialmedia = {
-        label: getSocial === "Other" ? "Social Media" : getSocial,
+        label: getSocial === 'Other' ? 'Social Media' : getSocial,
         type: getSocial.toLowerCase(),
       };
       query = {
@@ -1856,8 +1970,10 @@ async function mixinEngineAddService(req, array, name) {
       await uploadBufferFile(
         file,
         `${name}s`,
-        `${getRandomFileName(`${name}-`)}_${name == 'document' ? `${item?.data?.image?.fileName}` : ''}`,
-        name,
+        `${getRandomFileName(`${name}-`)}_${
+          name == 'document' ? `${item?.data?.image?.fileName}` : ''
+        }`,
+        name
       ).then(async (image) => {
         await Profile.updateOne(query, {
           $push: {
@@ -1869,11 +1985,13 @@ async function mixinEngineAddService(req, array, name) {
       console.log('image not available add');
       await Profile.updateOne(query, {
         $push: {
-          [`${item?.section}.${item?.section}s`]: { ...all, image: item?.data?.image },
+          [`${item?.section}.${item?.section}s`]: {
+            ...all,
+            image: item?.data?.image,
+          },
         },
       });
     }
-
   });
 }
 /**
@@ -1896,8 +2014,10 @@ async function mixinEngineEditService(req, array, name) {
       await uploadBufferFile(
         file,
         `${name}s`,
-        `${getRandomFileName(`${name}-`)}_${name == 'document' ? `${item?.data?.image?.fileName}` : ''}`,
-        name,
+        `${getRandomFileName(`${name}-`)}_${
+          name == 'document' ? `${item?.data?.image?.fileName}` : ''
+        }`,
+        name
       ).then(async (image) => {
         const query = {
           user: req?.query?.user ?? req?.user?.id,
@@ -1924,7 +2044,6 @@ async function mixinEngineEditService(req, array, name) {
   });
 }
 
-
 /**
  * @desc   Mixin Add Product
  * @model  {
@@ -1943,8 +2062,8 @@ async function mixinEngineAddProduct(req, array) {
     const file = { ...item?.data?.image, buffer: item?.data?.image?.base64 };
     await uploadBufferFile(
       file,
-      "products",
-      getRandomFileName("product-")
+      'products',
+      getRandomFileName('product-')
     ).then(async (image) => {
       await Profile.updateOne(query, {
         $push: {
@@ -1973,8 +2092,8 @@ async function mixinEngineEditProduct(req, array) {
       if (item?.data.image?.key) await deleteBufferFile(item?.data?.image?.key);
       await uploadBufferFile(
         file,
-        "products",
-        getRandomFileName("product-")
+        'products',
+        getRandomFileName('product-')
       ).then(async (image) => {
         const query = {
           user: req?.query?.user ?? req?.user?.id,
@@ -2010,7 +2129,13 @@ async function mixinEngineEditProduct(req, array) {
  */
 async function mixinEngineDelete(req, array) {
   // TODO: Delete Image Key If The Delete Section is Products
-  const validImageDeletion = ['product', 'service', 'award', 'certificate', 'document'];
+  const validImageDeletion = [
+    'product',
+    'service',
+    'award',
+    'certificate',
+    'document',
+  ];
 
   const updates = array.map((item) => {
     if (validImageDeletion.includes(item?.section)) {
@@ -2056,25 +2181,25 @@ function mixinEngineEdit(req, array) {
     // Create Add Query For Bank and Video
     if (
       // item?.section == "video" ||
-      item?.section == "bank" ||
-      item?.section == "enquiry"
+      item?.section == 'bank' ||
+      item?.section == 'enquiry'
     ) {
       query = {
         user: req?.query?.user ?? req?.user?.id,
         _id: req?.query?.profile,
       };
       update =
-        item?.section == "video"
+        item?.section == 'video'
           ? {
-            $set: { [`${item?.section}.link`]: item.data },
-          }
-          : item?.section == "enquiry"
-            ? { $set: { [`${item?.section}.email`]: rest } }
-            : { $set: { [`${item?.section}.bankDetails`]: rest } };
-    } else if (item?.section == "social") {
+              $set: { [`${item?.section}.link`]: item.data },
+            }
+          : item?.section == 'enquiry'
+          ? { $set: { [`${item?.section}.email`]: rest } }
+          : { $set: { [`${item?.section}.bankDetails`]: rest } };
+    } else if (item?.section == 'social') {
       const getSocial = getSocialMedia(rest?.value);
       const socialmedia = {
-        label: getSocial === "Other" ? "Social Media" : getSocial,
+        label: getSocial === 'Other' ? 'Social Media' : getSocial,
         type: getSocial.toLowerCase(),
       };
       query = {
@@ -2111,7 +2236,6 @@ function mixinEngineEdit(req, array) {
     updates.map(({ query, update }) => Profile.updateOne(query, update))
   )
     .then((results) => {
-
       console.log(`${results.length} items updated.`);
     })
     .catch((error) => console.error(error));
@@ -2227,7 +2351,7 @@ export const createUserProfileBulk = asyncHandler(async (req, res, next) => {
       }
       const file = await getFileFromUrl(url);
       // Parse the spreadsheet data
-      workbook = xlsx.read(file, { type: "buffer" });
+      workbook = xlsx.read(file, { type: 'buffer' });
     } else {
       workbook = xlsx.readFile(req.file.path);
     }
@@ -2235,14 +2359,40 @@ export const createUserProfileBulk = asyncHandler(async (req, res, next) => {
     // Read the spreadsheet file
     const sheetName = workbook.SheetNames[0];
     const worksheet = workbook.Sheets[sheetName];
-    const headers = ["phone", "name", "designation", "company", "bio",
-      "email", "wabusiness", "location", "landmark", "maplink",
-      "whatsapp", "instagram", "facebook", "linkedin", "spotify", "youtube", "dribble", "behance", "medium", "twitter",
-      "websitename", "websitelink", "youtubelink"
+    const headers = [
+      'phone',
+      'name',
+      'designation',
+      'company',
+      'bio',
+      'email',
+      'wabusiness',
+      'location',
+      'landmark',
+      'maplink',
+      'whatsapp',
+      'instagram',
+      'facebook',
+      'linkedin',
+      'spotify',
+      'youtube',
+      'dribble',
+      'behance',
+      'medium',
+      'twitter',
+      'websitename',
+      'websitelink',
+      'youtubelink',
     ];
-    const profileCheckList = ["name", "designation", "company", "bio",];
-    const contactsCheckList = ["phone", "email", "social", "whatsapp", "wabusiness"];
-    const multiDataCheckList = ["websitename", "websitelink", "youtubelink"];
+    const profileCheckList = ['name', 'designation', 'company', 'bio'];
+    const contactsCheckList = [
+      'phone',
+      'email',
+      'social',
+      'whatsapp',
+      'wabusiness',
+    ];
+    const multiDataCheckList = ['websitename', 'websitelink', 'youtubelink'];
 
     headers.forEach((header) => {
       if (worksheet[`${header}1`]) {
@@ -2251,7 +2401,6 @@ export const createUserProfileBulk = asyncHandler(async (req, res, next) => {
     });
     // Convert the spreadsheet data to an array of objects
     const rows = xlsx.utils.sheet_to_json(worksheet);
-
 
     rows.forEach((row, rowIndex) => {
       headers.forEach((header) => {
@@ -2264,11 +2413,9 @@ export const createUserProfileBulk = asyncHandler(async (req, res, next) => {
       if (!/^\+[0-9]+/.test(row.phone)) {
         throw new Error(`Invalid phone in row ${rowIndex + 2}`);
       }
-
     });
 
-
-    for(const profile of rows) {
+    for (const profile of rows) {
       let body;
       let update = {};
       let value;
@@ -2287,13 +2434,12 @@ export const createUserProfileBulk = asyncHandler(async (req, res, next) => {
             websites.push({
               name: name[i],
               link: link[i],
-            })
+            });
           }
           update['website'] = {
             status: true,
             websites: websites,
           };
-
         }
       }
       /*YOUTUBE VIDEO LINK*/
@@ -2303,15 +2449,13 @@ export const createUserProfileBulk = asyncHandler(async (req, res, next) => {
         for (let i = 0; i < link?.length; i++) {
           videos.push({
             link: link[i],
-          })
+          });
         }
         update['video'] = {
           status: true,
           videos: videos,
         };
-
       }
-
 
       /*LOCATION*/
       if (profile?.location || profile?.landmark || profile?.maplink) {
@@ -2324,8 +2468,6 @@ export const createUserProfileBulk = asyncHandler(async (req, res, next) => {
         });
       }
 
-
-
       //DELETE ALREADY DONE THINGS
       delete profile?.location;
       delete profile?.landmark;
@@ -2334,32 +2476,29 @@ export const createUserProfileBulk = asyncHandler(async (req, res, next) => {
       delete profile?.websitelink;
       delete profile?.youtubelink;
 
-
       // console.log(profile);
       // profile = profile.filter(obj => Object.keys(obj).length !== 0);
       for (const key in profile) {
         if (profile.hasOwnProperty(key)) {
           // console.log(`${key}: ${profile[key]}`);
           value = `${profile[key].trim()}`;
-          let contact = {}, social = {};
+          let contact = {},
+            social = {};
           if (multiDataCheckList.includes(key)) {
             //Multidata
           } else if (contactsCheckList.includes(key)) {
-              //CONTACTS
-              contact['label'] = key.charAt(0).toUpperCase() + key.slice(1);
-              contact['value'] = value;
-              contact['type'] = key;
-            } else if (!profileCheckList.includes(key)) {
-              //SOCIALS
-              social['label'] = key.charAt(0).toUpperCase() + key.slice(1);
-              social['value'] = value;
-              social['type'] = key;
-            }
-          if (Object.keys(contact).length !== 0)
-            contacts.push(contact);
-          if (Object.keys(social).length !== 0)
-            socials.push(social);
-
+            //CONTACTS
+            contact['label'] = key.charAt(0).toUpperCase() + key.slice(1);
+            contact['value'] = value;
+            contact['type'] = key;
+          } else if (!profileCheckList.includes(key)) {
+            //SOCIALS
+            social['label'] = key.charAt(0).toUpperCase() + key.slice(1);
+            social['value'] = value;
+            social['type'] = key;
+          }
+          if (Object.keys(contact).length !== 0) contacts.push(contact);
+          if (Object.keys(social).length !== 0) socials.push(social);
         }
       }
 
@@ -2402,11 +2541,14 @@ export const createUserProfileBulk = asyncHandler(async (req, res, next) => {
         phone: profile.phone,
         update: JSON.stringify(update),
         // update: update,
-        asFunction: true
-      }
+        asFunction: true,
+      };
 
-
-      await createUserProfile({ body: body,query:{group: req?.query?.group,} }, res, next);
+      await createUserProfile(
+        { body: body, query: { group: req?.query?.group } },
+        res,
+        next
+      );
 
       // console.log(update.contact)
       // console.log(update.social)
@@ -2415,150 +2557,14 @@ export const createUserProfileBulk = asyncHandler(async (req, res, next) => {
       update.length = 0;
       socials.length = 0;
       contacts.length = 0;
-      
-    };
+    }
     let message = {
       success: `Uploaded ${rows.length} new profiles created.`,
     };
-    return res.json({ success: true, message });
-    const users = rows.map((row) => ({
-      phone: row.phone,
-      profile: {
-        name: row.name,
-        designation: row.designation,
-        companyName: row.company,
-        bio: row.bio,
-      },
-    }));
-    const existingUsers = await User.find({
-      username: { $in: users.map((u) => u.phone) },
-    });
-
-    const existingPhones = existingUsers.map((u) => u.username);
-    const newUsers = users.filter((u) => !existingPhones.includes(u.username));
-    const oldUsers = users.filter((u) => existingPhones.includes(u.username));
-
-    users.map(async (idx, inx) => {
-      const options = {
-        scale: 34,
-        color: {
-          dark: "#BEFF6C", // dark color
-          light: "#1C1C1E", // light color
-        },
-      };
-      const { phone, profile } = idx;
-      const cardId =
-        `${profile?.name.toLowerCase().split(" ").join("")}-` +
-        randomId().toLowerCase();
-      const profileLink = `${process.env.HOST_URL_HTTPS}/profile/${cardId}`;
-      const qrCode = await QRCode.toBuffer(profileLink, options);
-      const qrFile = {
-        buffer: qrCode,
-        mimetype: "image/jpeg",
-      };
-      const qrImageUrl = await uploadFile(
-        qrFile,
-        "cards",
-        getRandomFileName("card-")
-      );
-
-      let user;
-      if (existingPhones.includes(phone)) {
-        user = oldUsers.find(user => user.username === phone);
-        await Profile.create({
-          user: user?.id,
-          group: req?.query?.group,
-          card: {
-            cardId,
-          },
-          profile: {
-            ...profile,
-            profileLink,
-            profileQR: qrImageUrl,
-          },
-          contact: {
-            status: true,
-            contacts: [
-              { label: "Phone Number", value: phone, type: "phone" },
-              { label: "Email", value: "", type: "email" },
-              { label: "Whatsapp Business", value: "", type: "wabusiness" },
-              {
-                label: "Location",
-                value: "",
-                street: "",
-                pincode: "",
-                type: "location",
-              },
-              { label: "Whatsapp", value: "", type: "whatsapp" },
-            ],
-          },
-        });
-        let message = {
-          success: `Uploaded ${users.length} new profiles created.`,
-        };
-        return res.json({ success: true, message });
-      } else {
-        admin
-          .auth()
-          .createUser({
-            phoneNumber: phone,
-            displayName: profile?.name,
-            disabled: false,
-          })
-          .then(async (userRecord) => {
-            const user = await User.create({
-              username: phone,
-              uid: userRecord?.uid,
-              role: "user",
-              providerData: userRecord?.providerData,
-            });
-            await Profile.create({
-              user: user?.id,
-              group: req?.query?.group,
-              card: {
-                cardId,
-              },
-              profile: {
-                ...profile,
-                profileLink,
-                profileQR: qrImageUrl,
-              },
-              contact: {
-                status: true,
-                contacts: [
-                  { label: "Phone Number", value: phone, type: "phone" },
-                  { label: "Email", value: "", type: "email" },
-                  { label: "Whatsapp Business", value: "", type: "wabusiness" },
-                  {
-                    label: "Location",
-                    value: "",
-                    street: "",
-                    pincode: "",
-                    type: "location",
-                  },
-                  { label: "Whatsapp", value: "", type: "whatsapp" },
-                ],
-              },
-            });
-            let message = {
-              success: `Uploaded ${users.length} new profiles created.`,
-            };
-            return res.json({ success: true, message });
-          })
-          .catch(() => {
-            return next(
-              new Error(`${existingPhones.length} existing users were skipped.`)
-            );
-          });
-      }
-
-    });
-    fs.unlinkSync(req.file.path);
   } catch (error) {
     return next(new ErrorResponse(`Error uploading users ${error}`, 400));
   }
 });
-
 
 /**
  * @desc    Create user profile bulk from cloud
@@ -2568,7 +2574,7 @@ export const createUserProfileBulk = asyncHandler(async (req, res, next) => {
  */
 export const createUserProfileCloudBulk = asyncHandler(
   async (req, res, next) => {
-    const ALLOWED_DOMAINS = ["docs.google.com"];
+    const ALLOWED_DOMAINS = ['docs.google.com'];
     try {
       // Read the spreadsheet file from the URL
       const url = req.body.url;
@@ -2580,11 +2586,11 @@ export const createUserProfileCloudBulk = asyncHandler(
       }
       const file = await getFileFromUrl(url);
       // Parse the spreadsheet data
-      const workbook = xlsx.read(file, { type: "buffer" });
+      const workbook = xlsx.read(file, { type: 'buffer' });
 
       const sheetName = workbook.SheetNames[0];
       const worksheet = workbook.Sheets[sheetName];
-      const headers = ["phone", "name", "designation", "company", "bio"];
+      const headers = ['phone', 'name', 'designation', 'company', 'bio'];
       headers.forEach((header) => {
         if (worksheet[`${header}1`]) {
           throw new Error(
@@ -2605,7 +2611,6 @@ export const createUserProfileCloudBulk = asyncHandler(
         if (!/^\+[0-9]+/.test(row.phone)) {
           throw new Error(`Invalid phone in row ${rowIndex + 2}`);
         }
-
       });
       const users = rows.map((row) => ({
         phone: row.phone,
@@ -2627,23 +2632,23 @@ export const createUserProfileCloudBulk = asyncHandler(
         const options = {
           scale: 34,
           color: {
-            dark: "#BEFF6C", // dark color
-            light: "#1C1C1E", // light color
+            dark: '#BEFF6C', // dark color
+            light: '#1C1C1E', // light color
           },
         };
         const cardId =
-          `${profile?.name.toLowerCase().split(" ").join("")}-` +
+          `${profile?.name.toLowerCase().split(' ').join('')}-` +
           randomId().toLowerCase();
         const profileLink = `${process.env.HOST_URL_HTTPS}/profile/${cardId}`;
         const qrCode = await QRCode.toBuffer(profileLink, options);
         const qrFile = {
           buffer: qrCode,
-          mimetype: "image/jpeg",
+          mimetype: 'image/jpeg',
         };
         const qrImageUrl = await uploadFile(
           qrFile,
-          "cards",
-          getRandomFileName("card-")
+          'cards',
+          getRandomFileName('card-')
         );
         const { phone, profile } = idx;
         admin
@@ -2657,7 +2662,7 @@ export const createUserProfileCloudBulk = asyncHandler(
             const user = await User.create({
               username: phone,
               uid: userRecord?.uid,
-              role: "user",
+              role: 'user',
               providerData: userRecord?.providerData,
             });
             await Profile.create({
@@ -2674,17 +2679,17 @@ export const createUserProfileCloudBulk = asyncHandler(
               contact: {
                 status: true,
                 contacts: [
-                  { label: "Phone Number", value: phone, type: "phone" },
-                  { label: "Email", value: "", type: "email" },
-                  { label: "Whatsapp Business", value: "", type: "wabusiness" },
+                  { label: 'Phone Number', value: phone, type: 'phone' },
+                  { label: 'Email', value: '', type: 'email' },
+                  { label: 'Whatsapp Business', value: '', type: 'wabusiness' },
                   {
-                    label: "Location",
-                    value: "",
-                    street: "",
-                    pincode: "",
-                    type: "location",
+                    label: 'Location',
+                    value: '',
+                    street: '',
+                    pincode: '',
+                    type: 'location',
                   },
-                  { label: "Whatsapp", value: "", type: "whatsapp" },
+                  { label: 'Whatsapp', value: '', type: 'whatsapp' },
                 ],
               },
             });
@@ -2706,7 +2711,6 @@ export const createUserProfileCloudBulk = asyncHandler(
   }
 );
 
-
 /**
  * @desc    Get Application Version
  * @route   GET /api/v1/user/appversion
@@ -2714,7 +2718,7 @@ export const createUserProfileCloudBulk = asyncHandler(
  */
 export const appVersion = asyncHandler(async (req, res, next) => {
   if (!req.query.app) {
-    let message = { success: "Please pass app and platform" };
+    let message = { success: 'Please pass app and platform' };
     return res.status(400).json({ success: false, message });
   }
   const settings = await Setting.findById(process.env.SETTINGS_DOCUMENT_ID, {
@@ -2727,13 +2731,12 @@ export const appVersion = asyncHandler(async (req, res, next) => {
   });
 });
 
-
 async function streamToBase64(stream) {
   return new Promise((resolve, reject) => {
     const chunks = [];
-    stream.on("data", (chunk) => chunks.push(chunk));
-    stream.on("end", () => resolve(Buffer.concat(chunks).toString("base64")));
-    stream.on("error", (err) => reject(err));
+    stream.on('data', (chunk) => chunks.push(chunk));
+    stream.on('end', () => resolve(Buffer.concat(chunks).toString('base64')));
+    stream.on('error', (err) => reject(err));
   });
 }
 
@@ -2751,12 +2754,14 @@ async function imageFileToBase64(filePath) {
   return base64EncodedImage;
 }
 
-
-
 export const getNotifications = asyncHandler(async (req, res, next) => {
   try {
     const { id } = req.query;
-    const form = await Profile.findByIdAndUpdate({ _id: id }, { $set: { 'form.status': 0 } }, { new: true }).select('form');
+    const form = await Profile.findByIdAndUpdate(
+      { _id: id },
+      { $set: { 'form.status': 0 } },
+      { new: true }
+    ).select('form');
     res.status(200).json(form);
   } catch (e) {
     console.log(e);
