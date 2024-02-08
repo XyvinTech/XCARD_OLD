@@ -42,6 +42,8 @@ const ProfileSchema = new mongoose.Schema(
     },
     contact: {
       status: { type: Boolean, default: false },
+      label: { type: String, default: 'Contacts' }, // New field for editable heading
+  
       contacts: {
         type: [
           {
@@ -103,6 +105,7 @@ const ProfileSchema = new mongoose.Schema(
     },
     social: {
       status: { type: Boolean, default: false },
+      label: { type: String, default: 'Social Media' }, // New field for editable heading
       socials: {
         type: [
           {
@@ -152,10 +155,14 @@ const ProfileSchema = new mongoose.Schema(
     },
     website: {
       status: { type: Boolean, default: false },
+      label: { type: String, default: 'Website' }, // New field for editable heading
+  
       websites: { type: [{ link: String, name: String }], default: [] },
     },
     service: {
       status: { type: Boolean, default: false },
+      label: { type: String, default: 'Services' }, // New field for editable heading
+  
       services: {
         type: [
           {
@@ -170,6 +177,8 @@ const ProfileSchema = new mongoose.Schema(
     },
     document: {
       status: { type: Boolean, default: false },
+      label: { type: String, default: 'Files' }, // New field for editable heading
+  
       documents: {
         type: [
           {
@@ -183,6 +192,8 @@ const ProfileSchema = new mongoose.Schema(
     },
     video: {
       status: { type: Boolean, default: false },
+      label: { type: String, default: 'Video Link' }, // New field for editable heading
+  
       videos: { type: [{ link: String }], default: [] },
       // link: {
       //   link: { type: String, default: "" },
@@ -194,6 +205,8 @@ const ProfileSchema = new mongoose.Schema(
     },
     product: {
       status: { type: Boolean, default: false },
+      label: { type: String, default: 'Products' }, // New field for editable heading
+  
       products: {
         type: [
           {
@@ -219,10 +232,13 @@ const ProfileSchema = new mongoose.Schema(
     // },
     category: {
       status: { type: Boolean, default: false },
+      label: { type: String, default: 'Category' }, // New field for editable heading
+  
       categories: { type: [{ name: String }], default: [] },
     },
     award: {
       status: { type: Boolean, default: false },
+      label: { type: String, default: 'Awards' }, // New field for editable heading
       awards: {
         type: [
           {
@@ -237,6 +253,8 @@ const ProfileSchema = new mongoose.Schema(
 
     certificate: {
       status: { type: Boolean, default: false },
+      label: { type: String, default: 'Certificates' }, // New field for editable heading
+  
       certificates: {
         type: [
           {
