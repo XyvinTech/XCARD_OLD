@@ -195,7 +195,7 @@ export const submitForm = asyncHandler(async (req, res, next) => {
 export const duplicateProfile = async (req, res, next) => {
   try {
     const { profileId } = req.params;
-    const { phone } = req.body; // New phone number from the request body
+    const { name, email, phone } = req.body; // New phone number from the request body
 
     let newProfile;
     // Find the profile to duplicate
@@ -206,7 +206,7 @@ export const duplicateProfile = async (req, res, next) => {
         .send({ success: false, message: 'Profile not found' });
     }
     // Generate cardId and profileLink
-    const cardId = `${profileToDuplicate.profile.name
+    const cardId = `${name
       .toLowerCase()
       .split(' ')
       .join('')}-${randomId().toLowerCase()}`;
@@ -228,8 +228,10 @@ export const duplicateProfile = async (req, res, next) => {
     await admin
       .auth()
       .createUser({
+        email: email,
+        password: phone, // User's password
         phoneNumber: phone,
-        displayName: profileToDuplicate?.profile?.name,
+        displayName: name,
         disabled: false,
       })
       .then(async (userRecord) => {
@@ -245,12 +247,18 @@ export const duplicateProfile = async (req, res, next) => {
         const duplicatedData = profileToDuplicate.toObject();
         delete duplicatedData._id;
 
+        // Update the Profile name
+        duplicatedData.profile.name = name;
+
         // Replace the phone number in the contacts
         if (duplicatedData.contact && duplicatedData.contact.contacts) {
           duplicatedData.contact.contacts = duplicatedData.contact.contacts.map(
             (contact) => {
               if (contact.type === 'phone') {
                 return { ...contact, value: phone }; // Set the new phone number
+              }
+              if (contact.type === 'email') {
+                return { ...contact, value: email }; // Set the new email
               }
               return contact;
             }
@@ -279,8 +287,10 @@ export const duplicateProfile = async (req, res, next) => {
       })
       .catch(async (error) => {
         //If User already exisits create second or third profile
-
-        if (error?.errorInfo?.code === 'auth/phone-number-already-exists') {
+        if (
+          error?.errorInfo?.code === 'auth/phone-number-already-exists' ||
+          error?.errorInfo?.code === 'auth/email-already-exists'
+        ) {
           console.log('phone no already exist');
           let user = await User.findOne({ username: phone });
 
@@ -296,12 +306,18 @@ export const duplicateProfile = async (req, res, next) => {
           const duplicatedData = profileToDuplicate.toObject();
           delete duplicatedData._id;
 
+          // Update the Profile name
+          duplicatedData.profile.name = name;
+
           // Replace the phone number in the contacts
           if (duplicatedData.contact && duplicatedData.contact.contacts) {
             duplicatedData.contact.contacts =
               duplicatedData.contact.contacts.map((contact) => {
                 if (contact.type === 'phone') {
                   return { ...contact, value: phone }; // Set the new phone number
+                }
+                if (contact.type === 'email') {
+                  return { ...contact, value: email }; // Set the new email
                 }
                 return contact;
               });
