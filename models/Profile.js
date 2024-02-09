@@ -195,13 +195,6 @@ const ProfileSchema = new mongoose.Schema(
       label: { type: String, default: 'Video Link' }, // New field for editable heading
 
       videos: { type: [{ link: String }], default: [] },
-      // link: {
-      //   link: { type: String, default: "" },
-      //   _id: {
-      //     type: mongoose.Schema.ObjectId,
-      //     default: new mongoose.Types.ObjectId(),
-      //   },
-      // },
     },
     product: {
       status: { type: Boolean, default: false },
@@ -222,14 +215,7 @@ const ProfileSchema = new mongoose.Schema(
         default: [],
       },
     },
-    // award: {
-    //   status: { type: Boolean, default: false },
-    //   awards: { type: [{ label: String, value: String }], default: [] },
-    // },
-    // certificate: {
-    //   status: { type: Boolean, default: false },
-    //   certificates: { type: [{ label: String, value: String }], default: [] },
-    // },
+
     category: {
       status: { type: Boolean, default: false },
       label: { type: String, default: 'Category' }, // New field for editable heading
@@ -331,6 +317,7 @@ ProfileSchema.pre('save', async function (next) {
       'video',
       'service',
       'website',
+      'category',
       'social',
       'product',
       'visible',
