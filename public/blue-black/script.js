@@ -362,7 +362,9 @@ function generateContactMeLabel(status) {
     return '';
   }
   return `
-            <h4 id="contact_me_label" class="gradient_text sub_heading">Contact me</h4>
+            <h4 id="contact_me_label" class="gradient_text sub_heading">${
+              data.contact.label ?? `Contact Me`
+            }</h4>
         `;
 }
 
@@ -606,6 +608,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   const contact_long_cards = document.getElementById('contact_long_cards');
   const contact_me_label = document.getElementById('contact_me_label');
   const user_contact_sites = document.getElementById('user_contact_sites');
+  const contact_section = document.getElementById('contact_section');
+  const products_section = document.getElementById('products_section');
+  const services_section = document.getElementById('services_section');
   const products_card_section = document.getElementById(
     'products_card_section'
   );
@@ -662,7 +667,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // websites
   if (data.website && data.website.status && data.website.websites.length > 0) {
+    const h4 = user_contact_sites.querySelector('h4');
+    h4.textContent = data.website.label ?? 'Websites';
+
     var websites = data.website.websites;
+
     websites.map((website) => {
       user_contact_sites.innerHTML += generateUserSiteCard(
         website.name,
@@ -675,6 +684,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // products
   if (data.product && data.product.status && data.product.products.length > 0) {
+    const h4 = products_section.querySelector('h4');
+    h4.textContent = data.product.label ?? 'Products';
+
     data.product.products.map((product) => {
       products_card_section.innerHTML += generateProductCard(
         product.name,
@@ -692,6 +704,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   // services
   const serviceGlider = document.querySelector('.service_glider');
   if (data.service && data.service.status && data.service.services.length > 0) {
+    const h4 = services_section.querySelector('h4');
+    h4.textContent = data.service.label ?? 'Services';
     const services = data.service.services;
 
     services.forEach((service) => {
@@ -709,6 +723,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // awards
   if (data.award && data.award.status && data.award.awards.length > 0) {
+    document.getElementById('awards_section').querySelector('h4').textContent =
+      data.award.label ?? 'Awards';
+
     data.award.awards.map((award) => {
       awards_cards.innerHTML += generateAwardCard(
         award.label,
@@ -726,6 +743,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     data.document.status &&
     data.document.documents.length > 0
   ) {
+    document
+      .getElementById('documents_section')
+      .querySelector('h4').textContent = data.document.label ?? 'Catalogues';
     data.document.documents.map((document) => {
       documents_cards.innerHTML += generateDocumentCard(document);
     });
@@ -739,6 +759,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     data.certificate.status &&
     data.certificate.certificates.length > 0
   ) {
+    document
+      .getElementById('certificate_section')
+      .querySelector('h4').textContent =
+      data.certificate.label ?? 'Certificates';
+
     data.certificate.certificates.map((certificate) => {
       certificate_cards.innerHTML += generateCertificateCard(
         certificate.label,
@@ -838,6 +863,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // social media links
   if (data.social && data.social.status && data.social.socials.length > 0) {
+    const h4 = contact_section.querySelector('h4');
+    h4.textContent = data.social.label ?? 'Social Media';
     var socials = data.social.socials;
 
     // Custom sorting function
