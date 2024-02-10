@@ -105,6 +105,7 @@ export const viewProfile = asyncHandler(async (req, res, next) => {
     'orange&black',
     'white&blue',
     'blue&black'
+    'restaturants'
 
   */
 
@@ -120,6 +121,8 @@ export const viewProfile = asyncHandler(async (req, res, next) => {
     res.render('blue-black', { data: profile });
   } else if (profileTheme == 'aero&black') {
     res.render('sky-blue', { data: profile });
+  } else if (profileTheme == 'restaturants') {
+    res.render('sienna', { data: profile });
   } else {
     res.render('index', { data: profile });
   }
