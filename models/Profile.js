@@ -26,6 +26,7 @@ const ProfileSchema = new mongoose.Schema(
           'aero&black',
           'white&blue',
           'blue&black',
+          'restaturants',
         ],
         default: 'orange&black',
       },
