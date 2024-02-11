@@ -128,7 +128,7 @@ const contactCardImg = (type) => {
     case 'dribble':
       return 'dribble.svg';
     case 'whatsapp':
-      return 'whatsapp_blk.svg';
+      return 'whatsapp.svg';
     case 'email':
       return 'email.svg';
     case 'gmail':
@@ -300,7 +300,7 @@ const showAwardPopup = (heading, description, imageUrl) => {
 function generateContactCard(link, label) {
   return `
       <div class="contact_card">
-          <a href=${link}>
+          <a style="display: flex;align-content: center;justify-content: center;" href=${link} >
               <img src="/profile/public/sienna/assets/icons/${contactCardImg(
                 label
               )}" alt="">
@@ -414,7 +414,7 @@ function generateAwardCard(awardTitle, organizationName, imageUrl) {
 //   return `
 //       <div class="document_card">
 //           <div class="left_section">
-//               <img src="http://localhost:8000/sienna/assets/icons/document.svg" alt="file">
+//               <img src="/profile/public/sienna/assets/icons/document.svg" alt="file">
 //               <p class="document_name fw_400 f_14">${documentName}</p>
 //           </div>
 //           <button class="btn" onclick="${
@@ -422,7 +422,7 @@ function generateAwardCard(awardTitle, organizationName, imageUrl) {
 //               ? `viewDocument('${data.public}')`
 //               : `downloadDocument('${data.public}', '${data.fileName}', '${data.mimeType}')`
 //           }">
-//               <img src="http://localhost:8000/sienna/assets/icons/${icon}" alt="download">
+//               <img src="/profile/public/sienna/assets/icons/${icon}" alt="download">
 //           </button>
 //       </div>
 //   `;
@@ -520,8 +520,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     var company = profile.companyName;
     var designation = profile.designation;
 
-    user_bg.src = profile.profileBanner.public;
-    avatar.src = profile.profilePicture.public;
+    user_bg.src = (profile.profileBanner==null)?'/profile/public/sienna/assets/images/user_bg.png':profile.profileBanner.public;
+    avatar.src = (profile.profilePicture==null)?'/profile/public/sienna/assets/images/user.png':profile.profilePicture.public;
     user_name.innerText = name;
     bio.innerText = profile.bio;
 
@@ -541,20 +541,20 @@ document.addEventListener('DOMContentLoaded', async () => {
   } else {
     document.getElementById('user_contact_sites').classList.add('d_none');
   }
-  let categoriesSelected = null;
+  let categorysSelected = "all";
 
   if (
     data.category &&
     data.category.status &&
-    data.category.categories.length > 0
+    data.category.categorys.length > 0
   ) {
-    const categories = data.category.categories;
+    const categorys = data.category.categorys;
     const categorySection = document.getElementById('category');
-    categories.innterHTML = `
+    categorys.innterHTML = `
       <option value="none">Filter by category</option>
       <option value="all">All</option>
     `;
-    categories.forEach((category) => {
+    categorys.forEach((category) => {
       categorySection.innerHTML += `
       <option value="${category.name}">${category.name}</option>      
     `;
@@ -588,8 +588,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (data.product && data.product.status && data.product.products.length > 0) {
     data.product.products.map((product) => {
       if (
-        categoriesSelected !== null &&
-        categoriesSelected !== product.category
+        categorysSelected !== null &&
+        categorysSelected !== product.category
       ) {
         products_card_section.innerHTML += generateProductCard(
           product.name,

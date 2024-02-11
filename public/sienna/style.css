@@ -85,6 +85,7 @@ header{
   height: fit-content;
   display: flex;
   flex-direction: column;
+  flex-wrap: wrap;
   align-items: center;
   position: relative;
   top: calc(-1 * var(--avatar-size) / 2 - 10px);
@@ -115,11 +116,17 @@ header{
 }
 .user_name_section{
   height: fit-content;
-  position: absolute;
+  position: relative;
   top: 80px;
+  word-break:break-all;
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 10px;
+  margin-left: calc(var(--avatar-size) + 30px);
+
+  margin-right:10px;
+
 }
 .rating{
   width: 42px;
@@ -241,7 +248,7 @@ header{
 
 /* location */
 .location{
-  margin: 100px 3% 50px;
+  margin: 30px 3% 50px;
   border-radius: 12px;
   display: flex;
   background-color: #FBF2EB;
