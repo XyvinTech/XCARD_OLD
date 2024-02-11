@@ -335,7 +335,7 @@ const socialMediaSection = document.getElementById('social-media-section');
 socialMediaSection.innerHTML = socialMediaVisibility
   ? `
   <div class="sm-section section">
-    <h3 class="sm-head head">Social Media</h3>
+    <h3 class="sm-head head">${data.social.label ?? `Social Media`}</h3>
     <hr />
     <div class="sm-icons">
       ${socialMediaHTML}
@@ -352,6 +352,8 @@ if (!contactVisible || contactsData.length === 0) {
   document.getElementsByClassName('contacts-section')[0].style.display = 'none';
   document.getElementsByClassName('save')[0].style.display = 'none';
 }
+document.getElementById('contacts-section').querySelector('h3').textContent =
+  data.contact.label ?? 'Contacts';
 
 const contactsIconsDiv = document.getElementById('contacts-icons');
 
@@ -406,6 +408,9 @@ if (!linkStatus || linksData?.length == 0) {
   document.getElementsByClassName('websites-section')[0].style.display = 'none';
 }
 
+document.getElementById('websites-section').querySelector('h3').textContent =
+  data.website.label ?? 'Websites';
+
 function addHttpsToLinks(link) {
   if (!link?.startsWith('http://') && !link?.startsWith('https://')) {
     link = 'https://' + link;
@@ -441,6 +446,8 @@ if (linksData?.length > 0) {
 if (!serviceVisibility || services.length == 0) {
   document.getElementById('services-section').style.display = 'none';
 } else {
+  document.getElementById('services-section').querySelector('h3').textContent =
+    data.service.label ?? 'Services';
   const servicesSection = document.getElementById('services-section');
   const servicesIcons = document.createElement('div');
   servicesIcons.classList.add('products-icons');
@@ -499,7 +506,7 @@ if (!docsVisibility || documents.length == 0) {
   docsSectionIcons.classList.add('docs-icons');
   const docsHead = document.createElement('h3');
   docsHead.classList.add('products-head', 'head');
-  docsHead.textContent = 'Catalogues';
+  docsHead.textContent = data.document.label ?? 'Catalogues';
 
   documents?.forEach((doc) => {
     const docCard = document.createElement('div');
@@ -569,7 +576,7 @@ const productsSection = document.getElementById('products-section');
 
 const productsHead = document.createElement('h3');
 productsHead.classList.add('products-head', 'head');
-productsHead.textContent = 'Products';
+productsHead.textContent = data.product.label ?? 'Products';
 
 const productsIcons = document.createElement('div');
 productsIcons.classList.add('products-icons');
@@ -641,7 +648,7 @@ const awardSection = document.getElementById('award-section');
 // Create the products heading element
 const awardHead = document.createElement('h3');
 awardHead.classList.add('products-head', 'head');
-awardHead.textContent = 'Gallery';
+awardHead.textContent = data.award.label ?? 'Awards';
 
 const awardIcons = document.createElement('div');
 awardIcons.classList.add('products-icons');
@@ -697,6 +704,8 @@ let certifVisibility = data?.certificate?.status;
 if (!certifVisibility || certif.length == 0) {
   document.getElementsByClassName('certif-section')[0].style.display = 'none';
 }
+document.getElementById('certif-section').querySelector('h3').textContent =
+  data.certificate.label ?? 'Certifications';
 const certifIcons = document.getElementById('certif-icons');
 certifIcons.classList.add('products-icons');
 
