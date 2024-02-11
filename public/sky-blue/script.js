@@ -200,6 +200,8 @@ function generateWebsites() {
     websiteSection.style.display = 'none';
     return;
   }
+  document.getElementById('websites').querySelector('h2').textContent =
+    data.website.label ?? 'Website';
 
   const ul = websiteSection.querySelector('ul');
 
@@ -231,6 +233,8 @@ function generateAwards() {
     awardSection.style.display = 'none';
     return;
   }
+  document.getElementById('awards').querySelector('h2').textContent =
+    data.award.label ?? 'Awards';
 
   const ul = awardSection.querySelector('ul');
 
@@ -262,6 +266,8 @@ function generateServices() {
     serviceSection.style.display = 'none';
     return;
   }
+  document.getElementById('services').querySelector('h2').textContent =
+    data.service.label ?? 'Services';
 
   const ul = serviceSection.querySelector('.glider');
 
@@ -307,6 +313,8 @@ function generateProducts() {
     productSection.style.display = 'none';
     return;
   }
+  document.getElementById('products').querySelector('h2').textContent =
+    data.product.label ?? 'Products';
 
   const ul = productSection.querySelector('.glider');
 
@@ -393,6 +401,9 @@ function generateCatalogues() {
     catalogueSection.style.display = 'none';
     return;
   }
+
+  document.getElementById('catalogues').querySelector('h2').textContent =
+    data.document.label ?? 'Catalogues';
 
   const ul = catalogueSection.querySelector('ul');
 
@@ -635,6 +646,9 @@ function generateCertificates() {
     certificateSection.style.display = 'none';
     return;
   }
+
+  document.getElementById('certificates').querySelector('h2').textContent =
+    data.certificate.label ?? 'Certificates';
 
   const ul = certificateSection.querySelector('ul');
 

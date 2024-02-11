@@ -177,6 +177,10 @@ function generateWebsites() {
     return;
   }
 
+  // Select the <h2> element and change its text content
+  const h2 = websiteSection.querySelector('h2');
+  h2.textContent = data.website.label ?? 'Website';
+
   const ul = websiteSection.querySelector('ul');
 
   let content = '';
@@ -207,6 +211,8 @@ function generateAwards() {
     awardSection.style.display = 'none';
     return;
   }
+  const h2 = awardSection.querySelector('h2');
+  h2.textContent = data.award.label ?? 'Awards';
 
   const ul = awardSection.querySelector('ul');
 
@@ -239,6 +245,9 @@ function generateServices() {
     serviceSection.style.display = 'none';
     return;
   }
+
+  const h2 = serviceSection.querySelector('h2');
+  h2.textContent = data.service.label ?? 'Services';
 
   const ul = serviceSection.querySelector('.glider');
 
@@ -284,6 +293,9 @@ function generateProducts() {
     productSection.style.display = 'none';
     return;
   }
+
+  const h2 = productSection.querySelector('h2');
+  h2.textContent = data.product.label ?? 'Products';
 
   const ul = productSection.querySelector('.glider');
 
@@ -370,6 +382,9 @@ function generateCatalogues() {
     catalogueSection.style.display = 'none';
     return;
   }
+
+  const h2 = catalogueSection.querySelector('h2');
+  h2.textContent = data.document.label ?? 'Catalogues';
 
   const ul = catalogueSection.querySelector('ul');
 
@@ -613,6 +628,8 @@ function generateCertificates() {
     certificateSection.style.display = 'none';
     return;
   }
+  const h2 = certificateSection.querySelector('h2');
+  h2.textContent = data.certificate.label ?? 'Certifications';
 
   const ul = certificateSection.querySelector('ul');
 
