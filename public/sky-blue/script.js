@@ -782,10 +782,10 @@ function openModal(type, data) {
   <p class="description">${data.desc}</p>`;
 
   if (type === 'product' && data.price) {
-    content += `<p class="price"><span class="discount">₹${
+    content += `<p class="price"><span class="discount">${
       data.discount ? data.discount : data.price
     }</span>${
-      data.discount ? '<span class="actual">₹' + data.price + '</span>' : ''
+      data.discount ? '<span class="actual">' + data.price + '</span>' : ''
     }</p>`;
   }
   content += `<a class="btn btn-primary w-full" target="_blank" href="${data.link}">Know More</a>`;

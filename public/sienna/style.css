@@ -261,7 +261,7 @@ header{
 
 /* quote section */
 .quote_section {
-  background: url('http://localhost:8000/sienna/assets/icons/quote.svg');
+  background: url('/profile/public/sienna/assets/icons/quote.svg');
   background-repeat: no-repeat;
   margin: 30px 3%;
   display: flex;
@@ -463,7 +463,7 @@ header{
   color: #f2f2f2;
 }
 .service_desc {
-  color: #8f8f8f;
+  color: #fff;
   margin-top: 8px;
 }
 

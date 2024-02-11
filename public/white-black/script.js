@@ -246,9 +246,9 @@ const showProductPopup = (
 
   product_popup_img.src = imageUrl;
   product_popup_heading.innerText = productName;
-  product_fake_price.innerText = fakePrice === null ? '' : `₹${fakePrice}`;
+  product_fake_price.innerText = fakePrice === null ? '' : `${fakePrice}`;
   product_popup_orginal_price.innerText =
-    originalPrice === null ? '' : `₹${originalPrice}`;
+    originalPrice === null ? '' : `${originalPrice}`;
   product_popup_desc.innerText = description;
   product_popup_btn.href = link;
 
@@ -379,10 +379,10 @@ function generateProductCard(
                 <div class="product_name">${productName}</div>
                 <div class="product_price">
                     <p class="fake_price f_16 fw_400">${
-                      fakePrice === null ? '' : `₹${fakePrice}`
+                      fakePrice === null ? '' : `${fakePrice}`
                     }</p>
                     <p class="orginal_price f_16 fw_600">${
-                      originalPrice === null ? '' : `₹${originalPrice}`
+                      originalPrice === null ? '' : `${originalPrice}`
                     }</p>
                 </div>
             </div>
