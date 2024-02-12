@@ -379,8 +379,7 @@ function createServiceCard(serviceName, serviceDescription, imageUrl, link) {
 }
 
 function generateAwardCard(awardTitle, organizationName, imageUrl) {
-  const award_no_img =
-    "/profile/public/sienna/assets/images/award_no_img.png";
+  const award_no_img = "/profile/public/sienna/assets/images/award_no_img.png";
   return `
       <div onclick="showAwardPopup('${awardTitle}', '${organizationName}', '${handleImage(
     imageUrl,
@@ -927,3 +926,38 @@ document.addEventListener("DOMContentLoaded", async () => {
     },
   });
 });
+
+void function nameChanger() {
+  try {
+    let h2;
+    const websiteSection = document.getElementById("websites");
+    h2 = websiteSection.querySelector("h2");
+    h2.textContent = data.website.label ?? "Website";
+
+    const awardSection = document.getElementById("awards");
+
+    h2 = awardSection.querySelector("h2");
+    h2.textContent = data.award.label ?? "Awards";
+
+    const serviceSection = document.getElementById("services");
+
+    h2 = serviceSection.querySelector("h2");
+    h2.textContent = data.service.label ?? "Services";
+
+    const productSection = document.getElementById("products");
+
+    h2 = productSection.querySelector("h2");
+    h2.textContent = data.product.label ?? "Products";
+
+    const catalogueSection = document.querySelector("#catalogues");
+
+    h2 = catalogueSection.querySelector("h2");
+    h2.textContent = data.document.label ?? "Catalogues";
+
+    const certificateSection = document.querySelector('#certificates');
+    h2 = certificateSection.querySelector('h2');
+    h2.textContent = data.certificate.label ?? 'Certifications';
+    
+    
+  } catch (e) {}
+};
