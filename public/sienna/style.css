@@ -687,7 +687,7 @@ header{
   border: 1px solid rgba(0, 0, 0, 0.2);
   height: 60px;
   padding-left: 21px;
-  color: rgba(130, 130, 130, 0.5);
+  color: rgb(0, 0, 0);
   background: #FFF;
   &:focus {
     outline: none;
