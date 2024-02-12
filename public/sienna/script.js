@@ -663,17 +663,17 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // documents
-  // if (
-  //   data.document &&
-  //   data.document.status &&
-  //   data.document.documents.length > 0
-  // ) {
-  //   data.document.documents.map((document) => {
-  //     documents_cards.innerHTML += generateDocumentCard(document);
-  //   });
-  // } else {
-  //   document.getElementById("documents_section").classList.add("d_none");
-  // }
+  if (
+    data.document &&
+    data.document.status &&
+    data.document.documents.length > 0
+  ) {
+    data.document.documents.map((document) => {
+      documents_cards.innerHTML += generateDocumentCard(document);
+    });
+  } else {
+    document.getElementById("documents_section").classList.add("d_none");
+  }
 
   // certificates
   if (
