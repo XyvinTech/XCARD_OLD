@@ -261,7 +261,7 @@ header{
 
 /* quote section */
 .quote_section {
-  background: url('/profile/public/sienna/assets/icons/quote.svg');
+  background: url('http://localhost:8000/sienna/assets/icons/quote.svg');
   background-repeat: no-repeat;
   margin: 30px 3%;
   display: flex;
@@ -546,9 +546,8 @@ header{
   background: #F2F2F2;
   text-align: left;
 }
-
-/* documents section */
-/* .documents_section {
+/*  documents section */
+ .documents_section {
   padding: 0 3%;
   margin-top: 53px;
   text-align: center;
@@ -568,7 +567,7 @@ header{
   justify-content: space-between;
   align-items: center;
   border: 1px solid rgba(0, 0, 0, 0.1);
-  background: #333842;
+  background: #fff;
   border-radius: var(--border-radius);
   background-blend-mode: overlay, normal;
   box-shadow: 0px 0.47043px 2.21381px 0px rgba(0, 0, 0, 0.01),
@@ -579,8 +578,12 @@ header{
     0px 17px 80px 0px rgba(0, 0, 0, 0.03);
 }
 .document_name {
-  color: #f9fcff;
-} */
+  color: #121212;
+} 
+.iti__country-name{
+  color: #000;
+
+}
 
 /* certificate section */
 .certificate_section {
@@ -690,6 +693,7 @@ header{
     outline: none;
   }
 }
+
 .enquiry_input::placeholder {
   color: rgba(130, 130, 130, 0.5);
 }
@@ -742,6 +746,14 @@ header{
   border-radius: 8px;
 }
 
+.iti__dial-code{
+  color: #000;
+}
+
+.enquiry_form input{
+  color: #000;
+}
+
 #phone {
   height: 58px;
   border-radius: 8px;
@@ -751,7 +763,7 @@ header{
 
   background: #fff;
   padding-left: 21px;
-  color: rgba(130, 130, 130, 0.5);
+  color: rgb(0, 0, 0);
   &:focus {
     outline: none;
   }
