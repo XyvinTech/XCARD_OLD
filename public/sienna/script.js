@@ -819,6 +819,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   enquiry_btn.addEventListener("click", async (e) => {
     e.preventDefault();
+    const id = data["_id"];
     const name_input = document.getElementById("name_input");
     const phone = document.getElementById("phone");
     const email_input = document.getElementById("email_input");
@@ -852,16 +853,39 @@ document.addEventListener("DOMContentLoaded", async () => {
       isPhoneNumber(phone.value) &&
       isValidEmail(email_input.value)
     ) {
+      enquiry_btn.innerHTML = "Submitting...";
       let code = country_code.title.split(" ");
       code = code[code.length - 1];
+
       const data = {
+        id: id,
         name: name_input.value,
-        phone: phone.value,
+        phone: code + phone.value,
         email: email_input.value,
-        country_code: code,
+
         message: textarea.value,
       };
-      await sendFormData(data);
+
+      try {
+        const res = await fetch("/profile/submitForm", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        });
+        const json = await res.json();
+
+        if (json) {
+          enquiry_btn.innerHTML = "Submitted";
+        }
+      } catch (e) {
+        enquiry_btn.innerHTML = "Can't submit form";
+      }
+      name_input.value = "";
+      phone.value = "";
+      email_input.value = "";
+      textarea.value = "";
     }
   });
 
@@ -954,10 +978,8 @@ void function nameChanger() {
     h2 = catalogueSection.querySelector("h2");
     h2.textContent = data.document.label ?? "Catalogues";
 
-    const certificateSection = document.querySelector('#certificates');
-    h2 = certificateSection.querySelector('h2');
-    h2.textContent = data.certificate.label ?? 'Certifications';
-    
-    
+    const certificateSection = document.querySelector("#certificates");
+    h2 = certificateSection.querySelector("h2");
+    h2.textContent = data.certificate.label ?? "Certifications";
   } catch (e) {}
 };
