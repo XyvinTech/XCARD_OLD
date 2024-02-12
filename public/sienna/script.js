@@ -604,6 +604,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           });
         } else {
           var numerOfCards = 0;
+          products_card_section.innerHTML = "";
           data.product.products.map((product) => {
             if (product.category == selectedCategory) {
               numerOfCards = numerOfCards + 1;
@@ -617,10 +618,13 @@ document.addEventListener("DOMContentLoaded", async () => {
               );
             }
             console.log(numerOfCards);
-            if (numerOfCards == 0) {
-              products_card_section.innerHTML = `No Products found in ${selectedCategory}`;
-            }
-          });
+            
+          }
+          
+          );
+          if (numerOfCards == 0) {
+            products_card_section.innerHTML = `No Products found in ${selectedCategory}`;
+          }
         }
       } else {
         document.getElementById("products_section").classList.add("d_none");
