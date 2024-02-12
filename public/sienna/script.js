@@ -379,8 +379,7 @@ function createServiceCard(serviceName, serviceDescription, imageUrl, link) {
 }
 
 function generateAwardCard(awardTitle, organizationName, imageUrl) {
-  const award_no_img =
-    "/profile/public/sienna/assets/images/award_no_img.png";
+  const award_no_img = "/profile/public/sienna/assets/images/award_no_img.png";
   return `
       <div onclick="showAwardPopup('${awardTitle}', '${organizationName}', '${handleImage(
     imageUrl,
@@ -663,17 +662,17 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // documents
-  // if (
-  //   data.document &&
-  //   data.document.status &&
-  //   data.document.documents.length > 0
-  // ) {
-  //   data.document.documents.map((document) => {
-  //     documents_cards.innerHTML += generateDocumentCard(document);
-  //   });
-  // } else {
-  //   document.getElementById("documents_section").classList.add("d_none");
-  // }
+  if (
+    data.document &&
+    data.document.status &&
+    data.document.documents.length > 0
+  ) {
+    data.document.documents.map((document) => {
+      documents_cards.innerHTML += generateDocumentCard(document);
+    });
+  } else {
+    document.getElementById("documents_section").classList.add("d_none");
+  }
 
   // certificates
   if (
@@ -820,6 +819,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   enquiry_btn.addEventListener("click", async (e) => {
     e.preventDefault();
+    const id = data["_id"];
     const name_input = document.getElementById("name_input");
     const phone = document.getElementById("phone");
     const email_input = document.getElementById("email_input");
@@ -853,16 +853,39 @@ document.addEventListener("DOMContentLoaded", async () => {
       isPhoneNumber(phone.value) &&
       isValidEmail(email_input.value)
     ) {
+      enquiry_btn.innerHTML = "Submitting...";
       let code = country_code.title.split(" ");
       code = code[code.length - 1];
+
       const data = {
+        id: id,
         name: name_input.value,
-        phone: phone.value,
+        phone: code + phone.value,
         email: email_input.value,
-        country_code: code,
+
         message: textarea.value,
       };
-      await sendFormData(data);
+
+      try {
+        const res = await fetch("/profile/submitForm", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        });
+        const json = await res.json();
+
+        if (json) {
+          enquiry_btn.innerHTML = "Submitted";
+        }
+      } catch (e) {
+        enquiry_btn.innerHTML = "Can't submit form";
+      }
+      name_input.value = "";
+      phone.value = "";
+      email_input.value = "";
+      textarea.value = "";
     }
   });
 
@@ -927,3 +950,36 @@ document.addEventListener("DOMContentLoaded", async () => {
     },
   });
 });
+
+void function nameChanger() {
+  try {
+    let h2;
+    const websiteSection = document.getElementById("websites");
+    h2 = websiteSection.querySelector("h2");
+    h2.textContent = data.website.label ?? "Website";
+
+    const awardSection = document.getElementById("awards");
+
+    h2 = awardSection.querySelector("h2");
+    h2.textContent = data.award.label ?? "Awards";
+
+    const serviceSection = document.getElementById("services");
+
+    h2 = serviceSection.querySelector("h2");
+    h2.textContent = data.service.label ?? "Services";
+
+    const productSection = document.getElementById("products");
+
+    h2 = productSection.querySelector("h2");
+    h2.textContent = data.product.label ?? "Products";
+
+    const catalogueSection = document.querySelector("#catalogues");
+
+    h2 = catalogueSection.querySelector("h2");
+    h2.textContent = data.document.label ?? "Catalogues";
+
+    const certificateSection = document.querySelector("#certificates");
+    h2 = certificateSection.querySelector("h2");
+    h2.textContent = data.certificate.label ?? "Certifications";
+  } catch (e) {}
+};
