@@ -479,7 +479,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     "products_card_section"
   );
   const awards_cards = document.getElementById("awards_cards");
-  // const documents_cards = document.getElementById("documents_cards");
+  const documents_cards = document.getElementById("documents_cards");
   const certificate_cards = document.getElementById("certificate_cards");
   // const bank_detail_cards = document.getElementById("bank_detail_cards");
   const youtube_player_section = document.getElementById(
@@ -953,6 +953,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       next: ".awards_glider_next",
     },
   });
+  
 });
 
 void function nameChanger() {
@@ -985,5 +986,9 @@ void function nameChanger() {
     const certificateSection = document.querySelector("#certificates");
     h2 = certificateSection.querySelector("h2");
     h2.textContent = data.certificate.label ?? "Certifications";
-  } catch (e) {}
+  } catch (e) {
+    console.log(e);
+  }
 };
+
+nameChanger();
