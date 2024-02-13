@@ -48,7 +48,7 @@ groupRouter
   .route('/edit/:id')
   .put(
     protect,
-    authorize('admin'),
+    authorize('admin', 'super'),
     upload.single('file'),
     groupController.editGroup
   );
