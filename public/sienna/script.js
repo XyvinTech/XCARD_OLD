@@ -418,7 +418,7 @@ function generateDocumentCard(doc) {
               <img src="/profile/public/sienna/assets/icons/document.svg" alt="file">
               <p class="document_name fw_400 f_14">${documentName}</p>
           </div>
-          <button class="button" onclick="${
+          <button class="btn" onclick="${
             isViewableData
               ? `viewDocument('${data.public}')`
               : `downloadDocument('${data.public}', '${data.fileName}', '${data.mimeType}')`
@@ -953,38 +953,49 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 function nameChanger() {
   try {
-    let h2;
-    const websiteSection = document.getElementById("websites");
-    h2 = websiteSection.querySelector("h2");
-    h2.textContent = data.website.label ?? "Website";
+    console.log("changing name")
+    let h4;
+    const websiteSection = document.getElementById("user_contact_sites");
+    h4 = websiteSection.querySelector("h4");
+    console.log(h4);
+    h4.textContent = data.website.label ?? "Website";
 
-    const awardSection = document.getElementById("awards");
+    const awardSection = document.getElementById("awards_section");
 
-    h2 = awardSection.querySelector("h2");
-    h2.textContent = data.award.label ?? "Awards";
+    h4 = awardSection.querySelector("h4");
+    console.log(h4);
+    h4.textContent = data.award.label ?? "Awards";
 
-    const serviceSection = document.getElementById("services");
+    const serviceSection = document.getElementById("services_section");
 
-    h2 = serviceSection.querySelector("h2");
-    h2.textContent = data.service.label ?? "Services";
+    h4 = serviceSection.querySelector("h4");
+    console.log(h4);
+    h4.textContent = data.service.label ?? "Services";
 
-    const productSection = document.getElementById("products");
+    const productSection = document.getElementById("products_section");
 
-    h2 = productSection.querySelector("h2");
-    h2.textContent = data.product.label ?? "Products";
+    h4 = productSection.querySelector("h4");
+    console.log(h4);
+    h4.textContent = data.product.label ?? "Products";
 
-    const catalogueSection = document.querySelector("#catalogues");
+    const catalogueSection = document.getElementById("documents_section");
 
-    h2 = catalogueSection.querySelector("h2");
-    h2.textContent = data.document.label ?? "Catalogues";
+    h4 = catalogueSection.querySelector("h4");
+    console.log(h4);
+    h4.textContent = data.document.label ?? "Documents";
 
-    const certificateSection = document.querySelector("#certificates");
-    h2 = certificateSection.querySelector("h2");
-    h2.textContent = data.certificate.label ?? "Certifications";
-  } catch (e) {}
+    const certificateSection = document.getElementById("certificate_section");
+    h4 = certificateSection.querySelector("h4");
+    console.log(h4);
+    h4.textContent = data.certificate.label ?? "Certifications";
+  } catch (e) {
+    console.log(e)
+  }
 }
 
-nameChanger();
+document.addEventListener("DOMContentLoaded", () => {
+  nameChanger();
+});
 
 function letsChat() {
   const largeDiv = document.getElementById("largeDiv");
@@ -1008,7 +1019,9 @@ function letsChat() {
     <div class="scroll-top-div">
       <a href="#top" class="scroll-top btn_view_more
       btn-secondary">
-      <i class="fa-solid fa-arrow-up"></i>      </a>
+      <i class="fa-solid fa-arrow-up" style="color: #ffffff;"></i>
+      
+      </a>
     </div>
   `;
   }

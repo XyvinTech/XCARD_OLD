@@ -1043,11 +1043,3 @@ footer {
   cursor: pointer;
 
 }
-
-.visible{
-  display: flex;
-}
-
-.d-none{
-  display: none;
-}
