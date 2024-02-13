@@ -567,7 +567,7 @@ header{
   justify-content: space-between;
   align-items: center;
   border: 1px solid rgba(0, 0, 0, 0.1);
-  background: #fff;
+  background: #FBF2EB;
   border-radius: var(--border-radius);
   background-blend-mode: overlay, normal;
   box-shadow: 0px 0.47043px 2.21381px 0px rgba(0, 0, 0, 0.01),
@@ -992,4 +992,62 @@ footer {
   .contact_cards{
       grid-template-columns: repeat(4,1fr);
   }
+}
+.whatsapp-btn {
+  /* position: fixed;
+  bottom: 4rem;
+
+  transition: bottom 300ms ease;
+  z-index: 10; */
+}
+
+.largeDiv {
+  width: 100%;
+  position: absolute;
+  bottom: 4px;
+  display: none;
+}
+.whatsapp-btn.active {
+  bottom: 1rem;
+}
+
+.btn_view_more {
+  border: none;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 3.75rem;
+  padding: 0.75rem 1.25rem;
+  font-family: var(--font-outfit);
+  color: white;
+}
+
+.btn-secondary {
+  background-color: rgba(34, 34, 34, 0.624);
+  backdrop-filter: blur(27px);
+}
+
+
+
+.scroll-top-div{
+  position: absolute;
+  right: 2rem;
+  border-radius: 50%;
+
+}
+
+.scroll-top-div i{
+  font-size: 2rem;
+  color: #ffffff57;
+  cursor: pointer;
+
+}
+
+.visible{
+  display: flex;
+}
+
+.d-none{
+  display: none;
 }
