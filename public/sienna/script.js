@@ -199,10 +199,10 @@ const createVCard = (
   URL.revokeObjectURL(url);
 };
 
-// const sendHiToWhatsApp = (whatsapp, btn) => {
-//   const whatsappLink = `https://wa.me/${whatsapp}`;
-//   btn.href = whatsappLink;
-// };
+const sendHiToWhatsApp = (whatsapp, btn) => {
+  const whatsappLink = `https://wa.me/${whatsapp}`;
+  btn.href = whatsappLink;
+};
 
 const sendFormData = async (data) => {
   const res = await fetch("/profile/submitForm", {
@@ -379,7 +379,8 @@ function createServiceCard(serviceName, serviceDescription, imageUrl, link) {
 }
 
 function generateAwardCard(awardTitle, organizationName, imageUrl) {
-  const award_no_img = "/profile/public/sienna/assets/images/award_no_img.png";
+  const award_no_img =
+    "/profile/public/sienna/assets/images/award_no_img.png";
   return `
       <div onclick="showAwardPopup('${awardTitle}', '${organizationName}', '${handleImage(
     imageUrl,
@@ -417,7 +418,7 @@ function generateDocumentCard(doc) {
               <img src="/profile/public/sienna/assets/icons/document.svg" alt="file">
               <p class="document_name fw_400 f_14">${documentName}</p>
           </div>
-          <button class="btn" onclick="${
+          <button class="button" onclick="${
             isViewableData
               ? `viewDocument('${data.public}')`
               : `downloadDocument('${data.public}', '${data.fileName}', '${data.mimeType}')`
@@ -618,10 +619,7 @@ document.addEventListener("DOMContentLoaded", async () => {
               );
             }
             console.log(numerOfCards);
-            
-          }
-          
-          );
+          });
           if (numerOfCards == 0) {
             products_card_section.innerHTML = `No Products found in ${selectedCategory}`;
           }
@@ -813,10 +811,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   //   );
   // });
 
-  // send_hi_btn.addEventListener("click", () => {
-  //   sendHiToWhatsApp(whatsapp, send_hi_btn);
-  // });
-
   // lets_chat_btn.addEventListener("click", () => {
   //   sendHiToWhatsApp(whatsapp, bottom_fixed_btn_link);
   // });
@@ -893,16 +887,17 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
-  // window.addEventListener("scroll", function () {
-  //   const scrollPosition = window.scrollY;
-  //   const threshold = (40 * window.innerHeight) / 100; // 40vh in pixels
+  window.addEventListener("scroll", () => {
+    const lets_chat_btn = document.getElementById("largeDiv");
+    const scrollPosition = window.scrollY;
+    const threshold = (40 * window.innerHeight) / 100; // 40vh in pixels
 
-  //   if (scrollPosition > threshold) {
-  //     lets_chat_btn.classList.add("visible");
-  //   } else {
-  //     lets_chat_btn.classList.remove("visible");
-  //   }
-  // });
+    if (scrollPosition > threshold) {
+      lets_chat_btn.style.display = "flex";
+    } else {
+      lets_chat_btn.style.display = "none"; 
+    }
+  });
 
   new Glider(document.querySelector(".service_glider"), {
     slidesToShow: 1,
@@ -955,7 +950,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 });
 
-void function nameChanger() {
+function nameChanger() {
   try {
     let h2;
     const websiteSection = document.getElementById("websites");
@@ -986,6 +981,36 @@ void function nameChanger() {
     h2 = certificateSection.querySelector("h2");
     h2.textContent = data.certificate.label ?? "Certifications";
   } catch (e) {}
-};
+}
 
 nameChanger();
+
+function letsChat() {
+  const largeDiv = document.getElementById("largeDiv");
+
+  wabusiness = data.contact.contacts.find(
+    (contact) => contact.type === "wabusiness"
+  );
+
+  if (wabusiness && wabusiness.value) {
+    largeDiv.innerHTML += `
+    <div class="chat_btn_wp">
+      <a target="_blank" href="https://wa.me/${wabusiness.value}?text=Hi" id="say-hello-btn" class="btn_view_more btn-secondary whatsapp-btn visible" style="text-decoration: none;">
+      <img
+        src="/profile/public/sienna/assets/icons/whatsapp.svg"
+        alt="whatsapp"
+      />
+    
+      <span>Let's Chat!</span>  
+    </a>
+    </div>
+    <div class="scroll-top-div">
+      <a href="#top" class="scroll-top btn_view_more
+      btn-secondary">
+      <i class="fa-solid fa-arrow-up"></i>      </a>
+    </div>
+  `;
+  }
+}
+
+letsChat();
