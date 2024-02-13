@@ -1019,7 +1019,7 @@ function letsChat() {
     <div class="scroll-top-div">
       <a href="#top" class="scroll-top btn_view_more
       btn-secondary">
-      <i class="fa-solid fa-arrow-up" style="color: #ffffff;"></i>
+      <img src="/profile/public/sienna/assets/icons/arrow.svg">
       
       </a>
     </div>
