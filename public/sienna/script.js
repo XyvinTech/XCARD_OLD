@@ -987,3 +987,5 @@ void function nameChanger() {
     h2.textContent = data.certificate.label ?? "Certifications";
   } catch (e) {}
 };
+
+nameChanger();
