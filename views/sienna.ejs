@@ -6,7 +6,13 @@
       rel="stylesheet"
       href="https://cdn.tutorialjinni.com/intl-tel-input/17.0.19/css/intlTelInput.css"
     />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
@@ -16,14 +22,14 @@
       href="https://cdn.jsdelivr.net/npm/glider-js@1/glider.min.css"
     />
 
-    <link rel="stylesheet" href="/profile/public/sienna/style.css" />
+    <link rel="stylesheet" href="http://localhost:8000/sienna/style.css" />
     <title>Xcard Theme</title>
   </head>
 
   <body>
     <div id="loader">
       <img
-        src="/profile/public/sienna/assets/icons/loader.svg"
+        src="http://localhost:8000/sienna/assets/icons/loader.svg"
         alt="loading"
       />
     </div>
@@ -41,7 +47,7 @@
             </h1>
             <div class="rating">
               <img
-                src="/profile/public/sienna/assets/icons/star.svg"
+                src="http://localhost:8000/sienna/assets/icons/star.svg"
                 alt="star"
               />
               <p>4.5</p>
@@ -80,7 +86,7 @@
 
     <div class="location">
       <img
-        src="/profile/public/sienna/assets/icons/location.svg"
+        src="http://localhost:8000/sienna/assets/icons/location.svg"
         alt="location"
       />
       <p>
@@ -155,7 +161,7 @@
     <!-- products section -->
     <section id="products_section" class="products_section">
       <div class="products_header">
-        <h4 class="gradient_text sub_heading">Menu</h4>
+        <h4 class="gradient_text sub_heading">Products</h4>
         <div class="dropdown">
           <select id="category" name="category">
             <option value="all" selected>Filter by category</option>
@@ -189,10 +195,8 @@
     </section>
 
     <section id="documents_section" class="documents_section">
-        <h4 class="gradient_text sub_heading">Documents</h4>
-        <div id="documents_cards" class="documents_cards">
-
-        </div>
+      <h4 class="gradient_text sub_heading">Documents</h4>
+      <div id="documents_cards" class="documents_cards"></div>
     </section>
 
     <section id="youtube_player_section" class="youtube_player_section">
@@ -244,14 +248,14 @@
       <div class="service_slider_header">
         <button aria-label="Previous" class="btn service_glider_prev">
           <img
-            src="/profile/public/sienna/assets/icons/arrow_left.svg"
+            src="http://localhost:8000/sienna/assets/icons/arrow_left.svg"
             alt="left-arrow"
           />
         </button>
         <h4 class="gradient_text sub_heading">Services</h4>
         <button aria-label="Next" class="btn service_glider_next">
           <img
-            src="/profile/public/sienna/assets/icons/arrow_right.svg"
+            src="http://localhost:8000/sienna/assets/icons/arrow_right.svg"
             alt="left-arrow"
           />
         </button>
@@ -289,14 +293,14 @@
       <div class="awards_slider_header">
         <button aria-label="Previous" class="btn awards_glider_prev">
           <img
-            src="/profile/public/sienna/assets/icons/arrow_left.svg"
+            src="http://localhost:8000/sienna/assets/icons/arrow_left.svg"
             alt="left-arrow"
           />
         </button>
         <h4 class="gradient_text sub_heading">Awards</h4>
         <button aria-label="Next" class="btn awards_glider_next">
           <img
-            src="/profile/public/sienna/assets/icons/arrow_right.svg"
+            src="http://localhost:8000/sienna/assets/icons/arrow_right.svg"
             alt="left-arrow"
           />
         </button>
@@ -370,7 +374,7 @@
     <div id="product_popup_section" class="product_popup_section popup d_none">
       <button id="product_popup_close_btn" class="btn popup_close_btn">
         <img
-          src="/profile/public/sienna/assets/icons/close.svg"
+          src="http://localhost:8000/sienna/assets/icons/close.svg"
           alt="close"
         />
       </button>
@@ -405,7 +409,7 @@
     <div id="service_popup_section" class="service_popup_section popup d_none">
       <button id="service_popup_close_btn" class="btn popup_close_btn">
         <img
-          src="/profile/public/sienna/assets/icons/close.svg"
+          src="http://localhost:8000/sienna/assets/icons/close.svg"
           alt="close"
         />
       </button>
@@ -429,7 +433,7 @@
     <div id="award_popup_section" class="service_popup_section popup d_none">
       <button id="award_popup_close_btn" class="btn popup_close_btn">
         <img
-          src="/profile/public/sienna/assets/icons/close.svg"
+          src="http://localhost:8000/sienna/assets/icons/close.svg"
           alt="close"
         />
       </button>
@@ -447,7 +451,9 @@
     <div id="certificate_image_section" class="popup d_none">
       <button id="popup_close_btn" class="btn popup_close_btn">
         <img
-          src="/profile/public/sienna/assets/icons/close.svg"
+          src="http://localhost:8000/
+
+sienna/assets/icons/close.svg"
           alt="close"
         />
       </button>
@@ -462,11 +468,19 @@
     <!-- <button id="chatButton" class="">
   
     </button> -->
-    <div id="largeDiv" class="largeDiv" style="position: fixed;bottom: 30px;width: 100%;display: flex;justify-content: center;align-content: center;align-items: center;">
-
-    
-     
-  </div>
+    <div
+      id="largeDiv"
+      class="largeDiv"
+      style="
+        position: fixed;
+        bottom: 30px;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-content: center;
+        align-items: center;
+      "
+    ></div>
 
     <script src="https://cdn.tutorialjinni.com/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
 
@@ -481,7 +495,7 @@
     <script src="https://cdn.jsdelivr.net/npm/glider-js@1/glider.min.js"></script>
     <script
       defer
-      src="/profile/public/sienna/script.js"
+      src="http://localhost:8000/sienna/script.js"
       data="<%= JSON.stringify(data) %>"
     ></script>
 
