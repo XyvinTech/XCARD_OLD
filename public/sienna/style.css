@@ -261,7 +261,7 @@ header{
 
 /* quote section */
 .quote_section {
-  background: url('/profile/public/sienna/assets/icons/quote.svg');
+  background: url('http://localhost:8000/sienna/assets/icons/quote.svg');
   background-repeat: no-repeat;
   margin: 30px 3%;
   display: flex;
@@ -1042,4 +1042,12 @@ footer {
   color: #ffffff57;
   cursor: pointer;
 
+}
+
+
+.btn_dark {
+  width: 200px;
+  color: #fff;
+  background-color: #BF631C;
+  /* padding: 0 60px; */
 }
