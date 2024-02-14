@@ -92,14 +92,14 @@ function copyToClipboard(button, text, type) {
         const img = document.getElementById(`${text.toLowerCase()}_copy_icon`);
         setTimeout(() => {
           if (img) {
-            img.src = "http://localhost:8000/sienna/assets/icons/tick.svg";
+            img.src = "/profile/public/sienna/assets/icons/tick.svg";
           }
         }, 500);
 
         // After 2.5 seconds, change the button image back to "copy.svg"
         setTimeout(() => {
           if (img) {
-            img.src = "http://localhost:8000/sienna/assets/icons/copy.svg";
+            img.src = "/profile/public/sienna/assets/icons/copy.svg";
           }
         }, 2500);
       })
@@ -303,7 +303,7 @@ function generateContactCard(link, label) {
   return `
       <div class="contact_card">
           <a style="display: flex;align-content: center;justify-content: center;" href=${link} >
-              <img src="http://localhost:8000/sienna/assets/icons/${contactCardImg(
+              <img src="/profile/public/sienna/assets/icons/${contactCardImg(
                 label
               )}" alt="">
           </a>
@@ -316,10 +316,10 @@ function generateUserSiteCard(websiteName, link) {
       <div class="user_site_card">
           <a href=${link}>
               <div class="left_section">
-                  <img src="http://localhost:8000/sienna/assets/icons/global.svg" alt="global">
+                  <img src="/profile/public/sienna/assets/icons/global.svg" alt="global">
                   <p>${websiteName}</p>
               </div>
-              <img src="http://localhost:8000/sienna/assets/icons/arrow_outward.svg" alt="">
+              <img src="/profile/public/sienna/assets/icons/arrow_outward.svg" alt="">
           </a>
       </div>
   `;
@@ -354,7 +354,7 @@ function generateProductCard(
 function createServiceCard(serviceName, serviceDescription, imageUrl, link) {
   const service_desc = serviceDescription || ""; // Use empty string if serviceDescription is undefined
   const service_no_img =
-    "http://localhost:8000/sienna/assets/images/service_no_img.png";
+    "/profile/public/sienna/assets/images/service_no_img.png";
   const card = document.createElement("div");
   card.classList.add("slider_service_card");
   card.innerHTML = `
@@ -382,7 +382,7 @@ function createServiceCard(serviceName, serviceDescription, imageUrl, link) {
 
 function generateAwardCard(awardTitle, organizationName, imageUrl) {
   const award_no_img =
-    "http://localhost:8000/sienna/assets/images/award_no_img.png";
+    "/profile/public/sienna/assets/images/award_no_img.png";
   return `
       <div onclick="showAwardPopup('${awardTitle}', '${organizationName}', '${handleImage(
     imageUrl,
@@ -417,7 +417,7 @@ function generateDocumentCard(doc) {
   return `
       <div class="document_card">
           <div class="left_section">
-              <img src="http://localhost:8000/sienna/assets/icons/document.svg" alt="file">
+              <img src="/profile/public/sienna/assets/icons/document.svg" alt="file">
               <p class="document_name fw_400 f_14">${documentName}</p>
           </div>
           <button class="btn" onclick="${
@@ -425,7 +425,7 @@ function generateDocumentCard(doc) {
               ? `viewDocument('${data.public}')`
               : `downloadDocument('${data.public}', '${data.fileName}', '${data.mimeType}')`
           }">
-              <img src="http://localhost:8000/sienna/assets/icons/${icon}" alt="download">
+              <img src="/profile/public/sienna/assets/icons/${icon}" alt="download">
           </button>
       </div>
   `;
@@ -433,7 +433,7 @@ function generateDocumentCard(doc) {
 
 function generateCertificateCard(certificateTitle, organizationName, imageUrl) {
   const certificate_no_img =
-    "http://localhost:8000/sienna/assets/images/certificate.png";
+    "/profile/public/sienna/assets/images/certificate.png";
   return `
       <div class="certificate_card">
           <img src="${handleImage(
@@ -457,7 +457,7 @@ function generateBankDetail(type, data) {
               <p class="fw_600 f_14 bank_data">${data}</p>
           </div>
           <button class="btn" onclick="copyToClipboard(this, '${data}', '${type}')">
-              <img class="copy_icon" id="${data.toLowerCase()}_copy_icon" src="http://localhost:8000/sienna/assets/icons/copy.svg" alt="copy">
+              <img class="copy_icon" id="${data.toLowerCase()}_copy_icon" src="/profile/public/sienna/assets/icons/copy.svg" alt="copy">
           </button>
       </div>
   `;
@@ -525,11 +525,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     user_bg.src =
       profile.profileBanner == null
-        ? "http://localhost:8000/sienna/assets/images/user_bg.png"
+        ? "/profile/public/sienna/assets/images/user_bg.png"
         : profile.profileBanner.public;
     avatar.src =
       profile.profilePicture == null
-        ? "http://localhost:8000/sienna/assets/images/user.png"
+        ? "/profile/public/sienna/assets/images/user.png"
         : profile.profilePicture.public;
     user_name.innerText = name;
     bio.innerText = profile.bio;
@@ -1018,7 +1018,7 @@ function letsChat() {
     <div class="chat_btn_wp">
       <a target="_blank" href="https://wa.me/${wabusiness.value}?text=Hi" id="say-hello-btn" class="btn_view_more btn-secondary whatsapp-btn visible" style="text-decoration: none;">
       <img
-        src="http://localhost:8000/sienna/assets/icons/whatsapp.svg"
+        src="/profile/public/sienna/assets/icons/whatsapp.svg"
         alt="whatsapp"
       />
     
@@ -1028,7 +1028,7 @@ function letsChat() {
     <div class="scroll-top-div">
       <a href="#top" class="scroll-top btn_view_more
       btn-secondary">
-      <img src="http://localhost:8000/sienna/assets/icons/arrow.svg">
+      <img src="/profile/public/sienna/assets/icons/arrow.svg">
       
       </a>
     </div>
