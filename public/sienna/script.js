@@ -156,7 +156,7 @@ function isValidEmail(email) {
   return emailRegex.test(email);
 }
 
-const createVCard = (
+function createVCard(
   websites,
   name,
   company,
@@ -166,31 +166,42 @@ const createVCard = (
   locationInfo,
   socials,
   whatsapp
-) => {
-  const name_split = name.split(" ");
+) {
+  const name_split = name.split(' ');
   const firstName = name_split[0];
-  const lastName = name_split[1] != undefined && name[1] != null ? name[1] : "";
+  const lastName = name_split.slice(1).join(' ');
+
+  const newWebsites = Array.isArray(websites)
+    ? websites.map((website) => `URL:${website.link}`)
+    : [];
+
+  const newSocials = Array.isArray(socials)
+    ? socials?.map((social) => `URL:${social.value}`)
+    : [];
 
   const vcardData = [
-    "BEGIN:VCARD",
-    "VERSION:3.0",
+    'BEGIN:VCARD',
+    'VERSION:3.0',
     `N:${lastName};${firstName};;`,
-    `FN:${name}`,
-    `EMAIL;TYPE=WORK:${email}`,
-    `ORG:${company}`,
-    `TITLE:${designation}`,
-    `ADR;TYPE=WORK:;;${locationInfo.street};${locationInfo.pincode};${locationInfo.value}`,
-    `TEL;TYPE=CELL:${phoneNumber}`,
-    ...websites?.map((website) => `URL:${website.link}`),
+    `FN:${name ?? ''}`,
+    `EMAIL;TYPE=WORK:${email ?? ''}`,
+    `ORG:${company ?? ''}`,
+    `TITLE:${designation ?? ''}`,
+    `ADR;TYPE=WORK:;;${
+      locationInfo.value.replace(/\n/g, ';') ?? locationInfo.street ?? ''
+    };${locationInfo.pincode ?? ''}`,
+    `TEL;TYPE=CELL:${phoneNumber ?? ''}`,
+    `URL:${window.location.href ?? ''}`,
+    ...newWebsites,
     `X-SOCIALPROFILE;TYPE=whatsapp:${whatsapp}`,
-    ...socials.map((social) => `URL:${social.value}`),
-    "END:VCARD",
-  ].join("\n");
+    ...newSocials,
+    'END:VCARD',
+  ].join('\n');
 
-  const blob = new Blob([vcardData], { type: "text/vcard" });
+  const blob = new Blob([vcardData], { type: 'text/vcard' });
   const url = URL.createObjectURL(blob);
 
-  const downloadLink = document.createElement("a");
+  const downloadLink = document.createElement('a');
   downloadLink.href = url;
   downloadLink.download = `${name}.vcf`;
   document.body.appendChild(downloadLink);
@@ -199,7 +210,7 @@ const createVCard = (
 
   // Release the object URL after the download has started
   URL.revokeObjectURL(url);
-};
+}
 
 const sendHiToWhatsApp = (whatsapp, btn) => {
   const whatsappLink = `https://wa.me/${whatsapp}`;
