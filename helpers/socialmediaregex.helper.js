@@ -11,13 +11,14 @@ function getSocialMedia(link) {
     Behance: /(?:https?:\/\/)?(?:www\.)?behance\.net/i,
     Github: /(?:https?:\/\/)?(?:www\.)?github\.com/i,
     Dribble: /(?:https?:\/\/)?(?:www\.)?dribbble\.com/i,
+    Google: /(?:https?:\/\/)?(?:www\.)?google\.com/i,
   };
   for (const [socialMedia, regex] of Object.entries(socialMediaRegex)) {
     if (link.match(regex)) {
       return socialMedia;
     }
   }
-  return "Other";
+  return 'Other';
 }
 
 export default getSocialMedia;
