@@ -1371,7 +1371,6 @@ export const updateUserProfile = asyncHandler(async (req, res, next) => {
         req?.body;
       //TODO: Delete old profile picture from Firebase Storage
       const updateArray = JSON?.parse(req?.body?.update) ?? [];
-      console.log('updateUserProfile-------->', updateArray);
 
       const updateStatusArray = JSON?.parse(req?.body?.status) ?? [];
       if (Array?.isArray(updateArray) && updateArray?.length > 0) {
@@ -1712,7 +1711,6 @@ async function mixinEngine(req, array) {
     'enquiry',
   ];
 
-  console.log('validEditSection-------------->', validEditSection);
   const validDeleteSection = [...validAddSection, 'video'];
   const add = [];
   const addProduct = [];
