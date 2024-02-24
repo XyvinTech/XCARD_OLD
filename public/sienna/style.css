@@ -372,8 +372,8 @@ header{
   width: 48%;
   aspect-ratio: 185/200;
   background-blend-mode: overlay, normal;
-  border-radius: var(--border-radius);
-  background: #F2F2F2;
+  border-radius: 8px;
+  background: #E5E3E3;
   text-align: left;
 }
 .product_img,
@@ -389,7 +389,9 @@ header{
   display: flex;
   flex-direction: column;
   gap: 10px;
-  background-color: #F2F2F2;
+  background-color: #E5E3E3;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
 }
 .product_name {
   font-size: 14px;
@@ -407,8 +409,15 @@ header{
   text-decoration: line-through;
   color: #333;
 }
+.fake_price:empty{
+  display: none;
+}
+
 .orginal_price {
   color: #BF631C;
+}
+.orginal_price:empty{
+  display: none;
 }
 
 /* services section */
@@ -890,6 +899,10 @@ footer {
   padding: 3px 4px;
   color: #f4f4f4;
 }
+
+.popup_orginal_price:empty{
+  display: none;
+}
 .popup_btn {
   width: 100%;
   padding: 15px 24px;
@@ -1050,4 +1063,47 @@ footer {
   color: #fff;
   background-color: #BF631C;
   /* padding: 0 60px; */
+}
+
+/*
+  
+Sienna theme
+
+*/
+
+.sienna_save_btn{
+  margin-top: 3rem;
+}
+.location{
+  cursor: pointer;
+}
+
+.uncategorized_products_slider_header{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.7rem;
+}
+
+.uncategorized_glider_buttons{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.uncategorized_products_button{
+  background-color: #BF631C;
+  padding: 0.6rem;
+  border-radius: 50%;
+  margin: 0.3rem;
+}
+
+.uncategorized_products_button{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#uncategorized_products_glider{
+  padding: 0.6rem;
 }

@@ -176,8 +176,9 @@ function createVCard(
     : [];
 
   const newSocials = Array.isArray(socials)
-    ? socials?.map((social) => `URL:${social.value}`)
+    ? socials?.map((social) => { if (social.type != 'phone' && social.type != 'email') { return `URL:${social.value}` } })
     : [];
+
 
   const vcardData = [
     'BEGIN:VCARD',
@@ -187,8 +188,7 @@ function createVCard(
     `EMAIL;TYPE=WORK:${email ?? ''}`,
     `ORG:${company ?? ''}`,
     `TITLE:${designation ?? ''}`,
-    `ADR;TYPE=WORK:;;${
-      locationInfo.value.replace(/\n/g, ';') ?? locationInfo.street ?? ''
+    `ADR;TYPE=WORK:;;${locationInfo.value.replace(/\n/g, ';') ?? locationInfo.street ?? ''
     };${locationInfo.pincode ?? ''}`,
     `TEL;TYPE=CELL:${phoneNumber ?? ''}`,
     `URL:${window.location.href ?? ''}`,
@@ -311,12 +311,13 @@ const showAwardPopup = (heading, description, imageUrl) => {
 };
 
 function generateContactCard(link, label) {
+
   return `
       <div class="contact_card">
           <a style="display: flex;align-content: center;justify-content: center;" href=${link} >
               <img src="/profile/public/sienna/assets/icons/${contactCardImg(
-                label
-              )}" alt="">
+    label
+  )}" alt="">
           </a>
       </div>
   `;
@@ -344,18 +345,20 @@ function generateProductCard(
   description,
   link
 ) {
+  if(originalPrice == null || originalPrice == ""){
+    originalPrice = fakePrice;
+    fakePrice = null;
+  }
   return `
   <div onclick="showProductPopup('${productName}', ${fakePrice}, ${originalPrice}, '${imageUrl}','${description}','${link}')" class="product_card">
   <img class="product_img" src="${imageUrl}" alt="${productName}">
           <div class="product_details">
               <div class="product_name">${productName}</div>
               <div class="product_price">
-                  <p class="fake_price f_16 fw_400">${
-                    fakePrice === null ? "" : `${fakePrice}`
-                  }</p>
-                  <p class="orginal_price f_16 fw_600">${
-                    originalPrice === null ? "" : `${originalPrice}`
-                  }</p>
+                  <p class="fake_price f_16 fw_400">${fakePrice === null ? "" : `${fakePrice}`
+    }</p>
+                  <p class="orginal_price f_16 fw_600">${originalPrice === null ? "" : `${originalPrice}`
+    }</p>
               </div>
           </div>
       </div>
@@ -370,9 +373,9 @@ function createServiceCard(serviceName, serviceDescription, imageUrl, link) {
   card.classList.add("slider_service_card");
   card.innerHTML = `
       <img class="service_img" src="${handleImage(
-        imageUrl,
-        service_no_img
-      )}" alt="${serviceName}">
+    imageUrl,
+    service_no_img
+  )}" alt="${serviceName}">
       <div class="service_details">
           <h4 class="fw_600 f_16 service_heading">${serviceName}</h4>
           <p class="fw_400 f_14 service_desc">${service_desc}</p>
@@ -400,9 +403,9 @@ function generateAwardCard(awardTitle, organizationName, imageUrl) {
     award_no_img
   )}')" class="award_card">
           <img class="award_img" src="${handleImage(
-            imageUrl,
-            award_no_img
-          )}" alt="product">
+    imageUrl,
+    award_no_img
+  )}" alt="product">
           <div class="product_details">
               <h5 class="fw_600 f_16 award_title">${awardTitle}</h5>
               <p class="fw_400 f_16 award_organisation">${organizationName}</p>
@@ -431,11 +434,10 @@ function generateDocumentCard(doc) {
               <img src="/profile/public/sienna/assets/icons/document.svg" alt="file">
               <p class="document_name fw_400 f_14">${documentName}</p>
           </div>
-          <button class="btn" onclick="${
-            isViewableData
-              ? `viewDocument('${data.public}')`
-              : `downloadDocument('${data.public}', '${data.fileName}', '${data.mimeType}')`
-          }">
+          <button class="btn" onclick="${isViewableData
+      ? `viewDocument('${data.public}')`
+      : `downloadDocument('${data.public}', '${data.fileName}', '${data.mimeType}')`
+    }">
               <img src="/profile/public/sienna/assets/icons/${icon}" alt="download">
           </button>
       </div>
@@ -448,9 +450,9 @@ function generateCertificateCard(certificateTitle, organizationName, imageUrl) {
   return `
       <div class="certificate_card">
           <img src="${handleImage(
-            imageUrl,
-            certificate_no_img
-          )}" alt="certificate">
+    imageUrl,
+    certificate_no_img
+  )}" alt="certificate">
           <h5 class="gradient_text fw_600 f_16">${certificateTitle}</h5>
           <p class="fw_400 f_16">${organizationName}</p>
       </div>
@@ -573,12 +575,14 @@ document.addEventListener("DOMContentLoaded", async () => {
       <option value="none">Filter by category</option>
       <option value="all">All</option>
     `;
-    console.log(categorys);
     categorys.forEach((category) => {
       categorySection.innerHTML += `
       <option value="${category.name}">${category.name}</option>      
     `;
     });
+
+    let uncategorizedProducts = [];
+
 
     if (
       data.product &&
@@ -586,16 +590,39 @@ document.addEventListener("DOMContentLoaded", async () => {
       data.product.products.length > 0
     ) {
       data.product.products.map((product) => {
-        products_card_section.innerHTML += generateProductCard(
-          product.name,
-          product.offerPrice,
-          product.price,
-          product.image.public,
-          product.description,
-          product.link
-        );
+        if (product.category != null && product.category != "") {
+          products_card_section.innerHTML += generateProductCard(
+            product.name,
+            product.price,
+            product.offerPrice,
+            product.image.public,
+            product.description,
+            product.link
+          );
+          uncategorizedProducts.push(product)
+        } else {
+          uncategorizedProducts.push(product);
+        }
       });
+      console.log(uncategorizedProducts);
+      if (uncategorizedProducts.length > 0) {
+        const uncategorizedProductsSection = document.getElementById("uncategorized_products_glider");
+        uncategorizedProducts.map((product) => {
+          uncategorizedProductsSection.innerHTML += generateProductCard(
+            product.name,
+            product.price,
+            product.offerPrice,
+            product.image.public,
+            product.description,
+            product.link
+          );
+        });
+      }
+
+
+
     }
+
 
     categorySection.addEventListener("change", (e) => {
       selectedCategory = e.target.value;
@@ -607,14 +634,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         products_card_section.innerHTML = "";
         if (selectedCategory == "all") {
           data.product.products.map((product) => {
-            products_card_section.innerHTML += generateProductCard(
-              product.name,
-              product.offerPrice,
-              product.price,
-              product.image.public,
-              product.description,
-              product.link
-            );
+            if (product.category != null && product.category != "")
+              products_card_section.innerHTML += generateProductCard(
+                product.name,
+                product.price,
+                product.offerPrice,
+                product.image.public,
+                product.description,
+                product.link
+              );
           });
         } else {
           var numerOfCards = 0;
@@ -624,14 +652,13 @@ document.addEventListener("DOMContentLoaded", async () => {
               numerOfCards = numerOfCards + 1;
               products_card_section.innerHTML += generateProductCard(
                 product.name,
-                product.offerPrice,
                 product.price,
+                product.offerPrice,
                 product.image.public,
                 product.description,
                 product.link
               );
             }
-            console.log(numerOfCards);
           });
           if (numerOfCards == 0) {
             products_card_section.innerHTML = `No Products found in ${selectedCategory}`;
@@ -760,15 +787,21 @@ document.addEventListener("DOMContentLoaded", async () => {
         case "location":
           const locationBlock = document.getElementsByClassName("location")[0];
           locationBlock.querySelector("p").textContent = value;
-          
+
           value = value.replace(/\s/g, "+");
 
+          locationBlock.addEventListener('click', () => {
+            window.open(`https://www.google.com/maps?q=${value}`, '_blank');
+          })
+
           return `https://www.google.com/maps?q=${value}`;
+
         default:
           return;
       }
     };
     for (const contact of data.contact.contacts) {
+
       data.social.socials.push({
         label: contact.label,
         type: contact.type,
@@ -811,10 +844,19 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     socials.map((social) => {
+      if (social.type == "google") {
+        const ratingSection = document.getElementById("rating_section");
+        ratingSection.classList.remove("d_none");
+        ratingSection.addEventListener('click', () => {
+          window.open(social.value, '_blank');
+        });
+      };
       contact_cards.innerHTML += generateContactCard(social.value, social.type);
     });
   } else {
     document.getElementById("contact_section").classList.add("d_none");
+    document.getElementById("save_contact_button_id").classList.add("d_none");
+    document.getElementById("location_display_id").classList.add("d_none");
   }
 
   save_contact.addEventListener("click", () => {
@@ -915,7 +957,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (scrollPosition > threshold) {
       lets_chat_btn.style.display = "flex";
     } else {
-      lets_chat_btn.style.display = "none"; 
+      lets_chat_btn.style.display = "none";
     }
   });
 
@@ -947,6 +989,35 @@ document.addEventListener("DOMContentLoaded", async () => {
     },
   });
 
+
+  new Glider(document.querySelector(".uncategorized_products_glider"), {
+    slidesToShow: "auto",
+    draggable: true,
+    dots: "#uncategorized_products_dots",
+
+    scrollLock: false,
+    // scrollLockDelay: 2000,
+    resizeLock: true,
+
+    scrollLockDelay: 150,
+
+    scrollPropagate: false,
+    eventPropagate: true,
+
+    slidesToScroll: 1,
+
+    // Set easing and duration for smooth slide transitions
+    easing: function (t, b, c, d) {
+      return c * (t /= d) * t + b;
+    },
+    duration: 800, // Adjust the duration for your preferred speed (in milliseconds)
+
+    arrows: {
+      prev: ".uncategorized_products_glider_prev",
+      next: ".uncategorized_products_glider_next",
+    },
+  });
+
   // awards_slider
   new Glider(document.querySelector(".awards_slider"), {
     slidesToShow: 2,
@@ -968,48 +1039,41 @@ document.addEventListener("DOMContentLoaded", async () => {
       next: ".awards_glider_next",
     },
   });
-  
+
 });
 
 function nameChanger() {
   try {
-    console.log("changing name")
     let h4;
     const websiteSection = document.getElementById("user_contact_sites");
     h4 = websiteSection.querySelector("h4");
-    console.log(h4);
     h4.textContent = data.website.label ?? "Website";
 
     const awardSection = document.getElementById("awards_section");
 
     h4 = awardSection.querySelector("h4");
-    console.log(h4);
     h4.textContent = data.award.label ?? "Awards";
 
     const serviceSection = document.getElementById("services_section");
 
     h4 = serviceSection.querySelector("h4");
-    console.log(h4);
     h4.textContent = data.service.label ?? "Services";
 
     const productSection = document.getElementById("products_section");
 
     h4 = productSection.querySelector("h4");
-    console.log(h4);
     h4.textContent = data.product.label ?? "Products";
 
     const catalogueSection = document.getElementById("documents_section");
 
     h4 = catalogueSection.querySelector("h4");
-    console.log(h4);
     h4.textContent = data.document.label ?? "Documents";
 
     const certificateSection = document.getElementById("certificate_section");
     h4 = certificateSection.querySelector("h4");
-    console.log(h4);
     h4.textContent = data.certificate.label ?? "Certifications";
   } catch (e) {
-    console.log(e)
+    console.error(e)
   }
 }
 
