@@ -172,6 +172,7 @@ header{
   padding: 4px;
   width: 180px;
 }
+
 .dropdown select {
   width: 100%;
   padding: 8px;
@@ -193,6 +194,7 @@ header{
   border: 6px solid transparent;
   border-top-color: #000;
 }
+
 #category {
   display: flex;
   align-items: center;
@@ -1106,4 +1108,26 @@ Sienna theme
 
 #uncategorized_products_glider{
   padding: 0.6rem;
+}
+
+#category option{
+  padding: 0.6rem;
+  border-radius: 50%;
+  margin: 0.3rem;
+  background-color: #BF631C;
+}
+
+.enforceWidth{
+  width: 185px !important;
+}
+
+#category {
+  -webkit-appearance: none; /* Safari and older Chrome, Edge */
+  -moz-appearance: none; /* Firefox */
+  appearance: none;
+}
+
+/* Hide the Choices.js arrow */
+.choices[data-type*='select-one'] .choices__button {
+  display: none;
 }

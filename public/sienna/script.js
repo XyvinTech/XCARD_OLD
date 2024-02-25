@@ -123,6 +123,8 @@ const contactCardImg = (type) => {
       return "x.svg";
     case "youtube":
       return "yt.svg";
+    case "google":
+      return "google.svg";
     case "facebook":
       return "fb.svg";
     case "phone":
@@ -343,14 +345,15 @@ function generateProductCard(
   originalPrice,
   imageUrl,
   description,
-  link
+  link,
+  isUncategorized = false
 ) {
-  if(originalPrice == null || originalPrice == ""){
+  if (originalPrice == null || originalPrice == "") {
     originalPrice = fakePrice;
     fakePrice = null;
   }
   return `
-  <div onclick="showProductPopup('${productName}', ${fakePrice}, ${originalPrice}, '${imageUrl}','${description}','${link}')" class="product_card">
+  <div  onclick="showProductPopup('${productName}', ${fakePrice}, ${originalPrice}, '${imageUrl}','${description}','${link}')" class="product_card ${isUncategorized ? "enforceWidth" : ""}">
   <img class="product_img" src="${imageUrl}" alt="${productName}">
           <div class="product_details">
               <div class="product_name">${productName}</div>
@@ -480,7 +483,7 @@ function generateYouTubePlayer(link) {
   if (link === "" || link === null) {
     return "";
   }
-  const videoId = link.split("/")[3];
+  const videoId = link.split("/")[link.split("/").length - 1];
   return `
     <div class="youtube_player">
       <iframe class="yt_iframe" src="https://www.youtube.com/embed/${videoId}?controls=1" frameborder="0" allowfullscreen></iframe>
@@ -599,12 +602,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             product.description,
             product.link
           );
-          uncategorizedProducts.push(product)
+
         } else {
           uncategorizedProducts.push(product);
+
         }
       });
-      console.log(uncategorizedProducts);
       if (uncategorizedProducts.length > 0) {
         const uncategorizedProductsSection = document.getElementById("uncategorized_products_glider");
         uncategorizedProducts.map((product) => {
@@ -614,13 +617,22 @@ document.addEventListener("DOMContentLoaded", async () => {
             product.offerPrice,
             product.image.public,
             product.description,
-            product.link
+            product.link,
+            true,
           );
         });
+      } else {
+        document.getElementById("uncategorized_products_section").classList.add("d_none");
       }
 
 
 
+
+
+    }
+    else {
+      document.getElementById("products_section").classList.add("d_none");
+      document.getElementById("uncategorized_products_section").classList.add("d_none");
     }
 
 
@@ -994,6 +1006,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     slidesToShow: "auto",
     draggable: true,
     dots: "#uncategorized_products_dots",
+    exactWidth: true,
+    itemWidth: 200,
 
     scrollLock: false,
     // scrollLockDelay: 2000,
@@ -1020,7 +1034,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // awards_slider
   new Glider(document.querySelector(".awards_slider"), {
-    slidesToShow: 2,
+    slidesToShow: "auto",
     draggable: true,
     dots: "#dots",
 
@@ -1112,4 +1126,3 @@ function letsChat() {
 }
 
 letsChat();
-
