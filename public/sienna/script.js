@@ -589,9 +589,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (
       data.product &&
-      data.product.status &&
+      data.product.status==true &&
       data.product.products.length > 0
     ) {
+
+      document.getElementById("products_section").classList.remove("d_none");
       data.product.products.map((product) => {
         if (product.category != null && product.category != "") {
           products_card_section.innerHTML += generateProductCard(
@@ -608,8 +610,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         }
       });
-      if (uncategorizedProducts.length > 0) {
+      if (uncategorizedProducts.length > 0 && data.product.status==true) {
         const uncategorizedProductsSection = document.getElementById("uncategorized_products_glider");
+        document.getElementById("uncategorized_products").classList.remove("d_none");
         uncategorizedProducts.map((product) => {
           uncategorizedProductsSection.innerHTML += generateProductCard(
             product.name,
@@ -621,19 +624,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             true,
           );
         });
-      } else {
-        document.getElementById("uncategorized_products_section").classList.add("d_none");
-      }
-
-
-
-
-
-    }
-    else {
-      document.getElementById("products_section").classList.add("d_none");
-      document.getElementById("uncategorized_products_section").classList.add("d_none");
-    }
+      } 
+    } 
 
 
     categorySection.addEventListener("change", (e) => {
@@ -798,6 +790,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           return `mailto:${value}`;
         case "location":
           const locationBlock = document.getElementsByClassName("location")[0];
+          
           locationBlock.querySelector("p").textContent = value;
 
           value = value.replace(/\s/g, "+");
