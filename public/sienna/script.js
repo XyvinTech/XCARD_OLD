@@ -589,7 +589,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (
       data.product &&
-      data.product.status==true &&
+      data.product.status == true &&
       data.product.products.length > 0
     ) {
 
@@ -610,7 +610,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         }
       });
-      if (uncategorizedProducts.length > 0 && data.product.status==true) {
+      if (uncategorizedProducts.length > 0 && data.product.status == true) {
         const uncategorizedProductsSection = document.getElementById("uncategorized_products_glider");
         document.getElementById("uncategorized_products").classList.remove("d_none");
         uncategorizedProducts.map((product) => {
@@ -624,8 +624,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             true,
           );
         });
-      } 
-    } 
+      }
+    }
 
 
     categorySection.addEventListener("change", (e) => {
@@ -791,6 +791,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         case "location":
           const locationBlock = document.getElementsByClassName("location")[0];
           
+          document.getElementById("location_display_id").classList.remove("d_none");
+
+
+
           locationBlock.querySelector("p").textContent = value;
 
           value = value.replace(/\s/g, "+");
@@ -805,32 +809,44 @@ document.addEventListener("DOMContentLoaded", async () => {
           return;
       }
     };
-    for (const contact of data.contact.contacts) {
 
-      data.social.socials.push({
-        label: contact.label,
-        type: contact.type,
-        value: valueForSocials(contact.type, contact.value),
-      });
+    if (data.contact != null && data.contact.contacts != null && data.contact.contacts.length > 0 && data.contact.status == true) {
+      document.getElementById("contact_section").classList.remove("d_none");
+      document.getElementById("save_contact_button_id").classList.remove("d_none");
 
-      if (contact.type === "email") {
-        email = contact.value;
-      } else if (contact.type === "phone") {
-        phoneNumber = contact.value;
-      } else if (contact.type === "location") {
-        locationInfo = {
-          street: contact.street,
-          pincode: contact.pincode,
-          value: contact.value,
-        };
-      } else if (contact.type === "wabusiness") {
-        whatsapp = contact.value;
+      if (data.social.status == false) {
+        data.social.socials = [];
+      }
+
+      for (const contact of data.contact.contacts) {
+        data.social.socials.push({
+          label: contact.label,
+          type: contact.type,
+          value: valueForSocials(contact.type, contact.value),
+        });
+
+
+
+        if (contact.type === "email") {
+          email = contact.value;
+        } else if (contact.type === "phone") {
+          phoneNumber = contact.value;
+        } else if (contact.type === "location") {
+          locationInfo = {
+            street: contact.street,
+            pincode: contact.pincode,
+            value: contact.value,
+          };
+        } else if (contact.type === "wabusiness") {
+          whatsapp = contact.value;
+        }
       }
     }
+
   }
 
   // social media links
-  if (data.social && data.social.status && data.social.socials.length > 0) {
+  if ((data.social && data.social.status && data.social.socials.length > 0) || (data.contact && data.contact.status && data.contact.contacts.length > 0)) {
     var socials = data.social.socials;
 
     // Custom sorting function
@@ -858,10 +874,11 @@ document.addEventListener("DOMContentLoaded", async () => {
       };
       contact_cards.innerHTML += generateContactCard(social.value, social.type);
     });
-  } else {
+  }
+
+  else {
     document.getElementById("contact_section").classList.add("d_none");
     document.getElementById("save_contact_button_id").classList.add("d_none");
-    document.getElementById("location_display_id").classList.add("d_none");
   }
 
   save_contact.addEventListener("click", () => {
