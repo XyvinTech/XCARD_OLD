@@ -772,60 +772,59 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("youtube_player_section").classList.add("d_none");
   }
 
+  const valueForSocials = (type, value) => {
+    switch (type) {
+      case "wabusiness":
+      case "whatsapp":
+        return `https://wa.me/${value}`;
+      case "phone":
+        return `tel:${value}`;
+      case "email":
+        return `mailto:${value}`;
+      case "location":
+        const locationBlock = document.getElementsByClassName("location")[0];
+
+        document.getElementById("location_display_id").classList.remove("d_none");
+
+
+
+        locationBlock.querySelector("p").textContent = value;
+
+        value = value.replace(/\s/g, "+");
+
+        locationBlock.addEventListener('click', () => {
+          window.open(`https://www.google.com/maps?q=${value}`, '_blank');
+        })
+
+        return `https://www.google.com/maps?q=${value}`;
+
+      default:
+        return;
+    }
+  };
+
   let email = null;
   let phoneNumber = null;
   let locationInfo = null;
   let whatsapp = null;
 
-  if (data.contact && data.contact.status && data.contact.contacts.length > 0) {
+  socialVisibility = data.social != null && data.social.status == true && data.social.socials != null && data.social.socials.length > 0;
+  contactVisibility = data.contact != null && data.contact.status == true && data.contact.contacts != null && data.contact.contacts.length > 0;
 
-    const valueForSocials = (type, value) => {
-      switch (type) {
-        case "wabusiness":
-        case "whatsapp":
-          return `https://wa.me/${value}`;
-        case "phone":
-          return `tel:${value}`;
-        case "email":
-          return `mailto:${value}`;
-        case "location":
-          const locationBlock = document.getElementsByClassName("location")[0];
-          
-          document.getElementById("location_display_id").classList.remove("d_none");
+  if (socialVisibility || contactVisibility) {
+    document.getElementById("contact_section").classList.remove("d_none");
 
-
-
-          locationBlock.querySelector("p").textContent = value;
-
-          value = value.replace(/\s/g, "+");
-
-          locationBlock.addEventListener('click', () => {
-            window.open(`https://www.google.com/maps?q=${value}`, '_blank');
-          })
-
-          return `https://www.google.com/maps?q=${value}`;
-
-        default:
-          return;
-      }
-    };
-
-    if (data.contact != null && data.contact.contacts != null && data.contact.contacts.length > 0 && data.contact.status == true) {
-      document.getElementById("contact_section").classList.remove("d_none");
+    if (contactVisibility) {
       document.getElementById("save_contact_button_id").classList.remove("d_none");
-
-      if (data.social.status == false) {
+      if (!socialVisibility) {
         data.social.socials = [];
       }
-
       for (const contact of data.contact.contacts) {
         data.social.socials.push({
           label: contact.label,
           type: contact.type,
           value: valueForSocials(contact.type, contact.value),
         });
-
-
 
         if (contact.type === "email") {
           email = contact.value;
@@ -840,46 +839,147 @@ document.addEventListener("DOMContentLoaded", async () => {
         } else if (contact.type === "wabusiness") {
           whatsapp = contact.value;
         }
+
       }
+
+      socials = data.social.socials;
+
+      socials.sort((a, b) => {
+        if (a.type === "phone") {
+          return -1; // "phone" comes before other types
+        } else if (b.type === "phone") {
+          return 1; // "phone" comes before other types
+        } else if (a.type === "whatsapp") {
+          return -1; // "whatsapp" comes after "phone"
+        } else if (b.type === "whatsapp") {
+          return 1; // "whatsapp" comes after "phone"
+        } else {
+          return 0; // Keep the original order for other types
+        }
+      });
+
+      socials.map((social) => {
+        if (social.type == "google") {
+          const ratingSection = document.getElementById("rating_section");
+          ratingSection.classList.remove("d_none");
+          ratingSection.addEventListener('click', () => {
+            window.open(social.value, '_blank');
+          });
+        };
+        contact_cards.innerHTML += generateContactCard(social.value, social.type);
+      });
+    } else if (socialVisibility) {
+      socials = data.social.socials;
+
+      socials.sort((a, b) => {
+        if (a.type === "phone") {
+          return -1; // "phone" comes before other types
+        } else if (b.type === "phone") {
+          return 1; // "phone" comes before other types
+        } else if (a.type === "whatsapp") {
+          return -1; // "whatsapp" comes after "phone"
+        } else if (b.type === "whatsapp") {
+          return 1; // "whatsapp" comes after "phone"
+        } else {
+          return 0; // Keep the original order for other types
+        }
+      });
+
+      socials.map((social) => {
+        if (social.type == "google") {
+          const ratingSection = document.getElementById("rating_section");
+          ratingSection.classList.remove("d_none");
+          ratingSection.addEventListener('click', () => {
+            window.open(social.value, '_blank');
+          });
+        };
+        contact_cards.innerHTML += generateContactCard(social.value, social.type);
+      });
+
+      document.getElementById("contact_section").classList.remove("d_none");
+      document.getElementById("save_contact_button_id").classList.add("d_none");
+      document.getElementById("location_display_id").classList.add("d_none");
+
+
+
     }
 
   }
 
-  // social media links
-  if ((data.social && data.social.status && data.social.socials.length > 0) || (data.contact && data.contact.status && data.contact.contacts.length > 0)) {
-    var socials = data.social.socials;
+  // if (data.contact && data.contact.status && data.contact.contacts.length > 0) {
 
-    // Custom sorting function
-    socials.sort((a, b) => {
-      if (a.type === "phone") {
-        return -1; // "phone" comes before other types
-      } else if (b.type === "phone") {
-        return 1; // "phone" comes before other types
-      } else if (a.type === "whatsapp") {
-        return -1; // "whatsapp" comes after "phone"
-      } else if (b.type === "whatsapp") {
-        return 1; // "whatsapp" comes after "phone"
-      } else {
-        return 0; // Keep the original order for other types
-      }
-    });
 
-    socials.map((social) => {
-      if (social.type == "google") {
-        const ratingSection = document.getElementById("rating_section");
-        ratingSection.classList.remove("d_none");
-        ratingSection.addEventListener('click', () => {
-          window.open(social.value, '_blank');
-        });
-      };
-      contact_cards.innerHTML += generateContactCard(social.value, social.type);
-    });
-  }
 
-  else {
-    document.getElementById("contact_section").classList.add("d_none");
-    document.getElementById("save_contact_button_id").classList.add("d_none");
-  }
+  //   if (data.contact != null && data.contact.contacts != null && data.contact.contacts.length > 0 && data.contact.status == true) {
+  //     document.getElementById("contact_section").classList.remove("d_none");
+  //     document.getElementById("save_contact_button_id").classList.remove("d_none");
+
+  //     if (data.social.status == false) {
+  //       data.social.socials = [];
+  //     }
+
+  //     for (const contact of data.contact.contacts) {
+  //       data.social.socials.push({
+  //         label: contact.label,
+  //         type: contact.type,
+  //         value: valueForSocials(contact.type, contact.value),
+  //       });
+
+
+
+  //       if (contact.type === "email") {
+  //         email = contact.value;
+  //       } else if (contact.type === "phone") {
+  //         phoneNumber = contact.value;
+  //       } else if (contact.type === "location") {
+  //         locationInfo = {
+  //           street: contact.street,
+  //           pincode: contact.pincode,
+  //           value: contact.value,
+  //         };
+  //       } else if (contact.type === "wabusiness") {
+  //         whatsapp = contact.value;
+  //       }
+  //     }
+  //   }
+
+  // }
+
+  // // social media links
+  // if ((data.social && data.social.status && data.social.socials.length > 0) || (data.contact && data.contact.status && data.contact.contacts.length > 0)) {
+  //   var socials = data.social.socials;
+
+  //   // Custom sorting function
+  //   socials.sort((a, b) => {
+  //     if (a.type === "phone") {
+  //       return -1; // "phone" comes before other types
+  //     } else if (b.type === "phone") {
+  //       return 1; // "phone" comes before other types
+  //     } else if (a.type === "whatsapp") {
+  //       return -1; // "whatsapp" comes after "phone"
+  //     } else if (b.type === "whatsapp") {
+  //       return 1; // "whatsapp" comes after "phone"
+  //     } else {
+  //       return 0; // Keep the original order for other types
+  //     }
+  //   });
+
+  //   socials.map((social) => {
+  //     if (social.type == "google") {
+  //       const ratingSection = document.getElementById("rating_section");
+  //       ratingSection.classList.remove("d_none");
+  //       ratingSection.addEventListener('click', () => {
+  //         window.open(social.value, '_blank');
+  //       });
+  //     };
+  //     contact_cards.innerHTML += generateContactCard(social.value, social.type);
+  //   });
+  // }
+
+  // else {
+  //   document.getElementById("contact_section").classList.add("d_none");
+  //   document.getElementById("save_contact_button_id").classList.add("d_none");
+  // }
 
   save_contact.addEventListener("click", () => {
     createVCard(
