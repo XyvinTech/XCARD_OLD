@@ -595,7 +595,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       document.getElementById("products_section").classList.remove("d_none");
       data.product.products.map((product) => {
-        if (product.category != null && product.category != "") {
+        if (product.category != null && product.category != "" && product.category != "none") {
           products_card_section.innerHTML += generateProductCard(
             product.name,
             product.price,
