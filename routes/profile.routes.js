@@ -14,7 +14,8 @@ const profileRouter = express.Router({ mergeParams: true });
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: {
-    fileSize: 50 * 1024 * 1024, // no larger than 5mb, you can change as needed.
+    fileSize: 170 * 1024 * 1024, // no larger than 170mb, you can change as needed.
+    fieldSize: 3 * 1024 * 1024,
   },
 });
 

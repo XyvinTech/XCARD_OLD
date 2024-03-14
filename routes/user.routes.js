@@ -16,6 +16,7 @@ const upload = multer({
   storage: multer.memoryStorage(),
   limits: {
     fileSize: 170 * 1024 * 1024, // no larger than 170mb, you can change as needed.
+    fieldSize: 3 * 1024 * 1024,
   },
 });
 
