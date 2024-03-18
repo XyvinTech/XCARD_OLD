@@ -16,9 +16,9 @@ const socials =
     : null;
 const websites =
   data.website &&
-  data.website.status &&
-  Array.isArray(data.website.websites) &&
-  data.website.websites?.length > 0
+    data.website.status &&
+    Array.isArray(data.website.websites) &&
+    data.website.websites?.length > 0
     ? data.website.websites
     : null;
 const services =
@@ -35,8 +35,8 @@ const awards =
     : null;
 const certificates =
   data.certificate &&
-  data.certificate.status &&
-  data.certificate.certificates?.length > 0
+    data.certificate.status &&
+    data.certificate.certificates?.length > 0
     ? data.certificate.certificates
     : null;
 const videos =
@@ -99,30 +99,26 @@ function generateProfile() {
   const card = profileSection.querySelector('.profile-card');
 
   card.innerHTML = `
-  <img src="${
-    profile.profileBanner?.public
+  <img src="${profile.profileBanner?.public
       ? profile.profileBanner?.public
       : '/profile/public/orange-black/assets/orange-dark/card-bg.png'
-  }" alt="card-bg" />
+    }" alt="card-bg" />
   <div class="info">
     <img
       class="profile-pic"
-      src="${
-        profile.profilePicture?.public
-          ? profile.profilePicture?.public
-          : '/profile/public/orange-black/assets/orange-dark/no_image.png'
-      }"
+      src="${profile.profilePicture?.public
+      ? profile.profilePicture?.public
+      : '/profile/public/orange-black/assets/orange-dark/no_image.png'
+    }"
       alt="profile-pic"
     />
     <h1>${profile.name ?? 'Fill Name'}</h1>
-    <h2>${profile.designation ?? 'fill designation'} | ${
-    profile.companyName
-  }</h2>
+    <h2>${profile.designation ?? 'fill designation'} | ${profile.companyName
+    }</h2>
     <p>
      ${profile.bio ?? ''}
     </p>
-    <button class="btn btn-primary" target="_blank" href="${
-      profile.profileLink ?? '#'
+    <button class="btn btn-primary" target="_blank" href="${profile.profileLink ?? '#'
     }">
      <img src="/profile/public/orange-black/assets/orange-dark/icons/add-contact.svg" alt="add-contact">
       <span>Save Contact</span>
@@ -189,8 +185,8 @@ function generateWebsites() {
       content += `
       <li>
         <a class="website-card" target="_blank"  rel="noreferrer" href="${ensureHttps(
-          website.link
-        )}">
+        website.link
+      )}">
           <img src="/profile/public/orange-black/assets/orange-dark/icons/global.svg" alt="website" />
           <span class="text">${website.name}</span>
         </a>
@@ -221,9 +217,8 @@ function generateAwards() {
       const card = document.createElement('li');
       card.classList.add('award-card');
       card.innerHTML = `
-        <img src="${
-          award.image?.public ??
-          '/profile/public/orange-black/assets/orange-dark/no_image.png'
+        <img src="${award.image?.public ??
+        '/profile/public/orange-black/assets/orange-dark/no_image.png'
         }" alt="award" />
         <h3>${award.label}</h3>
         ${award.value && '<p>' + shorten(award.value) + '</p>'}
@@ -257,11 +252,10 @@ function generateServices() {
       content += `
       <div class="service-card">
         <button>
-          <img src="${
-            service.image?.public
-              ? service.image.public
-              : '/profile/public/orange-black/assets/orange-dark/no_image.png'
-          }" alt="service" />
+          <img src="${service.image?.public
+          ? service.image.public
+          : '/profile/public/orange-black/assets/orange-dark/no_image.png'
+        }" alt="service" />
           <h3>${service.label}</h3>
           <p>${shorten(service.description ?? '')}</p>
         </button>
@@ -305,11 +299,10 @@ function generateProducts() {
       content += `
       <div class="service-card">
         <button>
-          <img src="${
-            product.image?.public
-              ? product.image.public
-              : '/profile/public/orange-black/assets/orange-dark/no_image.png'
-          }" alt="" />
+          <img src="${product.image?.public
+          ? product.image.public
+          : '/profile/public/orange-black/assets/orange-dark/no_image.png'
+        }" alt="" />
           <h3>${product.name}</h3>
           <p>${shorten(product.description ?? '')}</p>
         </button>
@@ -496,8 +489,8 @@ function generateSocials() {
       <a target="_blank" href="${social.value}">
       <img
         src="/profile/public/orange-black/assets/orange-dark/socials/${contactCardImg(
-          social.type
-        )}"
+        social.type
+      )}"
         alt="${social.type}"
       />
       <div>
@@ -511,8 +504,8 @@ function generateSocials() {
       card.innerHTML = `
       <a target="_blank" href="${social.value}">
         <img src="/profile/public/orange-black/assets/orange-dark/socials/${contactCardImg(
-          social.type
-        )}" alt="${social.type}" />
+        social.type
+      )}" alt="${social.type}" />
       </a>
       `;
 
@@ -573,9 +566,8 @@ function generateSocials() {
 
     smallDiv.innerHTML += `
     <div class="card">
-      <a target="_blank" href="${
-        location.pincode ??
-        'https://www.google.com/maps?q=' + query.replace(/\s+/g, '+')
+      <a target="_blank" href="${location.pincode ??
+      'https://www.google.com/maps?q=' + query.replace(/\s+/g, '+')
       }">
         <img src="/profile/public/orange-black/assets/orange-dark/socials/location.svg" alt="location" />
       </a>
@@ -641,10 +633,9 @@ function generateCertificates() {
     li.innerHTML = `
     <li>
               <img
-                src="${
-                  cert.image?.public ??
-                  '/profile/public/orange-black/assets/orange-dark/no_image.png'
-                }"
+                src="${cert.image?.public ??
+      '/profile/public/orange-black/assets/orange-dark/no_image.png'
+      }"
                 alt="certificate"
               />
               <h3>${cert.label}</h3>
@@ -758,17 +749,14 @@ function openModal(type, data) {
   const parent = document.querySelector('.modal');
   const modal = document.querySelector('.modal > .modal-content');
   let content = `<button class="close-button"><img src="/profile/public/orange-black/assets/orange-dark/icons/close.svg" alt="close"></button>
-  <img class="w-full" src="${
-    data.image ?? '/profile/public/orange-black/assets/orange-dark/no_image.png'
-  }" alt="image"> <h2>${data.heading}</h2>
+  <img class="w-full" src="${data.image ?? '/profile/public/orange-black/assets/orange-dark/no_image.png'
+    }" alt="image"> <h2>${data.heading}</h2>
   <p class="description">${data.desc ?? ''}</p>`;
 
   if (type === 'product' && data.price) {
-    content += `<p class="price"><span class="discount">${
-      data.discount ? data.discount : data.price
-    }</span>${
-      data.discount ? '<span class="actual">' + data.price + '</span>' : ''
-    }</p>`;
+    content += `<p class="price"><span class="discount">${data.discount ? data.discount : data.price
+      }</span>${data.discount ? '<span class="actual">' + data.price + '</span>' : ''
+      }</p>`;
   }
   if (type !== 'award') {
     content += `<a class="btn btn-primary w-full" target="_blank" href="${data.link}">Know More</a>`;
@@ -960,6 +948,8 @@ function contactCardImg(label) {
       return 'fb.svg';
     case 'x':
       return 'x.svg';
+    case "google":
+      return "google.svg";
     case 'phone':
       return 'call.svg';
     case 'dribble':
@@ -1010,8 +1000,7 @@ function createVCard(
     `EMAIL;TYPE=WORK:${email ?? ''}`,
     `ORG:${company ?? ''}`,
     `TITLE:${designation ?? ''}`,
-    `ADR;TYPE=WORK:;;${
-      locationInfo.value.replace(/\n/g, ';') ?? locationInfo.street ?? ''
+    `ADR;TYPE=WORK:;;${locationInfo.value.replace(/\n/g, ';') ?? locationInfo.street ?? ''
     };${locationInfo.pincode ?? ''}`,
     `TEL;TYPE=CELL:${phoneNumber ?? ''}`,
     `URL:${window.location.href ?? ''}`,
