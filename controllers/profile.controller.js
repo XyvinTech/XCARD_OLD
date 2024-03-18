@@ -294,11 +294,22 @@ export const duplicateProfile = async (req, res, next) => {
           error?.errorInfo?.code === 'auth/phone-number-already-exists' ||
           error?.errorInfo?.code === 'auth/email-already-exists'
         ) {
-          console.log('phone no already exist');
+          let userRecord;
+          // If email already exists, try to get the user by email
+          if (error?.errorInfo?.code === 'auth/email-already-exists') {
+            console.log('Fetching user details by email from Firebase');
+            userRecord = await admin.auth().getUserByEmail(email);
+          }
+          // If phone number already exists, try to get the user by phone number
+          else if (
+            error?.errorInfo?.code === 'auth/phone-number-already-exists'
+          ) {
+            console.log('Fetching user details by phone number from Firebase');
+            userRecord = await admin.auth().getUserByPhoneNumber(phone);
+          }
           let user = await User.findOne({ username: phone });
 
           if (user == null) {
-            const userRecord = await admin.auth().getUserByPhoneNumber(phone);
             user = await User.create({
               username: phone,
               uid: userRecord?.uid,

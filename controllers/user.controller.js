@@ -1364,7 +1364,6 @@ export const deleteFirebaseUser = asyncHandler(async (req, res, next) => {
  * @schema  Private
  */
 export const updateUserProfile = asyncHandler(async (req, res, next) => {
-  console.log('');
   await uploadFiles(req?.files, 'profiles')
     .then(async (images) => {
       const { name, designation, companyName, bio, theme, labelUpdates } =
@@ -1721,6 +1720,7 @@ async function mixinEngine(req, array) {
   const editAward = [];
   const addCertificate = [];
   const editCertificate = [];
+  const editCategory = [];
   const addDocument = [];
   const editDocument = [];
   const edit = [];
@@ -1782,6 +1782,11 @@ async function mixinEngine(req, array) {
         element.section === 'certificate'
       ) {
         editCertificate.push(element);
+      } else if (
+        validEditSection.includes(element.section) &&
+        element.section === 'category'
+      ) {
+        editCategory.push(element);
       } else edit.push(element);
     }
     if (element.action === 'delete') {
@@ -1818,6 +1823,9 @@ async function mixinEngine(req, array) {
     (await mixinEngineAddService(req, addCertificate, 'certificate'));
   editCertificate.length > 0 &&
     (await mixinEngineEditService(req, editCertificate, 'certificate'));
+
+  // Only for category
+  editCategory.length > 0 && (await mixinEngineEditCategory(req, editCategory));
 }
 
 async function mixinEngineAdmin(req, array) {
@@ -2042,6 +2050,58 @@ async function mixinEngineEditService(req, array, name) {
   });
 }
 
+async function mixinEngineEditCategory(req, array) {
+  // Find the existing profile
+  const profile = await Profile.findOne({
+    user: req.query?.user ?? req.user?.id,
+    _id: req.query?.profile,
+  });
+
+  if (!profile) {
+    console.log('Profile not found');
+    return;
+  }
+
+  // Extract existing category names for comparison
+  const existingCategoryNames = profile.category?.categorys.map(
+    (cat) => cat.name
+  );
+
+  // Filter array to include only new, non-duplicate categories
+  const newCategoryNames = array.filter(
+    (item) => !existingCategoryNames.includes(item.data?.name)
+  );
+
+  // If there are new categories to add
+  if (newCategoryNames.length > 0) {
+    const categoriesToAdd = newCategoryNames.map((item) => {
+      const { _id, ...rest } = item?.data;
+      return rest;
+    });
+
+    // Update query
+    const query = {
+      user: req.query?.user || req.user?.id,
+      _id: req.query?.profile,
+    };
+
+    // Update operation to add new categories
+
+    const update = {
+      $push: {
+        'category.categorys': { $each: categoriesToAdd },
+      },
+    };
+
+    // Perform the update operation
+    try {
+      await Profile.updateOne(query, update);
+    } catch (error) {
+      console.error('Error adding new categories-->', error);
+    }
+  }
+}
+
 /**
  * @desc   Mixin Add Product
  * @model  {
@@ -2172,6 +2232,9 @@ async function mixinEngineDelete(req, array) {
  */
 
 function mixinEngineEdit(req, array) {
+  console.log('****mixinEngineEdit*****');
+  console.log('Received Array --->', array);
+
   const updates = array.map((item) => {
     const { _id, ...rest } = item.data;
     let update;
@@ -2248,19 +2311,27 @@ function mixinEngineEdit(req, array) {
  */
 
 function mixinEngineAdminEdit(req, array) {
+  console.log('********Edit Section*******');
+  console.log('Received Array---->', array);
   const updates = array.map((item) => {
     const { _id, ...rest } = item.data;
     let update;
     let query;
+    console.log('********Checkpoint 1*******');
+
     query = {
       user: req?.query?.admin,
       [`${item?.section}.${item?.section}s._id`]: item.data?._id,
     };
+    console.log('********Checkpoint 2*******');
+
     update = {
       $set: { [`${item?.section}.${item?.section}s.$`]: item.data },
     };
     return { query, update };
   });
+  console.log('********Checkpoint 3*******');
+
   Promise.all(
     updates.map(({ query, update }) => Profile.updateOne(query, update))
   )
