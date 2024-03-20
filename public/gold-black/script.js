@@ -786,6 +786,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       document.getElementsByTagName('body')[0].style.marginBottom = '0px';
     }
   }
+  else{
+    save_contact.style.display = 'none';
+  }
 
   // social media links
   if (data.social && data.social.status && data.social.socials.length > 0) {

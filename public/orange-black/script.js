@@ -118,7 +118,7 @@ function generateProfile() {
     <p>
      ${profile.bio ?? ''}
     </p>
-    <button class="btn btn-primary" target="_blank" href="${profile.profileLink ?? '#'
+    <button class="btn btn-primary" id="save_contact_btn" target="_blank" href="${profile.profileLink ?? '#'
     }">
      <img src="/profile/public/orange-black/assets/orange-dark/icons/add-contact.svg" alt="add-contact">
       <span>Save Contact</span>
@@ -149,6 +149,8 @@ function generateProfile() {
         whatsapp = contact.value;
       }
     }
+  } else{
+    document.getElementById("save_contact_btn").style.display = "none";
   }
 
   button.addEventListener('click', () =>
