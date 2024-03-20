@@ -890,7 +890,7 @@ const isEmpty = (obj) => {
 };
 
 const submitBtn = document.getElementById('form_submit');
-const id = data['_id'];
+var id = data['_id'];
 
 submitBtn.addEventListener('click', (e) => {
   e.preventDefault();
@@ -916,6 +916,10 @@ submitBtn.addEventListener('click', (e) => {
     message: message,
   };
 
+  if(!name || !email || !phone || !message){
+    toggleModel('Please fill all the fields', []);
+    return;
+  }
   fetch(postURL, {
     method: 'POST',
     headers: {
