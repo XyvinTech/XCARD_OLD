@@ -431,7 +431,7 @@ function generateDocumentCard(doc) {
         <div class="document_card">
             <div class="left_section">
                 <img src="/profile/public/gold-black/assets/icons/global.svg" alt="file">
-                <p>${documentName}</p>
+                <p style="word-break: break-all;">${documentName}</p>
             </div>
             <button class="btn" onclick="${isViewableData
       ? `viewDocument('${data.public}')`
