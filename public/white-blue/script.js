@@ -815,7 +815,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       switch (type) {
         case 'wabusiness':
         case 'whatsapp':
-          return `https://wa.me/${value}`;
+          return `https://wa.me/${value.replace(/\s/g, "")}`;
         case 'phone':
           return `tel:${value}`;
         case 'email':
