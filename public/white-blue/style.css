@@ -550,6 +550,7 @@ body {
 }
 .document_name {
   color: #333;
+  word-break: break-all;
 }
 
 /* certificate section */

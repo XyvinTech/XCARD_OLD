@@ -537,6 +537,7 @@ body {
 }
 .document_name {
   color: #fff;
+  word-break: break-all;
 }
 
 /* certificate section */

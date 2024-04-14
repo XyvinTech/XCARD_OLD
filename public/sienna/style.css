@@ -584,6 +584,7 @@ header{
 }
 .document_name {
   color: #121212;
+  word-break: break-all;
 } 
 .iti__country-name{
   color: #000;
@@ -1000,13 +1001,13 @@ footer {
       grid-template-columns: repeat(4,1fr);
   }
 }
-.whatsapp-btn {
+/* .whatsapp-btn { */
   /* position: fixed;
   bottom: 4rem;
 
   transition: bottom 300ms ease;
   z-index: 10; */
-}
+/* } */
 
 .largeDiv {
   width: 100%;
