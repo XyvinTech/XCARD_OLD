@@ -428,7 +428,7 @@ function generateCatalogues() {
     <div class="website-card">
       <div class="content">
         <img src="/profile/public/sky-blue/assets/orange-dark/icons/pdf.svg" alt="" />
-        <span class="text">${label}</span>
+        <span class="text" style="word-break: break-all;">${label}</span>
       </div>
       <button class="action"><img src="/profile/public/sky-blue/assets/orange-dark/icons/${icon}" alt="${icon}" /></button>
     </div>
