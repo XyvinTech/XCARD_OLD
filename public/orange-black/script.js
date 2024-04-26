@@ -149,7 +149,7 @@ function generateProfile() {
         whatsapp = contact.value;
       }
     }
-  } else{
+  } else {
     document.getElementById("save_contact_btn").style.display = "none";
   }
 
@@ -460,8 +460,9 @@ function generateUpis() {
 }
 
 function generateSocials() {
+  console.log(socials)
   const socialSection = document.getElementById('socials');
-  if (!socials) {
+  if (!socials && !contacts) {
     socialSection.style.display = 'none';
     return;
   }
@@ -480,19 +481,22 @@ function generateSocials() {
   largeDiv.innerHTML = '';
   smallDiv.innerHTML = '';
 
-  socials.forEach((social) => {
-    const card = document.createElement('div');
-    card.classList.add('card');
+  if (socials) {
 
-    if (social.value === '') return;
 
-    if (!large.includes(social.type)) {
-      card.innerHTML = `
+    socials.forEach((social) => {
+      const card = document.createElement('div');
+      card.classList.add('card');
+
+      if (social.value === '') return;
+
+      if (!large.includes(social.type)) {
+        card.innerHTML = `
       <a target="_blank" href="${social.value}">
       <img
         src="/profile/public/orange-black/assets/orange-dark/socials/${contactCardImg(
-        social.type
-      )}"
+          social.type
+        )}"
         alt="${social.type}"
       />
       <div>
@@ -501,19 +505,24 @@ function generateSocials() {
       </div>
     </a>
       `;
-      largeDiv.appendChild(card);
-    } else {
-      card.innerHTML = `
+        largeDiv.appendChild(card);
+      } else {
+        card.innerHTML = `
       <a target="_blank" href="${social.value}">
         <img src="/profile/public/orange-black/assets/orange-dark/socials/${contactCardImg(
-        social.type
-      )}" alt="${social.type}" />
+          social.type
+        )}" alt="${social.type}" />
       </a>
       `;
 
-      smallDiv.append(card);
+        smallDiv.append(card);
+      }
     }
-  });
+
+
+
+    );
+  }
 
   const wabusiness =
     contacts?.find((contact) => contact.type === 'wabusiness') ?? null;

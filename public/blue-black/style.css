@@ -236,6 +236,7 @@ body {
     0px 3.79717px 17.86905px 0px rgba(0, 0, 0, 0.02),
     0px 7.10219px 33.42209px 0px rgba(0, 0, 0, 0.02),
     0px 17px 80px 0px rgba(0, 0, 0, 0.03);
+    word-break: break-word;
 }
 .contact_link {
   display: flex;

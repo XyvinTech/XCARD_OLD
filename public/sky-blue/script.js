@@ -478,7 +478,7 @@ function generateUpis() {
 
 function generateSocials() {
   const socialSection = document.getElementById('socials');
-  if (!socials) {
+  if (!socials && !contacts) {
     socialSection.style.display = 'none';
     return;
   }
@@ -497,19 +497,21 @@ function generateSocials() {
   largeDiv.innerHTML = '';
   smallDiv.innerHTML = '';
 
-  socials.forEach((social) => {
-    const card = document.createElement('div');
-    card.classList.add('card');
+  if (socials) {
 
-    if (social.value === '') return;
+    socials.forEach((social) => {
+      const card = document.createElement('div');
+      card.classList.add('card');
 
-    if (!large.includes(social.type)) {
-      card.innerHTML = `
+      if (social.value === '') return;
+
+      if (!large.includes(social.type)) {
+        card.innerHTML = `
       <a target="_blank" href="${social.value}">
       <img
         src="/profile/public/sky-blue/assets/orange-dark/socials/${contactCardImg(
-        social.type
-      )}"
+          social.type
+        )}"
         alt="${social.type}"
       />
       <div>
@@ -518,19 +520,20 @@ function generateSocials() {
       </div>
     </a>
       `;
-      largeDiv.appendChild(card);
-    } else {
-      card.innerHTML = `
+        largeDiv.appendChild(card);
+      } else {
+        card.innerHTML = `
       <a target="_blank" href="${social.value}">
         <img src="/profile/public/sky-blue/assets/orange-dark/socials/${contactCardImg(
-        social.type
-      )}" alt="${social.type}" />
+          social.type
+        )}" alt="${social.type}" />
       </a>
       `;
 
-      smallDiv.append(card);
-    }
-  });
+        smallDiv.append(card);
+      }
+    });
+  }
 
   const wabusiness =
     contacts?.find((contact) => contact.type === 'wabusiness') ?? null;
