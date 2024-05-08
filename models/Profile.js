@@ -125,6 +125,7 @@ const ProfileSchema = new mongoose.Schema(
                 'dribble',
                 'behance',
                 'github',
+                'google',
                 'other',
               ],
             },
