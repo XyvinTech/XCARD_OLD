@@ -11,7 +11,7 @@ function getSocialMedia(link) {
     Behance: /(?:https?:\/\/)?(?:www\.)?behance\.net/i,
     Github: /(?:https?:\/\/)?(?:www\.)?github\.com/i,
     Dribble: /(?:https?:\/\/)?(?:www\.)?dribbble\.com/i,
-    Google: /(?:https?:\/\/)?(?:www\.)?google\.com/i,
+    Google: /(?:https?:\/\/)?(?:www\.)?(google\.com|google.co\.in)/i,
   };
   for (const [socialMedia, regex] of Object.entries(socialMediaRegex)) {
     if (link.match(regex)) {

@@ -1857,7 +1857,6 @@ async function mixinEngineAdmin(req, array) {
       validEditSection.includes(element.section) && edit.push(element);
     }
   }
-  console.log('edit size---->', edit);
   add.length > 0 && mixinEngineAdminAdd(req, add);
   edit.length > 0 && mixinEngineAdminEdit(req, edit);
 }
