@@ -158,4 +158,6 @@ userRouter
 //   .route("/deleteFirebaseUsers")
 //   .delete(userController.deleteFirebaseUser);
 
+userRouter.route('/export/enquiry').get(userController.exportEnquiry);
+
 export default userRouter;

@@ -2836,3 +2836,49 @@ export const getNotifications = asyncHandler(async (req, res, next) => {
     res.status(500).json({ Error: e });
   }
 });
+
+export const exportEnquiry = asyncHandler(async (req, res) => {
+  try {
+    const { id } = req.query;
+    const profile = await Profile.findByIdAndUpdate({ _id: id }).select('form');
+    const sortedForms = profile?.form?.forms.sort(
+      (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+    );
+
+    const formData = sortedForms?.map((form) => ({
+      Name: form.name,
+      Phone: form.phone,
+      Email: form.email,
+      Message: form.message,
+      CreatedAt: form.createdAt,
+    }));
+
+    // convert data to Excel worksheet
+    const worksheet = xlsx.utils.json_to_sheet(formData);
+    const workbook = xlsx.utils.book_new();
+    xlsx.utils.book_append_sheet(workbook, worksheet, 'Enquiries');
+    // Generate the Excel file
+    const excelBuffer = xlsx.write(workbook, {
+      type: 'buffer',
+      bookType: 'xlsx',
+    });
+    // res.status(200).json(form);
+
+    // Set headers to tell the browser to download the file
+    res.setHeader(
+      'Content-Disposition',
+      'attachment; filename="enquiries.xlsx"'
+    );
+    res.setHeader(
+      'Content-Type',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    );
+
+    res.send(excelBuffer);
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ message: 'An error occurred while downloading excel' });
+  }
+});
