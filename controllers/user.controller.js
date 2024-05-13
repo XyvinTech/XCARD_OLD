@@ -1630,6 +1630,32 @@ export const enableDisableProfile = asyncHandler(async (req, res, next) => {
   }
 });
 
+export const enableDisableEditing = asyncHandler(async (req, res, next) => {
+  try {
+    //UPDATE USER COLLECTION
+    let id = req.body.id;
+    if (!id)
+      return res
+        .status(400)
+        .send({ success: false, message: `Profile not found with id: ${id}` });
+    const user = await Profile.updateOne(
+      { _id: id },
+      {
+        $set: {
+          disabledEditing: req?.body?.disabledEditing,
+        },
+      },
+      { new: true }
+    );
+    let message = { success: 'Successfully updated profile' };
+    //UPDATE USER ENDED
+    return res.status(200).send({ success: true, message, user });
+  } catch (err) {
+    console.log(err);
+    return next(new ErrorResponse(`${err}`, 400));
+  }
+});
+
 /**
  * @desc    Update Admin Profile
  * @route   POST /api/v1/user/updateSuperAdmin
@@ -2863,16 +2889,6 @@ export const exportEnquiry = asyncHandler(async (req, res) => {
       bookType: 'xlsx',
     });
     // res.status(200).json(form);
-
-    // Set headers to tell the browser to download the file
-    res.setHeader(
-      'Content-Disposition',
-      'attachment; filename="enquiries.xlsx"'
-    );
-    res.setHeader(
-      'Content-Type',
-      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-    );
 
     res.send(excelBuffer);
   } catch (error) {

@@ -6,6 +6,8 @@ const ProfileSchema = new mongoose.Schema(
       type: mongoose.Schema.ObjectId,
       ref: 'User',
     },
+    disabledEditing: { type: Boolean, default: false },
+    // profileActive: { type: Boolean, default: true },
     visible: { type: Boolean, default: false },
     isDisabled: { type: Boolean, default: false },
     visitCount: { type: Number, default: 0 },

@@ -100,6 +100,15 @@ userRouter
     upload.single('file'),
     userController.enableDisableUser
   );
+
+userRouter
+  .route('/enableDisableEditing')
+  .post(
+    protect,
+    authorize('admin', 'super'),
+    userController.enableDisableEditing
+  );
+
 userRouter
   .route('/enableDisableProfile')
   .post(
