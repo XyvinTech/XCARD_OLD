@@ -2888,9 +2888,42 @@ export const exportEnquiry = asyncHandler(async (req, res) => {
       type: 'buffer',
       bookType: 'xlsx',
     });
-    // res.status(200).json(form);
 
-    res.send(excelBuffer);
+    // Create a Nodemailer transporter
+    const transporter = Nodemailer.createTransport({
+      service: process.env.NODE_MAILER_PROVIDER,
+      auth: {
+        user: process.env.NODE_MAILER_USER,
+        pass: process.env.NODE_MAILER_PASS,
+      },
+    });
+
+    const user = await Profile.findOne({
+      user: new Types.ObjectId(req?.user?.id),
+    });
+    const userEmail = user?.contact?.contacts?.filter(
+      (item) => item.type === 'email'
+    )[0]?.value;
+
+    const profileName = await Profile.findByIdAndUpdate({ _id: id });
+
+    // Compose the email
+    const mailOptions = {
+      from: process.env.NODE_MAILER_USER,
+      to: userEmail,
+      subject: `${profileName?.profile?.name} Exported Data`,
+      text: 'Please find attached excel file.',
+      attachments: [
+        {
+          filename: `${profileName?.profile?.name.toLowerCase()}-exported-data.xlsx`,
+          content: excelBuffer,
+        },
+      ],
+    };
+    // Send the email
+    const info = await transporter.sendMail(mailOptions);
+    let message = { success: `Export Data sent to ${userEmail}` };
+    res.status(200).json({ message });
   } catch (error) {
     console.log(error);
     res
