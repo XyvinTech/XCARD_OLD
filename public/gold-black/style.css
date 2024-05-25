@@ -250,6 +250,7 @@ body{
     display: flex;
     flex-direction: column;
     gap: 18px;
+    text-align: center;
 }
 
 .user_site_card a{
