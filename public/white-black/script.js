@@ -123,8 +123,8 @@ const contactCardImg = (type) => {
       return 'x.svg';
     case 'x':
       return 'x.svg';
-    case "google":
-      return "google.svg";
+    case 'google':
+      return 'google.svg';
     case 'facebook':
       return 'fb.svg';
     case 'phone':
@@ -191,7 +191,8 @@ function createVCard(
     `EMAIL;TYPE=WORK:${email ?? ''}`,
     `ORG:${company ?? ''}`,
     `TITLE:${designation ?? ''}`,
-    `ADR;TYPE=WORK:;;${locationInfo.value.replace(/\n/g, ';') ?? locationInfo.street ?? ''
+    `ADR;TYPE=WORK:;;${
+      locationInfo.value.replace(/\n/g, ';') ?? locationInfo.street ?? ''
     };${locationInfo.pincode ?? ''}`,
     `TEL;TYPE=CELL:${phoneNumber ?? ''}`,
     `URL:${window.location.href ?? ''}`,
@@ -308,8 +309,8 @@ function generateContactCard(link, label) {
         <div class="contact_card">
             <a href=${link}>
                 <img src="/profile/public/white-black/assets/icons/${contactCardImg(
-    label
-  )}" alt="">
+                  label
+                )}" alt="">
             </a>
         </div>
     `;
@@ -325,8 +326,9 @@ function generateContactMeLabel(status) {
     return '';
   }
   return `
-          <h4 id="contact_me_label" class="gradient_text sub_heading">${data.contact.label ?? `Contact me`
-    }</h4>
+          <h4 id="contact_me_label" class="gradient_text sub_heading">${
+            data.contact.label ?? `Contact me`
+          }</h4>
       `;
 }
 
@@ -339,8 +341,8 @@ function generateLongContactCard(label, type, link, value) {
         <div class="contact_long_card">
             <a class="contact_link" href="${link}">
                 <img src="/profile/public/white-black/assets/icons/${contactCardImg(
-    type
-  )}" alt="">
+                  type
+                )}" alt="">
                 <div class="contact_info">
                     <h5 class="fw_500 f_12">${label}</h5>
                     <p class="f_14 fw_600">${value}</p>
@@ -378,10 +380,12 @@ function generateProductCard(
             <div class="product_details">
                 <div class="product_name">${productName}</div>
                 <div class="product_price">
-                    <p class="fake_price f_16 fw_400">${fakePrice === null ? '' : `${fakePrice}`
-    }</p>
-                    <p class="orginal_price f_16 fw_600">${originalPrice === null ? '' : `${originalPrice}`
-    }</p>
+                    <p class="fake_price f_16 fw_400">${
+                      fakePrice === null ? '' : `${fakePrice}`
+                    }</p>
+                    <p class="orginal_price f_16 fw_600">${
+                      originalPrice === null ? '' : `${originalPrice}`
+                    }</p>
                 </div>
             </div>
         </div>
@@ -396,9 +400,9 @@ function createServiceCard(serviceName, serviceDescription, imageUrl, link) {
   card.classList.add('slider_service_card');
   card.innerHTML = `
         <img class="service_img" src="${handleImage(
-    imageUrl,
-    service_no_img
-  )}" alt="${serviceName}">
+          imageUrl,
+          service_no_img
+        )}" alt="${serviceName}">
         <div class="service_details">
             <h4 class="fw_600 f_16 service_heading">${serviceName}</h4>
             <p class="fw_400 f_14 service_desc">${service_desc}</p>
@@ -426,9 +430,9 @@ function generateAwardCard(awardTitle, organizationName, imageUrl) {
     award_no_img
   )}')" class="award_card">
             <img class="award_img" src="${handleImage(
-    imageUrl,
-    award_no_img
-  )}" alt="product">
+              imageUrl,
+              award_no_img
+            )}" alt="product">
             <div class="product_details">
                 <h5 class="fw_600 f_16 award_title">${awardTitle}</h5>
                 <p class="fw_400 f_16 award_organisation">${organizationName}</p>
@@ -457,10 +461,11 @@ function generateDocumentCard(doc) {
                 <img src="/profile/public/white-black/assets/icons/document.svg" alt="file">
                 <p class="document_name fw_400 f_14">${documentName}</p>
             </div>
-            <button class="btn" onclick="${isViewableData
-      ? `viewDocument('${data.public}')`
-      : `downloadDocument('${data.public}', '${data.fileName}', '${data.mimeType}')`
-    }">
+            <button class="btn" onclick="${
+              isViewableData
+                ? `viewDocument('${data.public}')`
+                : `downloadDocument('${data.public}', '${data.fileName}', '${data.mimeType}')`
+            }">
                 <img src="/profile/public/white-black/assets/icons/${icon}" alt="download">
             </button>
         </div>
@@ -473,9 +478,9 @@ function generateCertificateCard(certificateTitle, organizationName, imageUrl) {
   return `
         <div class="certificate_card">
             <img src="${handleImage(
-    imageUrl,
-    certificate_no_img
-  )}" alt="certificate">
+              imageUrl,
+              certificate_no_img
+            )}" alt="certificate">
             <h5 class="gradient_text fw_600 f_16">${certificateTitle}</h5>
             <p class="fw_400 f_16">${organizationName}</p>
         </div>
@@ -735,7 +740,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       switch (type) {
         case 'wabusiness':
         case 'whatsapp':
-          return `https://wa.me/${value.replace(/\s/g, "")}`;
+          return `https://wa.me/${value.replace(/\s/g, '')}`;
         case 'phone':
           return `tel:${value}`;
         case 'email':
@@ -774,6 +779,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       lets_chat_btn.style.display = 'none';
       document.getElementsByTagName('body')[0].style.marginBottom = '0px';
     }
+  } else {
+    lets_chat_btn.style.display = 'none';
+    save_contact.style.display = 'none';
   }
 
   // social media links
