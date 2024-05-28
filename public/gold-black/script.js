@@ -850,9 +850,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!isPhoneNumber(phone.value)) {
       phone_input_wrapper.style.border = '1px solid red';
     }
-    if (!isValidEmail(email_input.value)) {
-      email_input.style.border = '1px solid red';
-    }
 
     name_input.addEventListener('input', () => {
       name_input.style.border = '1px solid rgba(255, 255, 255, 0.20)';
