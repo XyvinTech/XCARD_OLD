@@ -781,3 +781,21 @@ ul {
     transform: rotate(360deg);
   }
 }
+
+
+/* footer */
+footer{
+  width: 100%;
+  height: 50px;
+  padding: 0 3%;
+  background: #333;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.footer_text{
+  color: #878787;
+}
+.footer_company_text{
+  color: #FFF;
+}
