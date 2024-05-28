@@ -39,9 +39,9 @@ const socials =
     : null;
 const websites =
   data.website &&
-    data.website.status &&
-    Array.isArray(data.website.websites) &&
-    data.website.websites?.length > 0
+  data.website.status &&
+  Array.isArray(data.website.websites) &&
+  data.website.websites?.length > 0
     ? data.website.websites
     : null;
 const services =
@@ -58,8 +58,8 @@ const awards =
     : null;
 const certificates =
   data.certificate &&
-    data.certificate.status &&
-    data.certificate.certificates?.length > 0
+  data.certificate.status &&
+  data.certificate.certificates?.length > 0
     ? data.certificate.certificates
     : null;
 const videos =
@@ -123,26 +123,30 @@ function generateProfile() {
   const card = profileSection.querySelector('.profile-card');
 
   card.innerHTML = `
-  <img src="${profile.profileBanner?.public
+  <img src="${
+    profile.profileBanner?.public
       ? profile.profileBanner?.public
       : '/profile/public/sky-blue/assets/orange-dark/card-bg.png'
-    }" alt="card-bg" />
+  }" alt="card-bg" />
   <div class="info">
     <img
       class="profile-pic"
-      src="${profile.profilePicture?.public
-      ? profile.profilePicture?.public
-      : '/profile/public/sky-blue/assets/orange-dark/no_image.jpg'
-    }"
+      src="${
+        profile.profilePicture?.public
+          ? profile.profilePicture?.public
+          : '/profile/public/sky-blue/assets/orange-dark/no_image.jpg'
+      }"
       alt="profile-pic"
     />
     <h1>${profile.name ?? 'Fill Name'}</h1>
-    <h2>${profile.designation ?? 'fill designation'} | ${profile.companyName
-    }</h2>
+    <h2>${profile.designation ?? 'fill designation'} | ${
+    profile.companyName
+  }</h2>
     <p>
      ${profile.bio ?? ''}
     </p>
-    <button class="btn btn-primary" target="_blank" href="${profile.profileLink ?? '#'
+    <button class="btn btn-primary" target="_blank" href="${
+      profile.profileLink ?? '#'
     }">
      <img src="/profile/public/sky-blue/assets/orange-dark/icons/add-contact.svg" alt="add-contact">
       <span>Save Contact</span>
@@ -207,8 +211,8 @@ function generateWebsites() {
       content += `
       <li>
         <a class="website-card" target="_blank" rel="noreferrer" href="${ensureHttps(
-        website.link
-      )}">
+          website.link
+        )}">
           <img src="/profile/public/sky-blue/assets/orange-dark/icons/global.svg" alt="website" />
           <span class="text">${website.name}</span>
         </a>
@@ -239,8 +243,9 @@ function generateAwards() {
     if (award.label) {
       content += `
       <li class="award-card">
-        <img src="${award.image?.public ??
-        '/profile/public/sky-blue/assets/orange-dark/award_no_img.png'
+        <img src="${
+          award.image?.public ??
+          '/profile/public/sky-blue/assets/orange-dark/award_no_img.png'
         }" alt="award" />
         <h3>${award.label}</h3>
         ${award.value && '<p>' + award.value + '</p>'}
@@ -272,10 +277,11 @@ function generateServices() {
       content += `
       <div class="service-card">
         <button>
-          <img src="${service.image?.public
-          ? service.image.public
-          : '/profile/public/sky-blue/assets/orange-dark/service_no_img.png'
-        }" alt="service" />
+          <img src="${
+            service.image?.public
+              ? service.image.public
+              : '/profile/public/sky-blue/assets/orange-dark/service_no_img.png'
+          }" alt="service" />
           <h3>${service.label}</h3>
           <p>${service.description ?? ''}</p>
         </button>
@@ -318,10 +324,11 @@ function generateProducts() {
       content += `
       <div class="service-card">
         <button>
-          <img src="${product.image?.public
-          ? product.image.public
-          : '/profile/public/sky-blue/assets/orange-dark/award_no_img.png.jpg'
-        }" alt="" />
+          <img src="${
+            product.image?.public
+              ? product.image.public
+              : '/profile/public/sky-blue/assets/orange-dark/award_no_img.png.jpg'
+          }" alt="" />
           <h3>${product.name}</h3>
           <p>${product.description ?? ''}</p>
         </button>
@@ -498,7 +505,6 @@ function generateSocials() {
   smallDiv.innerHTML = '';
 
   if (socials) {
-
     socials.forEach((social) => {
       const card = document.createElement('div');
       card.classList.add('card');
@@ -588,9 +594,10 @@ function generateSocials() {
 
     smallDiv.innerHTML += `
   <div class="card">
-    <a target="_blank" href="${location.pincode ??
+    <a target="_blank" href="${
+      location.pincode ??
       'https://www.google.com/maps?q=' + query.replace(/\s+/g, '+')
-      }">
+    }">
       <img src="/profile/public/sky-blue/assets/orange-dark/socials/location.svg" alt="location" />
     </a>
   </div>`;
@@ -655,9 +662,10 @@ function generateCertificates() {
     li.innerHTML = `
     <li>
               <img
-                src="${cert.image?.public ??
-      '/profile/public/sky-blue/assets/orange-dark/certificate.png'
-      }"
+                src="${
+                  cert.image?.public ??
+                  '/profile/public/sky-blue/assets/orange-dark/certificate.png'
+                }"
                 alt="certificate"
               />
               <h3>${cert.label}</h3>
@@ -688,9 +696,6 @@ function generateEnquiry() {
     }
     if (!isPhoneNumber(phone.value)) {
       phone_input_wrapper.style.border = '1px solid red';
-    }
-    if (!isValidEmail(email_input.value)) {
-      email_input.style.border = '1px solid red';
     }
 
     name_input.addEventListener('input', () => {
@@ -770,14 +775,17 @@ function openModal(type, data) {
   const parent = document.querySelector('.modal');
   const modal = document.querySelector('.modal > .modal-content');
   let content = `<button class="close-button"><img src="/profile/public/sky-blue/assets/orange-dark/icons/close.svg" alt="close"></button>
-  <img class="w-full" src="${data.image ?? '/profile/public/sky-blue/assets/orange-dark/service.png'
-    }" alt="image"> <h2>${data.heading}</h2>
+  <img class="w-full" src="${
+    data.image ?? '/profile/public/sky-blue/assets/orange-dark/service.png'
+  }" alt="image"> <h2>${data.heading}</h2>
   <p class="description">${data.desc}</p>`;
 
   if (type === 'product' && data.price) {
-    content += `<p class="price"><span class="discount">${data.discount ? data.discount : data.price
-      }</span>${data.discount ? '<span class="actual">' + data.price + '</span>' : ''
-      }</p>`;
+    content += `<p class="price"><span class="discount">${
+      data.discount ? data.discount : data.price
+    }</span>${
+      data.discount ? '<span class="actual">' + data.price + '</span>' : ''
+    }</p>`;
   }
   content += `<a class="btn btn-primary w-full" target="_blank" href="${data.link}">Know More</a>`;
 
@@ -949,8 +957,8 @@ function contactCardImg(label) {
       return 'fb.svg';
     case 'x':
       return 'x.svg';
-    case "google":
-      return "google.svg";
+    case 'google':
+      return 'google.svg';
     case 'phone':
       return 'call.svg';
     case 'dribble':
@@ -1001,7 +1009,8 @@ function createVCard(
     `EMAIL;TYPE=WORK:${email ?? ''}`,
     `ORG:${company ?? ''}`,
     `TITLE:${designation ?? ''}`,
-    `ADR;TYPE=WORK:;;${locationInfo.value.replace(/\n/g, ';') ?? locationInfo.street ?? ''
+    `ADR;TYPE=WORK:;;${
+      locationInfo.value.replace(/\n/g, ';') ?? locationInfo.street ?? ''
     };${locationInfo.pincode ?? ''}`,
     `TEL;TYPE=CELL:${phoneNumber ?? ''}`,
     `URL:${window.location.href ?? ''}`,
