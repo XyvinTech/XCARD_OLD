@@ -972,9 +972,11 @@ export const exportAdminData = asyncHandler(async (req, res, next) => {
     const adminEmail = admin?.contact?.contacts?.filter(
       (item) => item.type === 'email'
     )[0]?.value;
-    const superadminEmail = superadmin?.contact?.contacts?.filter(
-      (item) => item.type === 'email'
-    )[0]?.value;
+    const superadminEmails = superadmin?.contact?.contacts
+      ?.filter((item) => item.type === 'email')
+      .map((item) => item.value);
+
+    const superAdminEmailList = superadminEmails.join(', ');
     // Extract the specific fields from the data
     const extractedAdmin = [
       {
@@ -1060,7 +1062,7 @@ export const exportAdminData = asyncHandler(async (req, res, next) => {
     // Compose the email
     const mailOptions = {
       from: process.env.NODE_MAILER_USER,
-      to: superadminEmail,
+      to: superAdminEmailList,
       subject: `${admin?.profile?.name} Exported Data`,
       text: 'Please find attached excel file.',
       attachments: [
@@ -1072,7 +1074,7 @@ export const exportAdminData = asyncHandler(async (req, res, next) => {
     };
     // Send the email
     const info = await transporter.sendMail(mailOptions);
-    let message = { success: `Export Data sent to ${superadminEmail}` };
+    let message = { success: `Export Data sent to ${superAdminEmailList}` };
     res.status(200).json({ message });
   } catch (error) {
     console.log(error);
@@ -2901,16 +2903,18 @@ export const exportEnquiry = asyncHandler(async (req, res) => {
     const user = await Profile.findOne({
       user: new Types.ObjectId(req?.user?.id),
     });
-    const userEmail = user?.contact?.contacts?.filter(
-      (item) => item.type === 'email'
-    )[0]?.value;
+    const userEmails = user?.contact?.contacts
+      ?.filter((item) => item.type === 'email')
+      .map((item) => item.value);
+
+    const userEmailList = userEmails.join(', ');
 
     const profileName = await Profile.findByIdAndUpdate({ _id: id });
 
     // Compose the email
     const mailOptions = {
       from: process.env.NODE_MAILER_USER,
-      to: userEmail,
+      to: userEmailList,
       subject: `${profileName?.profile?.name} Exported Data`,
       text: 'Please find attached excel file.',
       attachments: [
@@ -2922,7 +2926,7 @@ export const exportEnquiry = asyncHandler(async (req, res) => {
     };
     // Send the email
     const info = await transporter.sendMail(mailOptions);
-    let message = { success: `Export Data sent to ${userEmail}` };
+    let message = { success: `Export Data sent to ${userEmailList}` };
     res.status(200).json({ message });
   } catch (error) {
     console.log(error);
