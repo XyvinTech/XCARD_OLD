@@ -58,7 +58,7 @@ jobs:
           EC2_INSTANCE_IP: ${{ secrets.EC2_INSTANCE_IP }}
           SSH_KEY: ${{ secrets.EC2_PRIVATE_KEY }}
           USERNAME: ec2-user
-          PORT: 3000
+          PORT: 8000
           CONTAINER_NAME: XCARD_BACKEND
           ENV_FILE_PATH: /home/ec2-user/.env
 
