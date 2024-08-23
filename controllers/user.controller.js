@@ -1051,6 +1051,7 @@ export const exportAdminData = asyncHandler(async (req, res, next) => {
     });
 
     // Create a Nodemailer transporter
+    console.log(process.env)
     const transporter = Nodemailer.createTransport({
       service: process.env.NODE_MAILER_PROVIDER,
       auth: {
@@ -2892,6 +2893,8 @@ export const exportEnquiry = asyncHandler(async (req, res) => {
     });
 
     // Create a Nodemailer transporter
+    console.log(process.env)
+
     const transporter = Nodemailer.createTransport({
       service: process.env.NODE_MAILER_PROVIDER,
       auth: {
