@@ -71,7 +71,7 @@ app.use(express.static('public'));
 const PORT = process.env.PORT;
 const SECUREPORT = process.env.SECUREPORT;
 
-// HTTP Servers
+// HTTP Server
 const httpServer = http.createServer(app);
 const server = httpServer.listen(
   PORT,
