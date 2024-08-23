@@ -22,7 +22,7 @@ const firebaseapp = admin.initializeApp({
 });
 // Load env vars
 dotenv.config({
-  path: process.env.NODE_ENV === 'production' ? '.env.production' : '.env',
+  path: process.env.NODE_ENV === 'production' ? '.env' : '.env',
 });
 
 // Connect to database
@@ -78,32 +78,32 @@ const server = httpServer.listen(
   console.info(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`)
 );
 
-if (process.env.NODE_ENV === 'production') {
-  // if(true){
-  const credentials = {
-    cert: fs.readFileSync('./ssl/app_visitingcard_store.crt'),
-    ca: fs.readFileSync('./ssl/app_visitingcard_store.ca-bundle'),
-    key: fs.readFileSync('./ssl/app_visitingcard_store.key'),
-  };
-  const httpsServer = https.createServer(credentials, app);
-  const secureServer = httpsServer.listen(
-    SECUREPORT,
-    console.info(
-      `Secure Server running in ${process.env.NODE_ENV} mode on port ${SECUREPORT}`
-    )
-  );
+// if (process.env.NODE_ENV === 'production') {
+//   // if(true){
+//   const credentials = {
+//     cert: fs.readFileSync('./ssl/app_visitingcard_store.crt'),
+//     ca: fs.readFileSync('./ssl/app_visitingcard_store.ca-bundle'),
+//     key: fs.readFileSync('./ssl/app_visitingcard_store.key'),
+//   };
+//   const httpsServer = https.createServer(credentials, app);
+//   const secureServer = httpsServer.listen(
+//     SECUREPORT,
+//     console.info(
+//       `Secure Server running in ${process.env.NODE_ENV} mode on port ${SECUREPORT}`
+//     )
+//   );
 
-  app.use((req, res, next) => {
-    if (req.protocol === 'http') {
-      res.redirect(301, `https://${req.headers.host}${req.url}`);
-    }
-    next();
-  });
+//   app.use((req, res, next) => {
+//     if (req.protocol === 'http') {
+//       res.redirect(301, `https://${req.headers.host}${req.url}`);
+//     }
+//     next();
+//   });
 
-  winLogger.warn('This is a warning log');
-  winLogger.info('This is an info log');
-  winLogger.error('This is an error log');
-}
+//   winLogger.warn('This is a warning log');
+//   winLogger.info('This is an info log');
+//   winLogger.error('This is an error log');
+// }
 
 function exitHandler(options, exitCode) {
   if (options.cleanup) if (exitCode || exitCode === 0) console.log(exitCode);

@@ -4,7 +4,7 @@
   "description": "xcard backend services for the main xcard application",
   "main": "server.js",
   "scripts": {
-    "start": "NODE_ENV=production node server",
+    "start": "NODE_ENV=production & nodemon server",
     "dev": "SET NODE_ENV=development & nodemon server",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -29,12 +29,11 @@
     "node-fetch": "^3.3.1",
     "node-xlsx": "^0.21.0",
     "nodemailer": "^6.9.3",
+    "nodemon": "^3.1.4",
     "qrcode": "^1.5.1",
     "url-parse": "^1.5.10",
     "winston": "^3.13.0",
+    "xcard-backend": "file:",
     "xlsx": "^0.18.5"
-  },
-  "devDependencies": {
-    "nodemon": "^2.0.22"
   }
 }
