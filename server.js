@@ -67,6 +67,8 @@ routes(app);
 app.use(errorMiddleware);
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
+app.use('/profile/public', express.static('public'));
+
 
 const PORT = process.env.PORT;
 const SECUREPORT = process.env.SECUREPORT;
