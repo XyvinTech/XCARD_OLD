@@ -25,7 +25,7 @@ dotenv.config({
   path: process.env.NODE_ENV === 'production' ? '.env' : '.env',
 });
 
-// Connect to database
+// Connect to databases
 connectDB();
 
 // Express initialisation
