@@ -125,7 +125,6 @@ header{
 .rating{
 
   width: fit-content;
-  font-size: xx-large;
   padding: 0.1rem 0.3rem;
   background-color: #fff;
   border-radius: 2.5px;
@@ -135,7 +134,7 @@ header{
   align-items: center;
 }
 .rating p{
-  font-size: 10px;
+  font-size: 1.5rem;
   color: #BF631C;
 }
 
