@@ -525,6 +525,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // contact
   const save_contact = document.getElementById('save_contact');
+  const play_games = document.getElementById('play_games');
+
   // const send_hi_btn = document.getElementById("send_hi_btn");
   // const lets_chat_btn = document.getElementById("chatButton");
   const bottom_fixed_btn_link = document.getElementById(
@@ -537,6 +539,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const loader = document.getElementById('loader');
     loader.style.display = 'none';
   }
+  if ( window.location.href.split('/')[4] != 'simplerestaurant-nbg4m98m') {
+    play_games.style.display = 'none';
+  }
 
   // profile details
   if (data.profile) {
@@ -545,6 +550,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     var name = profile.name;
     var company = profile.companyName;
     var designation = profile.designation;
+    
 
     user_bg.src =
       profile.profileBanner == null
@@ -1012,6 +1018,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       socials,
       whatsapp
     );
+  });
+
+  play_games.addEventListener('click', () => {
+    window.open('https://friv.com', '_blank');
   });
 
   // lets_chat_btn.addEventListener("click", () => {
