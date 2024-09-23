@@ -148,6 +148,29 @@ header{
 .user_company {
   color: #a1a1a1;
 } */
+
+#play_games {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px; /* Space between the text and icon */
+  padding: 10px;
+  background-color: #333; /* Adjust button color */
+  border: none;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+#play_games img {
+  vertical-align: middle;
+}
+
+#play_games span {
+  display: inline-block;
+  font-weight: bold;
+}
+
 .contact_btns {
   --gap: 12px;
   display: flex;
