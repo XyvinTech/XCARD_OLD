@@ -539,7 +539,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     const loader = document.getElementById('loader');
     loader.style.display = 'none';
   }
-  if ( window.location.href.split('/')[4] != 'simplerestaurant-nbg4m98m') {
+
+  // List of URL segments or specific paths to check
+  let restrictedPaths = ['simplerestaurant-nbg4m98m','restaurantdemoprofile-h07dcenn'];
+
+  // Get the 5th part of the current window location path (index 4)
+  let currentPathSegment = window.location.href.split('/')[4];
+
+
+  if (!restrictedPaths.includes(currentPathSegment)) {
     play_games.style.display = 'none';
   }
 
