@@ -28,6 +28,11 @@ const id = data['_id'];
 const fetchUserData = async () => {
   return data;
 };
+const gamesEnabledPaths = JSON.parse(document.currentScript.getAttribute('gamesEnabledPaths'));
+const fetchgamesEnabledPaths = async () => {
+  console.log('gamesEnabledPaths recieved', gamesEnabledPaths);
+  return gamesEnabledPaths;
+};
 
 const handleImage = (imageUrl, no_image) => {
   if (imageUrl === null) {
@@ -534,20 +539,22 @@ document.addEventListener('DOMContentLoaded', async () => {
   );
 
   const data = await fetchUserData();
+  const gamesEnabledPaths = await fetchgamesEnabledPaths();
 
-  if (data) {
+  if (data && gamesEnabledPaths) {
     const loader = document.getElementById('loader');
     loader.style.display = 'none';
   }
 
+
   // List of URL segments or specific paths to check
-  let enabledPaths = ['simplerestaurant-nbg4m98m','restaurantdemoprofile-h07dcenn'];
+  // let gamesEnabledPaths = ['simplerestaurant-nbg4m98m','restaurantdemoprofile-h07dcenn'];
 
   // Get the 5th part of the current window location path (index 4)
   let currentPathSegment = window.location.href.split('/')[4];
 
 
-  if (!enabledPaths.includes(currentPathSegment)) {
+  if (!gamesEnabledPaths.includes(currentPathSegment)) {
     play_games.style.display = 'none';
   }
 
