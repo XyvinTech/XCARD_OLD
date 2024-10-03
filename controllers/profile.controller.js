@@ -8,7 +8,6 @@ import { uploadFiles, uploadFile } from '../utils/file.upload.js';
 import getRandomFileName from '../helpers/filename.helper.js';
 import QRCode from 'qrcode';
 import { nanoid, customAlphabet } from 'nanoid';
-import Setting from '../models/Setting.js';
 const randomId = customAlphabet('0123456789ABCDEFGHIJKLMNOP', 8);
 
 /**
@@ -96,10 +95,6 @@ export const viewProfile = asyncHandler(async (req, res, next) => {
     { 'card.cardId': req?.params?.id },
     { $inc: { visitCount: 1 } }
   );
-  const result = await Setting.findOne({ key: 'gamesEnabledPaths' }, { _id: 0, "application.gamesEnabledPaths": 1 });
-  const gamesEnabledPaths = result?.application?.gamesEnabledPaths || [];
-
-
   const profileTheme = profile?.card?.theme;
   /*
   Themes
@@ -127,7 +122,7 @@ export const viewProfile = asyncHandler(async (req, res, next) => {
   } else if (profileTheme == 'aero&black') {
     res.render('sky-blue', { data: profile });
   } else if (profileTheme == 'restaturants') {
-    res.render('sienna', { data: profile , gamesEnabledPaths: gamesEnabledPaths});
+    res.render('sienna', { data: profile });
   } else {
     res.render('index', { data: profile });
   }

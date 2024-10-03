@@ -24,13 +24,9 @@ const viewable = [
 ];
 
 const data = JSON.parse(document.currentScript.getAttribute('data'));
-const gamesEnabledPaths = JSON.parse(document.currentScript.getAttribute('gamesEnabledPaths'));
 const id = data['_id'];
 const fetchUserData = async () => {
   return data;
-};
-const fetchgamesEnabledPaths = async () => {
-  return gamesEnabledPaths;
 };
 
 const handleImage = (imageUrl, no_image) => {
@@ -544,16 +540,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     loader.style.display = 'none';
   }
 
-  const gamesEnabledPaths = await fetchgamesEnabledPaths();
-
   // List of URL segments or specific paths to check
-  // let gamesEnabledPaths = ['simplerestaurant-nbg4m98m','restaurantdemoprofile-h07dcenn'];
+  let enabledPaths = ['simplerestaurant-nbg4m98m','restaurantdemoprofile-h07dcenn'];
 
   // Get the 5th part of the current window location path (index 4)
   let currentPathSegment = window.location.href.split('/')[4];
 
 
-  if (!gamesEnabledPaths.includes(currentPathSegment)) {
+  if (!enabledPaths.includes(currentPathSegment)) {
     play_games.style.display = 'none';
   }
 
