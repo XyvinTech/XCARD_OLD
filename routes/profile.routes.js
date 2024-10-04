@@ -54,7 +54,7 @@ profileRouter
   );
 profileRouter
   .route('/enableGames/:profileId')
-  .post(
+  .patch(
     protect,
     authorize('admin', 'super'),
     profileController.enableGames
@@ -62,7 +62,7 @@ profileRouter
 
 profileRouter
   .route('/disableGames/:profileId')
-  .post(
+  .patch(
     protect,
     authorize('admin', 'super'),
     profileController.disableGames

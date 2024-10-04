@@ -389,7 +389,7 @@ export const getIsGamesEnabled = async (req, res, next) => {
     res.status(200).json({
       status: 'success',
       data: isGamesEnabled,
-      list: gamesEnabledPaths,
+      // list: gamesEnabledPaths,
       
     });
   } catch (error) {
@@ -404,10 +404,7 @@ export const enableGames = async (req, res, next) => {
     const { profileId } = req.params;
 
     // Find the setting document that holds the gamesEnabledPaths
-    const setting = await Setting.findOne(
-      { key: 'gamesEnabledPaths' },
-      { "application.gamesEnabledPaths": 1 }
-    );
+    const setting = await Setting.findOne({_id: '64836d5124c08425ddd429fa'});
     let gamesEnabledPaths = setting?.application?.gamesEnabledPaths || [];
 
     // Check if the profileId already exists in the array
@@ -416,8 +413,7 @@ export const enableGames = async (req, res, next) => {
       gamesEnabledPaths.push(profileId);
 
       // Update the setting document with the new array
-      await Setting.updateOne(
-        { key: 'gamesEnabledPaths' },
+      await Setting.updateOne({_id: '64836d5124c08425ddd429fa'},
         { $set: { "application.gamesEnabledPaths": gamesEnabledPaths } }
       );
     }
@@ -441,10 +437,7 @@ export const disableGames = async (req, res, next) => {
     const { profileId } = req.params;
 
     // Find the setting document that holds the gamesEnabledPaths
-    const setting = await Setting.findOne(
-      { key: 'gamesEnabledPaths' },
-      { "application.gamesEnabledPaths": 1 }
-    );
+    const setting = await Setting.findOne({_id: '64836d5124c08425ddd429fa'});
     let gamesEnabledPaths = setting?.application?.gamesEnabledPaths || [];
 
     // Check if the profileId exists in the array
@@ -453,8 +446,7 @@ export const disableGames = async (req, res, next) => {
       gamesEnabledPaths = gamesEnabledPaths.filter(id => id !== profileId);
 
       // Update the setting document with the new array
-      await Setting.updateOne(
-        { key: 'gamesEnabledPaths' },
+      await Setting.updateOne({_id: '64836d5124c08425ddd429fa'},
         { $set: { "application.gamesEnabledPaths": gamesEnabledPaths } }
       );
     }
