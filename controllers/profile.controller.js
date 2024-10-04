@@ -384,7 +384,7 @@ export const getIsGamesEnabled = async (req, res, next) => {
       { "application.gamesEnabledPaths": 1 }
     );
     const gamesEnabledPaths = setting?.application?.gamesEnabledPaths || [];
-    console.log('gamesEnabledPaths', gamesEnabled);
+    // console.log('gamesEnabledPaths', gamesEnabled);
     // Check if the profileId is in the gamesEnabledPaths array
     const isGamesEnabled = gamesEnabledPaths.includes(profileId);
 
