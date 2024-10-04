@@ -379,10 +379,7 @@ export const getIsGamesEnabled = async (req, res, next) => {
     const { profileId } = req.params;
 
     // Find the setting document that holds the gamesEnabledPaths
-    const setting = await Setting.findOne(
-      { key: 'gamesEnabledPaths' },
-      { "application.gamesEnabledPaths": 1 }
-    );
+    const setting = await Setting.findOne({_id: '64836d5124c08425ddd429fa'});
     const gamesEnabledPaths = setting?.application?.gamesEnabledPaths || [];
     // console.log('gamesEnabledPaths', gamesEnabled);
     // Check if the profileId is in the gamesEnabledPaths array
