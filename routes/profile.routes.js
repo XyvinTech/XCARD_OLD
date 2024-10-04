@@ -45,4 +45,27 @@ profileRouter
     profileController.duplicateProfile
   );
 
+profileRouter
+  .route('/isGamesEnabled/:profileId')
+  .get(
+    protect,
+    authorize('admin', 'super'),
+    profileController.getIsGamesEnabled
+  );
+profileRouter
+  .route('/enableGames/:profileId')
+  .post(
+    protect,
+    authorize('admin', 'super'),
+    profileController.enableGames
+  );
+
+profileRouter
+  .route('/disableGames/:profileId')
+  .post(
+    protect,
+    authorize('admin', 'super'),
+    profileController.disableGames
+  );
+
 export default profileRouter;

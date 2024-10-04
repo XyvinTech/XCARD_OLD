@@ -372,3 +372,105 @@ export const duplicateProfile = async (req, res, next) => {
     next(error);
   }
 };
+
+// Controller to check if games are enabled for a profile
+export const getIsGamesEnabled = async (req, res, next) => {
+  try {
+    const { profileId } = req.params;
+
+    // Find the setting document that holds the gamesEnabledPaths
+    const setting = await Setting.findOne(
+      { key: 'gamesEnabledPaths' },
+      { "application.gamesEnabledPaths": 1 }
+    );
+    const gamesEnabledPaths = setting?.application?.gamesEnabledPaths || [];
+
+    // Check if the profileId is in the gamesEnabledPaths array
+    const isGamesEnabled = gamesEnabledPaths.includes(profileId);
+
+    // Respond with the result
+    res.status(200).json({
+      status: 'success',
+      data: isGamesEnabled,
+      
+    });
+  } catch (error) {
+    // Handle any errors that occur
+    next(new AppError('Error retrieving games enabled status', 500));
+  }
+};
+
+// Controller to enable games for a profile
+export const enableGames = async (req, res, next) => {
+  try {
+    const { profileId } = req.params;
+
+    // Find the setting document that holds the gamesEnabledPaths
+    const setting = await Setting.findOne(
+      { key: 'gamesEnabledPaths' },
+      { "application.gamesEnabledPaths": 1 }
+    );
+    let gamesEnabledPaths = setting?.application?.gamesEnabledPaths || [];
+
+    // Check if the profileId already exists in the array
+    if (!gamesEnabledPaths.includes(profileId)) {
+      // Add the profileId to the array
+      gamesEnabledPaths.push(profileId);
+
+      // Update the setting document with the new array
+      await Setting.updateOne(
+        { key: 'gamesEnabledPaths' },
+        { $set: { "application.gamesEnabledPaths": gamesEnabledPaths } }
+      );
+    }
+
+    // Respond with the updated paths
+    res.status(200).json({
+      status: 'success',
+      data: {
+        gamesEnabledPaths,
+      },
+    });
+  } catch (error) {
+    // Handle any errors that occur
+    next(new AppError('Error enabling games', 500));
+  }
+};
+
+// Controller to disable games for a profile
+export const disableGames = async (req, res, next) => {
+  try {
+    const { profileId } = req.params;
+
+    // Find the setting document that holds the gamesEnabledPaths
+    const setting = await Setting.findOne(
+      { key: 'gamesEnabledPaths' },
+      { "application.gamesEnabledPaths": 1 }
+    );
+    let gamesEnabledPaths = setting?.application?.gamesEnabledPaths || [];
+
+    // Check if the profileId exists in the array
+    if (gamesEnabledPaths.includes(profileId)) {
+      // Remove the profileId from the array
+      gamesEnabledPaths = gamesEnabledPaths.filter(id => id !== profileId);
+
+      // Update the setting document with the new array
+      await Setting.updateOne(
+        { key: 'gamesEnabledPaths' },
+        { $set: { "application.gamesEnabledPaths": gamesEnabledPaths } }
+      );
+    }
+
+    // Respond with the updated paths
+    res.status(200).json({
+      status: 'success',
+      data: {
+        gamesEnabledPaths,
+      },
+    });
+  } catch (error) {
+    // Handle any errors that occur
+    next(new AppError('Error disabling games', 500));
+  }
+};
+
