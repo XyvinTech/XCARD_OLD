@@ -32,537 +32,289 @@ import { query } from 'express';
  * @access  Private/Admin
  * @schema  Private
  */
+// Handler for creating a user profile
 export const createUserProfile = asyncHandler(async (req, res, next) => {
-  const { phone, update, theme, email } = req?.body;
-  const all = JSON.parse(update);
+  try {
+    const { phone, update, theme, email } = req?.body;
+    const all = JSON.parse(update);
 
-  const {
-    profile,
-    contact,
-    social,
-    website,
-    category,
-    video,
-    service,
-    document,
-    certificate,
-    award,
-    bank,
-    product,
-    enquiry,
-  } = all;
-  delete bank?.bankDetails?._id;
-  delete video?.link?._id;
-  delete enquiry?.email?._id;
-  console.log('inside create profile');
+    // Destructure properties from the update object
+    const {
+      profile,
+      contact,
+      social,
+      website,
+      category,
+      video,
+      service,
+      document,
+      certificate,
+      award,
+      bank,
+      product,
+      enquiry,
+    } = all;
 
-  await uploadFiles(req?.files, 'profiles', req?.body?.asFunction)
-    .then(async (images) => {
-      const options = {
-        scale: 34,
-        color: {
-          dark: '#BEFF6C', // dark color
-          light: '#1C1C1E', // light color
-        },
-      };
-      const cardId =
-        `${profile?.name.toLowerCase().split(' ').join('')}-` +
-        randomId().toLowerCase();
-      const profileLink = `${process.env.HOST_URL_HTTPS}/profile/${cardId}`;
-      const qrCode = await QRCode.toBuffer(profileLink, options);
-      const qrFile = {
-        buffer: qrCode,
-        mimetype: 'image/jpeg',
-      };
-      await admin
-        .auth()
-        .createUser({
-          email: email,
-          password: phone, // User's password
-          phoneNumber: phone,
-          displayName: profile?.name,
-          disabled: false,
-        })
-        .then(async (userRecord) => {
-          //If new user enters create single user and profile.
-          console.log('--------------------------------------', userRecord);
-          const user = await User.create({
-            username: phone,
-            uid: userRecord?.uid,
-            role: 'user',
-            providerData: userRecord?.providerData,
-          });
-          // TODO: Create Unique Card Id, Create Unique Profile Link, Create Custom QR Image and Upload to Firebase
-          const qrImageUrl = await uploadFile(
-            qrFile,
-            'cards',
-            getRandomFileName('card-')
-          );
-          // Upload Product Images
-          const modifiedProduct = await Promise.all(
-            product?.products?.map(async (item) => {
-              const { _id, ...all } = item;
-              const upload = await uploadBufferFile(
-                { ...all.image, buffer: item?.image?.base64 },
-                'products',
-                getRandomFileName('product-'),
-                'product'
-              );
-              return { ...all, image: upload };
-            })
-          );
-          // Upload Service Images
-          const modifiedService = await Promise.all(
-            service?.services?.map(async (item) => {
-              const { _id, ...all } = item;
-              const upload =
-                item.image == null
-                  ? null
-                  : await uploadBufferFile(
-                      { ...all.image, buffer: item?.image?.base64 },
-                      'services',
-                      getRandomFileName('service-'),
-                      'service'
-                    );
-              return { ...all, image: upload };
-            })
-          );
-          // Upload Documents
-          // const modifiedDocument = await Promise.all(
-          //   document?.documents?.map(async (item) => {
-          //     const { _id, ...all } = item;
-          //     const upload = await uploadBufferFile(
-          //       { ...all.image, buffer: item?.image?.base64 },
-          //       "documents",
-          //       getRandomFileName("document-"),
-          //       'document'
-          //     );
-          //     return { ...all, image: upload };
-          //   })
-          // );
-          // Upload Award Images
-          const modifiedAward = await Promise.all(
-            award?.awards?.map(async (item) => {
-              const { _id, ...all } = item;
-              const upload =
-                item.image == null
-                  ? null
-                  : await uploadBufferFile(
-                      { ...all.image, buffer: item?.image?.base64 },
-                      'awards',
-                      getRandomFileName('award-'),
-                      'award'
-                    );
-              return { ...all, image: upload };
-            })
-          );
-          // Upload Certificate Images
-          const modifiedCertificate = await Promise.all(
-            certificate?.certificates?.map(async (item) => {
-              const { _id, ...all } = item;
-              const upload =
-                item.image == null
-                  ? null
-                  : await uploadBufferFile(
-                      { ...all.image, buffer: item?.image?.base64 },
-                      'certificates',
-                      getRandomFileName('certificate-'),
-                      'certificate'
-                    );
-              return { ...all, image: upload };
-            })
-          );
-          console.log(images);
-          await Profile.create({
-            user: user?.id,
-            group: req?.query?.group,
-            card: {
-              cardId,
-              theme,
-            },
-            profile: {
-              ...profile,
-              profileLink,
-              profilePicture: !images
-                ? null
-                : images?.find((obj) => obj.type === 'profile'),
-              profileBanner: !images
-                ? null
-                : images?.find((obj) => obj.type === 'banner'),
-              profileQR: qrImageUrl,
-            },
-            contact: {
-              ...contact,
-              status: contact?.contacts?.length > 0 ? true : false,
-              contacts: contact?.contacts.map((obj) => {
-                const filteredObj = Object.fromEntries(
-                  Object.entries(obj).filter(([key, value]) => value !== null)
-                );
-                delete filteredObj['_id']; // remove the _id key from the filtered object
-                return filteredObj;
-              }),
-            },
-            social: {
-              ...social,
-              status: social?.socials?.length > 0 ? true : false,
-              socials: social?.socials.map((obj) => {
-                const filteredObj = Object.fromEntries(
-                  Object.entries(obj).filter(([key, value]) => value !== null)
-                );
-                delete filteredObj['_id'];
-                if (obj.type === 'other') {
-                  const getSocial = getSocialMedia(filteredObj?.value);
-                  return {
-                    label: getSocial === 'Other' ? 'Social Media' : getSocial,
-                    type: getSocial.toLowerCase(),
-                    value: filteredObj.value,
-                  };
-                } else {
-                  return filteredObj;
-                }
-              }),
-            },
-            website: {
-              ...website,
-              status: website?.websites?.length > 0 ? true : false,
-              websites: website?.websites.map((obj) => {
-                const filteredObj = Object.fromEntries(
-                  Object.entries(obj).filter(([key, value]) => value !== null)
-                );
-                delete filteredObj['_id']; // remove the _id key from the filtered object
-                return filteredObj;
-              }),
-            },
-            category: {
-              ...category,
-              status: category?.categorys?.length > 0 ? true : false,
-              categorys: category?.categorys.map((obj) => {
-                const filteredObj = Object.fromEntries(
-                  Object.entries(obj).filter(([key, value]) => value !== null)
-                );
-                delete filteredObj['_id']; // remove the _id key from the filtered object
-                return filteredObj;
-              }),
-            },
-            service: {
-              ...service,
-              status: modifiedService.length > 0 ? true : false,
-              services: modifiedService,
-            },
-            // document: {
-            //   ...document,
-            //   status: modifiedDocument.length > 0 ? true : false,
-            //   documents: modifiedDocument,
-            // },
-            document: {
-              ...document,
-              status: document?.documents?.length > 0 ? true : false,
-              documents: document?.documents.map((obj) => {
-                const filteredObj = Object.fromEntries(
-                  Object.entries(obj).filter(([key, value]) => value !== null)
-                );
-                delete filteredObj['_id']; // remove the _id key from the filtered object
-                return filteredObj;
-              }),
-            },
-            award: {
-              ...award,
-              status: modifiedAward.length > 0 ? true : false,
-              awards: modifiedAward,
-            },
-            certificate: {
-              ...certificate,
-              status: modifiedCertificate.length > 0 ? true : false,
-              certificates: modifiedCertificate,
-            },
-            product: {
-              ...product,
-              status: modifiedProduct.length > 0 ? true : false,
-              products: modifiedProduct,
-            },
-            bank: {
-              ...bank,
-              status: bank?.bankDetails?.accnumber ? true : false,
-              bankDetails: bank?.bankDetails,
-            },
-            video: {
-              ...video,
-              status: video?.link?.link ? true : false,
-              link: video?.link,
-            },
-            enquiry: {
-              ...enquiry,
-              status: enquiry?.email?.email ? true : false,
-              email: enquiry?.email,
-            },
-          });
-          let message = { success: 'User Profile Created' };
-          console.log(message);
-          if (!req?.body?.asFunction)
-            return res.status(201).send({ success: true, message, data: user });
-        })
-        .catch(async (error) => {
-          //If User already exisits create second or third profile
-          console.log('user already exists', error?.errorInfo?.code);
-          if (
-            error?.errorInfo?.code === 'auth/phone-number-already-exists' ||
-            error?.errorInfo?.code === 'auth/email-already-exists'
-          ) {
-            console.log('phone no already exist');
-            let user = await User.findOne({ username: phone });
+    // Removing unwanted _id fields before saving to the database
+    delete bank?.bankDetails?._id;
+    delete video?.link?._id;
+    delete enquiry?.email?._id;
 
-            if (user == null) {
-              const userRecord = await admin.auth().getUserByPhoneNumber(phone);
-              user = await User.create({
-                username: phone,
-                uid: userRecord?.uid,
-                role: 'user',
-                providerData: userRecord?.providerData,
-              });
-            }
-            const options = {
-              scale: 34,
-              color: {
-                dark: '#BEFF6C', // dark color
-                light: '#1C1C1E', // light color
-              },
-            };
-            const cardId =
-              `${profile?.name.toLowerCase().split(' ').join('')}-` +
-              randomId().toLowerCase();
-            const profileLink = `${process.env.HOST_URL_HTTPS}/profile/${cardId}`;
-            const qrCode = await QRCode.toBuffer(profileLink, options);
-            const qrFile = {
-              buffer: qrCode,
-              mimetype: 'image/jpeg',
-            };
-            const qrImageUrl = await uploadFile(
-              qrFile,
-              'cards',
-              getRandomFileName('card-')
-            );
-            // Upload Product Images
-            const modifiedProduct = await Promise.all(
-              product?.products?.map(async (item) => {
-                const { _id, ...all } = item;
+    console.log('[INFO] - Starting to create user profile...');
 
-                const upload = await uploadBufferFile(
-                  { ...all.image, buffer: item?.image?.base64 },
-                  'products',
-                  getRandomFileName('product-'),
-                  'product'
-                );
-                return { ...all, image: upload };
-              })
-            );
+    // Upload files (profile images, banners, etc.)
+    const images = await uploadFiles(req?.files, 'profiles', req?.body?.asFunction);
 
-            // Upload Service Images
-            const modifiedService = await Promise.all(
-              service?.services?.map(async (item) => {
-                const { _id, ...all } = item;
-                const upload =
-                  item.image == null
-                    ? null
-                    : await uploadBufferFile(
-                        { ...all.image, buffer: item?.image?.base64 },
-                        'services',
-                        getRandomFileName('service-'),
-                        'service'
-                      );
-                return { ...all, image: upload };
-              })
-            );
+    // Generate QR Code for the profile
+    const options = {
+      scale: 34,
+      color: {
+        dark: '#BEFF6C', // dark color
+        light: '#1C1C1E', // light color
+      },
+    };
 
-            // Upload documents
-            // const modifiedDocument = await Promise.all(
-            //   document?.documents?.map(async (item) => {
-            //     const { _id, ...all } = item;
-            //     const upload =item.image == null?null: await uploadBufferFile(
-            //       { ...all.image, buffer: item?.image?.base64 },
-            //       "documents",
-            //       getRandomFileName("document-"),
-            //       'document'
-            //     );
-            //     return { ...all, image: upload };
-            //   })
-            // );
-            // Upload Award Images
-            const modifiedAward = await Promise.all(
-              award?.awards?.map(async (item) => {
-                const { _id, ...all } = item;
-                const upload =
-                  item.image == null
-                    ? null
-                    : await uploadBufferFile(
-                        { ...all.image, buffer: item?.image?.base64 },
-                        'awards',
-                        getRandomFileName('award-'),
-                        'award'
-                      );
-                return { ...all, image: upload };
-              })
-            );
-            // Upload Certificate Images
-            const modifiedCertificate = await Promise.all(
-              certificate?.certificates?.map(async (item) => {
-                const { _id, ...all } = item;
-                const upload =
-                  item.image == null
-                    ? null
-                    : await uploadBufferFile(
-                        { ...all.image, buffer: item?.image?.base64 },
-                        'certificates',
-                        getRandomFileName('certificate-'),
-                        'certificate'
-                      );
-                return { ...all, image: upload };
-              })
-            );
-            await Profile.create({
-              user: user?.id,
-              group: req?.query?.group,
-              card: {
-                cardId,
-                theme,
-              },
-              profile: {
-                ...profile,
-                profileLink,
-                profilePicture: !images
-                  ? null
-                  : images?.find((obj) => obj.type === 'profile'),
-                profileBanner: !images
-                  ? null
-                  : images?.find((obj) => obj.type === 'banner'),
-                profileQR: qrImageUrl,
-              },
-              contact: {
-                ...contact,
-                status: contact?.contacts?.length > 0 ? true : false,
-                contacts: contact?.contacts.map((obj) => {
-                  const filteredObj = Object.fromEntries(
-                    Object.entries(obj).filter(([key, value]) => value !== null)
-                  );
-                  delete filteredObj['_id']; // remove the _id key from the filtered object
-                  return filteredObj;
-                }),
-              },
-              social: {
-                ...social,
-                status: social?.socials?.length > 0 ? true : false,
-                socials: social?.socials.map((obj) => {
-                  const filteredObj = Object.fromEntries(
-                    Object.entries(obj).filter(([key, value]) => value !== null)
-                  );
-                  delete filteredObj['_id']; // remove the _id key from the filtered object
-                  return filteredObj;
-                }),
-              },
-              website: {
-                ...website,
-                status: website?.websites?.length > 0 ? true : false,
-                websites: website?.websites.map((obj) => {
-                  const filteredObj = Object.fromEntries(
-                    Object.entries(obj).filter(([key, value]) => value !== null)
-                  );
-                  delete filteredObj['_id']; // remove the _id key from the filtered object
-                  return filteredObj;
-                }),
-              },
+    const cardId = `${profile?.name.toLowerCase().replace(/\s+/g, '')}-${randomId().toLowerCase()}`;
+    const profileLink = `${process.env.HOST_URL_HTTPS}/profile/${cardId}`;
+    const qrCode = await QRCode.toBuffer(profileLink, options);
+    const qrFile = { buffer: qrCode, mimetype: 'image/jpeg' };
 
-              category: {
-                ...category,
-                status: category?.categorys?.length > 0 ? true : false,
-                categorys: category?.categorys.map((obj) => {
-                  const filteredObj = Object.fromEntries(
-                    Object.entries(obj).filter(([key, value]) => value !== null)
-                  );
-                  delete filteredObj['_id']; // remove the _id key from the filtered object
-                  return filteredObj;
-                }),
-              },
-
-              service: {
-                ...service,
-                status: modifiedService.length > 0 ? true : false,
-                services: modifiedService,
-              },
-              // document: {
-              //   ...document,
-              //   status: modifiedDocument.length > 0 ? true : false,
-              //   documents: modifiedDocument,
-              // },
-              document: {
-                ...document,
-                status: document?.documents?.length > 0 ? true : false,
-                documents: document?.documents.map((obj) => {
-                  const filteredObj = Object.fromEntries(
-                    Object.entries(obj).filter(([key, value]) => value !== null)
-                  );
-                  delete filteredObj['_id']; // remove the _id key from the filtered object
-                  return filteredObj;
-                }),
-              },
-              award: {
-                ...award,
-                status: modifiedAward.length > 0 ? true : false,
-                awards: modifiedAward,
-              },
-              certificate: {
-                ...certificate,
-                status: modifiedCertificate.length > 0 ? true : false,
-                certificates: modifiedCertificate,
-              },
-              product: {
-                ...product,
-                status: modifiedProduct.length > 0 ? true : false,
-                products: modifiedProduct,
-              },
-              bank: {
-                ...bank,
-                status: bank?.bankDetails?.accnumber ? true : false,
-                bankDetails: bank?.bankDetails,
-              },
-              video: {
-                ...video,
-                status: video?.videos?.length > 0 ? true : false,
-                videos: video?.videos.map((obj) => {
-                  const filteredObj = Object.fromEntries(
-                    Object.entries(obj).filter(([key, value]) => value !== null)
-                  );
-                  delete filteredObj['_id']; // remove the _id key from the filtered object
-                  return filteredObj;
-                }),
-              },
-              enquiry: {
-                ...enquiry,
-                status: enquiry?.email?.email ? true : false,
-                email: enquiry?.email,
-              },
-            });
-            let message = { success: 'User Profile Created' };
-            console.log(message);
-            if (!req?.body?.asFunction)
-              return res
-                .status(201)
-                .send({ success: true, message, data: user });
-          }
-
-          if (!req?.body?.asFunction)
-            return next(
-              new ErrorResponse(
-                `Something went wrong ${error?.errorInfo?.code ?? error}`,
-                400
-              )
-            );
-        });
-    })
-    .catch((err) => {
-      console.log(err);
-      if (!req?.body?.asFunction)
-        return next(new ErrorResponse(`File upload failed ${err}`, 400));
+    // Create Firebase user
+    const userRecord = await admin.auth().createUser({
+      email: email,
+      password: phone, // User's password
+      phoneNumber: phone,
+      displayName: profile?.name,
+      disabled: false,
     });
+
+    console.log(`[SUCCESS] - Firebase user created: ${userRecord?.uid}`);
+
+    // Create a new user record in the application DB
+    const user = await User.create({
+      username: phone,
+      uid: userRecord?.uid,
+      role: 'user',
+      providerData: userRecord?.providerData,
+    });
+
+    console.log(`[INFO] - User created in DB with ID: ${user?.id}`);
+
+    // Upload QR Image
+    const qrImageUrl = await uploadFile(qrFile, 'cards', getRandomFileName('card-'));
+    console.log(`[INFO] - QR Code uploaded successfully.`);
+
+    // Process and upload images for products, services, etc.
+    const modifiedProduct = await processAndUploadImages(product?.products, 'product', 'products');
+    const modifiedService = await processAndUploadImages(service?.services, 'service', 'services');
+    const modifiedAward = await processAndUploadImages(award?.awards, 'award', 'awards');
+    const modifiedCertificate = await processAndUploadImages(certificate?.certificates, 'certificate', 'certificates');
+
+    // Create the Profile document
+    const profileDoc = await Profile.create({
+      user: user?.id,
+      group: req?.query?.group,
+      card: { cardId, theme },
+      profile: {
+        ...profile,
+        profileLink,
+        profilePicture: images?.find((obj) => obj.type === 'profile') || null,
+        profileBanner: images?.find((obj) => obj.type === 'banner') || null,
+        profileQR: qrImageUrl,
+      },
+      contact: {
+        ...contact,
+        status: contact?.contacts?.length > 0,
+        contacts: filterEmptyFields(contact?.contacts),
+      },
+      social: {
+        ...social,
+        status: social?.socials?.length > 0,
+        socials: filterSocialMedia(social?.socials),
+      },
+      website: {
+        ...website,
+        status: website?.websites?.length > 0,
+        websites: filterEmptyFields(website?.websites),
+      },
+      category: {
+        ...category,
+        status: category?.categorys?.length > 0,
+        categorys: filterEmptyFields(category?.categorys),
+      },
+      service: {
+        ...service,
+        status: modifiedService.length > 0,
+        services: modifiedService,
+      },
+      document: {
+        ...document,
+        status: document?.documents?.length > 0,
+        documents: filterEmptyFields(document?.documents),
+      },
+      award: {
+        ...award,
+        status: modifiedAward.length > 0,
+        awards: modifiedAward,
+      },
+      certificate: {
+        ...certificate,
+        status: modifiedCertificate.length > 0,
+        certificates: modifiedCertificate,
+      },
+      product: {
+        ...product,
+        status: modifiedProduct.length > 0,
+        products: modifiedProduct,
+      },
+      bank: {
+        ...bank,
+        status: !!bank?.bankDetails?.accnumber,
+        bankDetails: bank?.bankDetails,
+      },
+      video: {
+        ...video,
+        status: !!video?.link?.link,
+        link: video?.link,
+      },
+      enquiry: {
+        ...enquiry,
+        status: !!enquiry?.email?.email,
+        email: enquiry?.email,
+      },
+    });
+
+    console.log('[SUCCESS] - Profile created successfully.');
+
+    // Send a success response
+    if (!req?.body?.asFunction) {
+      return res.status(201).json({ success: true, message: 'User Profile Created', data: user });
+    }
+
+  } catch (error) {
+    console.error('[ERROR] - An error occurred while creating the user profile:', error);
+    // Handle Firebase user already exists error
+    if (error?.errorInfo?.code === 'auth/phone-number-already-exists' || error?.errorInfo?.code === 'auth/email-already-exists') {
+      console.warn('[WARNING] - User already exists. Fetching user details...');
+      return handleExistingUser(req, res, next);
+    }
+
+    // Handle other errors
+    if (!req?.body?.asFunction) {
+      return next(new ErrorResponse(`Something went wrong: ${error.message || error}`, 400));
+    }
+  }
 });
+
+// Function to handle existing users
+async function handleExistingUser(req, res, next) {
+  const { phone, profile, theme } = req?.body;
+
+  try {
+    let user = await User.findOne({ username: phone });
+
+    if (!user) {
+      const userRecord = await admin.auth().getUserByPhoneNumber(phone);
+      user = await User.create({
+        username: phone,
+        uid: userRecord?.uid,
+        role: 'user',
+        providerData: userRecord?.providerData,
+      });
+    }
+
+    console.log('[INFO] - Existing user found. Creating additional profile.');
+
+    const options = {
+      scale: 34,
+      color: {
+        dark: '#BEFF6C',
+        light: '#1C1C1E',
+      },
+    };
+
+    const cardId = `${profile?.name.toLowerCase().replace(/\s+/g, '')}-${randomId().toLowerCase()}`;
+    const profileLink = `${process.env.HOST_URL_HTTPS}/profile/${cardId}`;
+    const qrCode = await QRCode.toBuffer(profileLink, options);
+    const qrFile = { buffer: qrCode, mimetype: 'image/jpeg' };
+
+    const qrImageUrl = await uploadFile(qrFile, 'cards', getRandomFileName('card-'));
+
+    const modifiedProduct = await processAndUploadImages(req.body.product?.products, 'product', 'products');
+    const modifiedService = await processAndUploadImages(req.body.service?.services, 'service', 'services');
+
+    await Profile.create({
+      user: user?.id,
+      card: { cardId, theme },
+      profile: {
+        ...profile,
+        profileLink,
+        profileQR: qrImageUrl,
+      },
+      product: { products: modifiedProduct },
+      service: { services: modifiedService },
+    });
+
+    console.log('[SUCCESS] - Additional profile created for existing user.');
+
+    if (!req?.body?.asFunction) {
+      return res.status(201).json({ success: true, message: 'User Profile Created', data: user });
+    }
+
+  } catch (error) {
+    console.error('[ERROR] - Error handling existing user:', error);
+    if (!req?.body?.asFunction) {
+      return next(new ErrorResponse(`Error handling existing user: ${error.message || error}`, 400));
+    }
+  }
+}
+
+// // Helper functions
+
+// // Filters out null or empty fields
+// function filterEmptyFields(items) {
+//   return items?.map((obj) => {
+//     const filteredObj = Object.fromEntries(
+//       Object.entries(obj).filter(([_, value]) => value !== null)
+//     );
+//     delete filteredObj['_id'];
+//     return filteredObj;
+//   }) || [];
+// }
+// 
+// // Handles social media input
+// function filterSocialMedia(socials) {
+//   return socials?.map((obj) => {
+//     const filteredObj = Object.fromEntries(
+//       Object.entries(obj).filter(([_, value]) => value !== null)
+//     );
+//     delete filteredObj['_id'];
+//     if (obj.type === 'other') {
+//       const getSocial = getSocialMedia(filteredObj?.value);
+//       return {
+//         label: getSocial === 'Other' ? 'Social Media' : getSocial,
+//         type: getSocial.toLowerCase(),
+//         value: filteredObj.value,
+//       };
+//     } else {
+//       return filteredObj;
+//     }
+//   }) || [];
+// }
+
+// // Processes and uploads images for various categories
+// async function processAndUploadImages(items, filePrefix, folderName) {
+//   return Promise.all(
+//     items?.map(async (item) => {
+//       const { _id, ...rest } = item; // Exclude _id from items
+//       if (rest?.file) {
+//         rest.file = await uploadFile(rest.file, folderName, getRandomFileName(filePrefix));
+//       }
+//       return rest;
+//     }) || []
+//   );
+// }
+
 
 /**
  * @desc    Create new admin user profile
