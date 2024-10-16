@@ -269,51 +269,51 @@ async function handleExistingUser(req, res, next) {
   }
 }
 
-// // Helper functions
+// Helper functions
 
-// // Filters out null or empty fields
-// function filterEmptyFields(items) {
-//   return items?.map((obj) => {
-//     const filteredObj = Object.fromEntries(
-//       Object.entries(obj).filter(([_, value]) => value !== null)
-//     );
-//     delete filteredObj['_id'];
-//     return filteredObj;
-//   }) || [];
-// }
-// 
-// // Handles social media input
-// function filterSocialMedia(socials) {
-//   return socials?.map((obj) => {
-//     const filteredObj = Object.fromEntries(
-//       Object.entries(obj).filter(([_, value]) => value !== null)
-//     );
-//     delete filteredObj['_id'];
-//     if (obj.type === 'other') {
-//       const getSocial = getSocialMedia(filteredObj?.value);
-//       return {
-//         label: getSocial === 'Other' ? 'Social Media' : getSocial,
-//         type: getSocial.toLowerCase(),
-//         value: filteredObj.value,
-//       };
-//     } else {
-//       return filteredObj;
-//     }
-//   }) || [];
-// }
+// Filters out null or empty fields
+function filterEmptyFields(items) {
+  return items?.map((obj) => {
+    const filteredObj = Object.fromEntries(
+      Object.entries(obj).filter(([_, value]) => value !== null)
+    );
+    delete filteredObj['_id'];
+    return filteredObj;
+  }) || [];
+}
 
-// // Processes and uploads images for various categories
-// async function processAndUploadImages(items, filePrefix, folderName) {
-//   return Promise.all(
-//     items?.map(async (item) => {
-//       const { _id, ...rest } = item; // Exclude _id from items
-//       if (rest?.file) {
-//         rest.file = await uploadFile(rest.file, folderName, getRandomFileName(filePrefix));
-//       }
-//       return rest;
-//     }) || []
-//   );
-// }
+// Handles social media input
+function filterSocialMedia(socials) {
+  return socials?.map((obj) => {
+    const filteredObj = Object.fromEntries(
+      Object.entries(obj).filter(([_, value]) => value !== null)
+    );
+    delete filteredObj['_id'];
+    if (obj.type === 'other') {
+      const getSocial = getSocialMedia(filteredObj?.value);
+      return {
+        label: getSocial === 'Other' ? 'Social Media' : getSocial,
+        type: getSocial.toLowerCase(),
+        value: filteredObj.value,
+      };
+    } else {
+      return filteredObj;
+    }
+  }) || [];
+}
+
+// Processes and uploads images for various categories
+async function processAndUploadImages(items, filePrefix, folderName) {
+  return Promise.all(
+    items?.map(async (item) => {
+      const { _id, ...rest } = item; // Exclude _id from items
+      if (rest?.file) {
+        rest.file = await uploadFile(rest.file, folderName, getRandomFileName(filePrefix));
+      }
+      return rest;
+    }) || []
+  );
+}
 
 
 /**
