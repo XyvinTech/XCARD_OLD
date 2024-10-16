@@ -3,7 +3,7 @@ name: Deploy xcard-backend
 on:
   push:
     branches:
-      - main
+      - test
 
 jobs:
   build:
