@@ -37,7 +37,7 @@ jobs:
         id: build-and-push-image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: xcard
+          ECR_REPOSITORY: x-card
           IMAGE_TAG: latest
 
         run: |
@@ -51,7 +51,7 @@ jobs:
           AWS_REGION: ${{ secrets.AWS_REGION_PROD }}
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID_PROD }}
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: xcard
+          ECR_REPOSITORY: x-card
           IMAGE_TAG: latest
           EC2_INSTANCE_IP: ${{ secrets.EC2_INSTANCE_IP_PROD }}
           SSH_KEY: ${{ secrets.EC2_PRIVATE_KEY_PROD }}
@@ -74,8 +74,8 @@ jobs:
             # Pull Docker Image
             sudo docker pull ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
 
-            sudo docker stop ${{ env.CONTAINER_NAME }} || true
-            sudo docker rm ${{ env.CONTAINER_NAME }} || true
+            # sudo docker stop ${{ env.CONTAINER_NAME }} || true
+            # sudo docker rm ${{ env.CONTAINER_NAME }} || true
 
             sudo docker run -d \
               -p 8000:${{ env.PORT }}\
