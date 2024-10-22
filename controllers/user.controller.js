@@ -79,9 +79,18 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
     const qrCode = await QRCode.toBuffer(profileLink, options);
     const qrFile = { buffer: qrCode, mimetype: 'image/jpeg' };
 
+    // Trim and validate email format
+    const trimmedEmail = email?.trim();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(trimmedEmail)) {
+      throw new ErrorResponse("Invalid email format.", 400);
+    }
+
+    console.log(`[DEBUG] - Creating Firebase user with email: ${trimmedEmail}`);
+
     // Create Firebase user
     const userRecord = await admin.auth().createUser({
-      email: email,
+      email: trimmedEmail,
       password: phone, // User's password
       phoneNumber: phone,
       displayName: profile?.name,
