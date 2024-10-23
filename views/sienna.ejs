@@ -19,29 +19,25 @@
     <img src="/profile/public/sienna/assets/icons/loader.svg" alt="loading" />
   </div>
 
-  <header>
-    <img class="user_bg" id="user_bg" src="" alt="user-bg" />
-    <div class="avatar_section">
-      <div class="avatar_img">
-        <img id="avatar" class="avatar" src="" alt="avatar" />
+  <header style="margin: 0; padding: 0; line-height: 1;">
+    <img class="user_bg" id="user_bg" src="" alt="user-bg" style="display: block; width: 100%;">
+    <div class="avatar_section" style="margin: 0; padding: 0; text-align: left;"> <!-- Changed to left -->
+      <div class="avatar_img" style="margin: 0; padding: 0; display: inline-block;">
+        <img id="avatar" class="avatar" src="" alt="avatar" style="display: block; margin: 0 auto;">
       </div>
-      <div class="user_info">
-        <div class="user_name_section">
-          <h1 id="user_name" class="user_name">
+      <div class="user_info" style="margin-left: 40px; padding: 0;"> <!-- Adjust the margin-left value as needed -->
+        <div class="user_name_section" style="margin: 0; padding: 0;">
+          <h1 id="user_name" class="user_name" style="margin: 0; padding: 0; line-height: 1;">
             <!-- name -->
           </h1>
-          <!--  <div class="rating d_none" id="rating_section" style="font-size: 3.5rem; padding: 10px 20px; display: flex; align-items: center;">
-            <img src="https://services.google.com/fh/files/misc/google_g_icon_download.png" alt="star" width="50" />
-            <p>Post Reviews</p>
-          </div> -->
         </div>
       </div>
     </div>
   </header>
-
+  
   
 
-  <div class="contact_buttons" style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 20px;">
+  <div class="contact_buttons" style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 10px;">
     <button id="rating_button" class="btn btn_primary btn_dark" style="display: flex; align-items: center; padding: 10px 20px; gap: 8px; border: none; border-radius: 5px; background-color: #bf631c;">
         <img src="https://services.google.com/fh/files/misc/google_g_icon_download.png" alt="star" width="20" />
         <span style="color: white; font-size: 14px;">Post Reviews</span>
