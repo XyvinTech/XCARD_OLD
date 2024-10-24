@@ -19,23 +19,22 @@
     <img src="/profile/public/sienna/assets/icons/loader.svg" alt="loading" />
   </div>
 
-  <header style="margin: 0; padding: 0; line-height: 1;">
-    <img class="user_bg" id="user_bg" src="" alt="user-bg" style="display: block; width: 100%;">
-    <div class="avatar_section" style="margin: 0; padding: 0; text-align: left;"> <!-- Changed to left -->
-      <div class="avatar_img" style="margin: 0; padding: 0; display: inline-block;">
-        <img id="avatar" class="avatar" src="" alt="avatar" style="display: block; margin: 0 auto;">
+  <header style="margin: 0; padding: 0; line-height: 1; max-width: 100%; overflow: hidden;">
+    <img class="user_bg" id="user_bg" src="/api/placeholder/800/200" alt="user-bg" style="display: block; width: 100%;">
+    <div class="avatar_section" style="margin: 0; padding: 20px; position: relative; max-width: 100%; box-sizing: border-box;">
+      <div class="avatar_img" style="margin: 0; padding: 0; display: inline-block; vertical-align: top; width: 120px; min-width: 120px;">
+        <img id="avatar" class="avatar" src="/api/placeholder/120/120" alt="avatar" style="display: block; width: 120px; height: 120px; object-fit: cover;">
       </div>
-      <div class="user_info" style="margin-left: 40px; padding: 0;"> <!-- Adjust the margin-left value as needed -->
+      <div class="user_info" style="margin: 0 0 0 140px; padding: 0; display: block; overflow: hidden; max-width: calc(100% - 160px);">
         <div class="user_name_section" style="margin: 0; padding: 0;">
-          <h1 id="user_name" class="user_name" style="margin: 0; padding: 0; line-height: 1;">
-            <!-- name -->
+          <h1 id="user_name" class="user_name" style="margin: 0; padding: 0; font-size: 24px; line-height: 1.2; word-wrap: break-word;">
+            John Doe With A Very Long Name That Needs To Wrap Properly
           </h1>
         </div>
       </div>
     </div>
-  </header>
-  
-  
+</header>
+
 
   <div class="contact_buttons" style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 10px;">
     <button id="rating_button" class="btn btn_primary btn_dark" style="display: flex; align-items: center; padding: 10px 20px; gap: 8px; border: none; border-radius: 5px; background-color: #bf631c;">
