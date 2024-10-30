@@ -530,7 +530,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // contact
   const save_contact = document.getElementById('save_contact');
+  console.log('save_contact', save_contact);
   const play_games = document.getElementById('play_games');
+  console.log('play_games', play_games);
 
   // const send_hi_btn = document.getElementById("send_hi_btn"); test
   // const lets_chat_btn = document.getElementById("chatButton");
@@ -813,21 +815,21 @@ document.addEventListener('DOMContentLoaded', async () => {
       case 'email':
         return `mailto:${value}`;
       case 'location':
-        const locationBlock = document.getElementsByClassName('location')[0];
+        // const locationBlock = document.getElementsByClassName('location')[0];
 
-        document
-          .getElementById('location_display_id')
-          .classList.remove('d_none');
+        // document
+        //   .getElementById('location_display_id')
+        //   .classList.remove('d_none');
 
-        locationBlock.querySelector('p').textContent = value;
+        // locationBlock.querySelector('p').textContent = value;
 
-        value = value.replace(/\s/g, '+');
+        // value = value.replace(/\s/g, '+');
 
-        locationBlock.addEventListener('click', () => {
-          window.open(`https://www.google.com/maps?q=${value}`, '_blank');
-        });
+        // locationBlock.addEventListener('click', () => {
+        //   window.open(`https://www.google.com/maps?q=${value}`, '_blank');
+        // });
 
-        return `https://www.google.com/maps?q=${value}`;
+        // return `https://www.google.com/maps?q=${value}`;
 
       default:
         return;
@@ -854,9 +856,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('contact_section').classList.remove('d_none');
 
     if (contactVisibility) {
-      document
-        .getElementById('save_contact_button_id')
-        .classList.remove('d_none');
+      // document
+      //   .getElementById('save_contact_button_id')
+      //   .classList.remove('d_none');
       if (!socialVisibility) {
         data.social.socials = [];
       }
@@ -903,7 +905,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       socials.map((social) => {
         if (social.type == 'google') {
           const ratingSection = document.getElementById('rating_section');
-          ratingSection.classList.remove('d_none');
+          console.log('ratingSection', ratingSection);
+          // ratingSection.classList.remove('d_none');
           ratingSection.addEventListener('click', () => {
             window.open(social.value, '_blank');
           });
@@ -933,6 +936,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       socials.map((social) => {
         if (social.type == 'google') {
           const ratingSection = document.getElementById('rating_section');
+          console.log('ratingSection', ratingSection);
           ratingSection.classList.remove('d_none');
           ratingSection.addEventListener('click', () => {
             window.open(social.value, '_blank');
@@ -1034,8 +1038,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       whatsapp
     );
   });
-
+  console.log('play_games init');
   play_games.addEventListener('click', () => {
+    console.log('clicked');
     window.open('https://friv.com', '_blank');
   });
 
