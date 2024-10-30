@@ -532,7 +532,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const save_contact = document.getElementById('save_contact');
   const play_games = document.getElementById('play_games');
 
-  // const send_hi_btn = document.getElementById("send_hi_btn");
+  // const send_hi_btn = document.getElementById("send_hi_btn"); test
   // const lets_chat_btn = document.getElementById("chatButton");
   const bottom_fixed_btn_link = document.getElementById(
     'bottom_fixed_btn_link'
