@@ -1,8 +1,8 @@
-import express from 'express';
-import * as userController from '../controllers/user.controller.js';
-import * as authController from '../controllers/auth.controller.js';
-import { authorize, protect } from '../middlewares/auth.middleware.js';
-import multer from 'multer';
+import express from "express";
+import * as userController from "../controllers/user.controller.js";
+import * as authController from "../controllers/auth.controller.js";
+import { authorize, protect } from "../middlewares/auth.middleware.js";
+import multer from "multer";
 
 /**
  * @route  User Route
@@ -23,7 +23,7 @@ const upload = multer({
 // Multer initialisation for excel
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/');
+    cb(null, "uploads/");
   },
   filename: (req, file, cb) => {
     cb(null, `${Date.now()}-${file.originalname}`);
@@ -32,134 +32,134 @@ const storage = multer.diskStorage({
 
 const excel = multer({ storage });
 
-userRouter.route('/appversion').get(userController.appVersion);
+userRouter.route("/appversion").get(userController.appVersion);
 
 userRouter
-  .route('/create')
+  .route("/create")
   .post(
     protect,
-    authorize('admin', 'super'),
-    upload.array('file'),
+    authorize("admin", "super"),
+    upload.array("file"),
     userController.createUserProfile
   );
 userRouter
-  .route('/getNotifications')
+  .route("/getNotifications")
   .get(
     protect,
-    authorize('user', 'admin', 'super'),
+    authorize("user", "admin", "super"),
     userController.getNotifications
   );
 
 userRouter
-  .route('/createAdmin')
-  .post(upload.array('file'), userController.createAdminUserProfile);
+  .route("/createAdmin")
+  .post(upload.array("file"), userController.createAdminUserProfile);
 
 userRouter
-  .route('/update')
+  .route("/update")
   .post(
     protect,
-    authorize('admin', 'user', 'super'),
-    upload.array('file'),
+    authorize("admin", "user", "super"),
+    upload.array("file"),
     userController.updateUserProfile
   );
 
 userRouter
-  .route('/delete')
-  .delete(protect, authorize('admin', 'user'), userController.deleteUser);
+  .route("/delete")
+  .delete(protect, authorize("admin", "user"), userController.deleteUser);
 
 userRouter
-  .route('/updateAdmin')
+  .route("/updateAdmin")
   .post(
     protect,
-    authorize('super', 'admin'),
-    upload.single('file'),
+    authorize("super", "admin"),
+    upload.single("file"),
     userController.updateAdminUserProfile
   );
 userRouter
-  .route('/updateUserContact')
+  .route("/updateUserContact")
   .post(
     protect,
-    authorize('user'),
-    upload.single('file'),
+    authorize("user"),
+    upload.single("file"),
     userController.updateUserContact
   );
 //Super Admin Routes
 
 userRouter
-  .route('/upateSuperAdmin')
+  .route("/upateSuperAdmin")
   .post(
     protect,
-    authorize('super'),
+    authorize("super"),
     userController.updateSuperAdminUserProfile
   );
 userRouter
-  .route('/enableDisableUser')
+  .route("/enableDisableUser")
   .post(
     protect,
-    authorize('super'),
-    upload.single('file'),
+    authorize("super"),
+    upload.single("file"),
     userController.enableDisableUser
   );
 
 userRouter
-  .route('/enableDisableEditing')
+  .route("/enableDisableEditing")
   .post(
     protect,
-    authorize('admin', 'super'),
+    authorize("admin", "super"),
     userController.enableDisableEditing
   );
 
 userRouter
-  .route('/enableDisableProfile')
+  .route("/enableDisableProfile")
   .post(
     protect,
-    authorize('admin', 'super'),
-    upload.single('file'),
+    authorize("admin", "super"),
+    upload.single("file"),
     userController.enableDisableProfile
   );
 userRouter
-  .route('/admin')
-  .get(protect, authorize('super'), userController.getAllAdmin);
+  .route("/admin")
+  .get(protect, authorize("super"), userController.getAllAdmin);
 userRouter
-  .route('/admin/search')
-  .get(protect, authorize('super'), userController.searchAllAdmin);
+  .route("/admin/search")
+  .get(protect, authorize("super"), userController.searchAllAdmin);
 userRouter
-  .route('/admin/profiles')
-  .get(protect, authorize('super'), userController.getAllProfilesOfAdmin);
+  .route("/admin/profiles")
+  .get(protect, authorize("super"), userController.getAllProfilesOfAdmin);
 
 userRouter
-  .route('/admin/profiles/search')
-  .get(protect, authorize('super'), userController.searchAllProfilesOfAdmin);
+  .route("/admin/profiles/search")
+  .get(protect, authorize("super"), userController.searchAllProfilesOfAdmin);
 
 userRouter
-  .route('/admin/analytics')
-  .get(protect, authorize('super'), userController.getSingleAdminAnalytics);
+  .route("/admin/analytics")
+  .get(protect, authorize("super"), userController.getSingleAdminAnalytics);
 
 userRouter
-  .route('/admin/export')
-  .get(protect, authorize('super'), userController.exportAdminData);
+  .route("/admin/export")
+  .get(protect, authorize("super"), userController.exportAdminData);
 
 userRouter
-  .route('/analytics')
-  .get(protect, authorize('super'), userController.getAdminAnalytics);
+  .route("/analytics")
+  .get(protect, authorize("super"), userController.getAdminAnalytics);
 
 userRouter
-  .route('/analytics/counts')
-  .get(protect, authorize('super'), userController.getAdminCountAnalytics);
+  .route("/analytics/counts")
+  .get(protect, authorize("super"), userController.getAdminCountAnalytics);
 
 //Super Admin Routes
 userRouter
-  .route('/createBulk')
+  .route("/createBulk")
   .post(
     protect,
-    authorize('admin', 'super'),
-    excel.single('file'),
+    authorize("admin", "super"),
+    excel.single("file"),
     userController.createUserProfileBulk
   );
 
 userRouter
-  .route('/createCloudBulk')
-  .post(protect, authorize('admin'), userController.createUserProfileCloudBulk);
+  .route("/createCloudBulk")
+  .post(protect, authorize("admin"), userController.createUserProfileCloudBulk);
 
 // Special Routes on demand
 
@@ -168,11 +168,14 @@ userRouter
 //   .delete(userController.deleteFirebaseUser);
 
 userRouter
-  .route('/export/enquiry')
+  .route("/export/enquiry")
   .get(
     protect,
-    authorize('admin', 'super', 'user'),
+    authorize("admin", "super", "user"),
     userController.exportEnquiry
   );
+  
+  
+userRouter.route("/send-mail").post(userController.sendContactEmail);
 
 export default userRouter;
