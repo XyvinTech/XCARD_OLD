@@ -43,8 +43,6 @@ const transporter = Nodemailer.createTransport({
   },
 
 });
-console.log(process.env.NODE_MAILER_USER)
-console.log(process.env.NODE_MAILER_PASS)
 
 /**
  * @desc    Create new user profile
@@ -2727,7 +2725,7 @@ export const sendContactEmail = asyncHandler(async (req, res) => {
 
     const mailOptions = {
       from:emailAddress,
-      to: "aswinp.offcial@gmail.com",
+      to: process.env.NODE_MAILER_RECEIVER,
       subject: `Contact Us Form Submission: ${subject}`,
       text: `New message from ${firstName} ${lastName} (${emailAddress}):\n\n${message}`,
     };
