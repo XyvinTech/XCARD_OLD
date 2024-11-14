@@ -55,11 +55,30 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
       enquiry,
     } = all;
 
-    // Removing unwanted _id fields before saving to the database
-    delete bank?.bankDetails?._id;
-    delete video?.link?._id;
-    delete enquiry?.email?._id;
+    // Check if user already exists
+    let existingUser = await User.findOne({ username: phone });
+    if (existingUser) {
+      // If user exists, create a new profile for the existing user
+      const userProfile = await Profile.create({
+        user: existingUser._id,
+        profile: profile,
+        contact: contact,
+        social: social,
+        website: website,
+        category: category,
+        video: video,
+        service: service,
+        document: document,
+        certificate: certificate,
+        award: award,
+        bank: bank,
+        product: product,
+        enquiry: enquiry
+      });
+      return res.status(201).json({ success: true, message: 'Profile created for existing user', data: userProfile });
+    }
 
+    // Proceed with creating a new user if not found
     console.log('[INFO] - Starting to create user profile...');
 
     // Upload files (profile images, banners, etc.)
@@ -202,16 +221,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
 
   } catch (error) {
     console.error('[ERROR] - An error occurred while creating the user profile:', error);
-    // Handle Firebase user already exists error
-    if (error?.errorInfo?.code === 'auth/phone-number-already-exists' || error?.errorInfo?.code === 'auth/email-already-exists') {
-      console.warn('[WARNING] - User already exists. Fetching user details...');
-      return handleExistingUser(req, res, next);
-    }
-
-    // Handle other errors
-    if (!req?.body?.asFunction) {
-      return next(new ErrorResponse(`Something went wrong: ${error.message || error}`, 400));
-    }
+    return next(new ErrorResponse(`Something went wrong: ${error.message || error}`, 400));
   }
 });
 
@@ -2087,7 +2097,7 @@ function mixinEngineEdit(req, array) {
     .then((results) => {
       console.log(`${results.length} items updated.`);
     })
-    .catch((error) => console.error(error));
+      .catch((error) => console.error(error));
 }
 /**
  * @desc   Mixin Admin Edit
@@ -2626,7 +2636,7 @@ export const getNotifications = asyncHandler(async (req, res, next) => {
   }
 });
 
-export const exportEnquiry = asyncHandler(async (req, res) => {
+export const exportEnquiry = asyncHandler (async (req, res) => {
   try {
     const { id } = req.query;
     const profile = await Profile.findByIdAndUpdate({ _id: id }).select('form');
