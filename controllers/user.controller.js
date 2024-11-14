@@ -549,7 +549,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
           if (!req?.body?.asFunction)
             return next(
               new ErrorResponse(
-                `Something went wrong ${error?.errorInfo?.code ?? error}`,
+                `Something went wrong now ${error?.errorInfo?.code ?? error}`,
                 400
               )
             );
