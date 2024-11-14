@@ -1,3 +1,4 @@
+import dotenv from 'dotenv';
 import asyncHandler from '../middlewares/async.middleware.js';
 import admin from 'firebase-admin';
 import User from '../models/User.js';
@@ -25,6 +26,23 @@ import Group from '../models/Group.js';
 import Setting from '../models/Setting.js';
 import Nodemailer from 'nodemailer';
 import { query } from 'express';
+
+dotenv.config({
+  path: process.env.NODE_ENV === 'production' ? '.env' : '.env',
+});
+
+
+
+
+const transporter = Nodemailer.createTransport({
+  service:'gmail',
+  auth: {
+    user: process.env.NODE_MAILER_USER,
+    pass: process.env.NODE_MAILER_PASS,
+
+  },
+
+});
 
 /**
  * @desc    Create new user profile
@@ -823,7 +841,7 @@ export const exportAdminData = asyncHandler(async (req, res, next) => {
 
     // Create a Nodemailer transporter
     const transporter = Nodemailer.createTransport({
-      service: process.env.NODE_MAILER_PROVIDER,
+      service:'gmail',
       auth: {
         user: process.env.NODE_MAILER_USER,
         pass: process.env.NODE_MAILER_PASS,
@@ -2664,13 +2682,6 @@ export const exportEnquiry = asyncHandler (async (req, res) => {
 
     // Create a Nodemailer transporter
 
-    const transporter = Nodemailer.createTransport({
-      service: process.env.NODE_MAILER_PROVIDER,
-      auth: {
-        user: process.env.NODE_MAILER_USER,
-        pass: process.env.NODE_MAILER_PASS,
-      },
-    });
 
     const user = await Profile.findOne({
       user: new Types.ObjectId(req?.user?.id),
@@ -2706,4 +2717,35 @@ export const exportEnquiry = asyncHandler (async (req, res) => {
       .status(500)
       .json({ message: 'An error occurred while downloading excel' });
   }
+});
+
+
+
+export const sendContactEmail = asyncHandler(async (req, res) => {
+  const { subject, firstName, lastName, emailAddress, message } = req.body;
+
+  if (!subject || !firstName || !lastName || !emailAddress || !message) {
+    return res.status(400).json({ error: 'All fields are required' });
+  }
+
+
+
+  try {
+    
+
+    const mailOptions = {
+      from:emailAddress,
+      to: process.env.NODE_MAILER_RECEIVER,
+      subject: `Contact Us Form Submission: ${subject}`,
+      text: `New message from ${firstName} ${lastName} (${emailAddress}):\n\n${message}`,
+    };
+
+    await transporter.sendMail(mailOptions);
+    res.status(200).json({ success: 'Message sent and saved successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to process the request', details: error.message });
+  }
+
+
 });
