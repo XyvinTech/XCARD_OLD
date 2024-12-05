@@ -617,6 +617,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     let uncategorizedProducts = [];
 
     if (
+      console.log('data.product', data.product),
+      console.log('data.product.status', data.product.status),
+      console.log('data.product.products.length', data.product.products.length),
       data.product &&
       data.product.status == true &&
       data.product.products.length > 0
