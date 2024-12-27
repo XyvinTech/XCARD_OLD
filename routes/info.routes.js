@@ -10,5 +10,6 @@ const informationRouter = express.Router({ mergeParams: true });
 
 informationRouter.route("/terms").get(infoController.viewTerms);
 informationRouter.route("/privacy").get(infoController.viewPrivacy);
+informationRouter.route("/trending-profiles").get(infoController.getTrendingProfiles);
 
 export default informationRouter;
