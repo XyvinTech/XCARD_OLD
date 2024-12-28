@@ -6,6 +6,7 @@ import * as infoController from "../controllers/info.controller.js";
  * @desc   Route used for information operations
  * @url    api/v1/information
  */
+//test
 const informationRouter = express.Router({ mergeParams: true });
 
 informationRouter.route("/terms").get(infoController.viewTerms);
