@@ -32,14 +32,19 @@ export const getTrendingProfiles = asyncHandler(async (req, res, next) => {
   const limit = parseInt(req.query.limit, 10) || 20;
   const startIndex = (page - 1) * limit;
 
-  const totalProfiles = await Profile.countDocuments({ visible: true });
-  const totalPages = Math.ceil(totalProfiles / limit);
-
-  const profiles = await Profile.find({ visible: true })
+  const profiles = await Profile.find({ 
+    'profile.name': { $exists: true, $ne: '' },  // Ensure profile has a name
+    'visitCount': { $exists: true }  // Ensure visit count exists
+  })
     .sort({ visitCount: -1 })
     .select('profile.name profile.companyName profile.designation visitCount')
     .skip(startIndex)
     .limit(limit);
+
+  const totalValidProfiles = await Profile.countDocuments({ 
+    'profile.name': { $exists: true, $ne: '' },
+    'visitCount': { $exists: true }
+  });
 
   res.status(200).json({
     success: true,
@@ -47,8 +52,8 @@ export const getTrendingProfiles = asyncHandler(async (req, res, next) => {
     pagination: {
       page,
       limit,
-      totalPages,
-      totalResults: totalProfiles
+      totalPages: Math.ceil(totalValidProfiles / limit),
+      totalResults: totalValidProfiles
     }
   });
 });
