@@ -65,6 +65,10 @@
                               "designation": {
                                 "type": "string",
                                 "example": "Software Engineer"
+                              },
+                              "profilePicture": {
+                                "type": "object",
+                                "description": "Profile picture object containing URL and other details"
                               }
                             }
                           },

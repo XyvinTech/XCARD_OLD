@@ -37,7 +37,7 @@ export const getTrendingProfiles = asyncHandler(async (req, res, next) => {
     'visitCount': { $exists: true }  // Ensure visit count exists
   })
     .sort({ visitCount: -1 })
-    .select('profile.name profile.companyName profile.designation visitCount')
+    .select('profile.name profile.companyName profile.designation profile.profilePicture visitCount')
     .skip(startIndex)
     .limit(limit);
 
