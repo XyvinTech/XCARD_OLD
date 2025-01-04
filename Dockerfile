@@ -23,11 +23,19 @@ RUN --mount=type=bind,source=package.json,target=package.json \
     --mount=type=cache,target=/root/.npm \
     npm ci --omit=dev
 
-# Run the application as a non-root user.
-USER node
+# Create uploads directory and set permissions
+RUN mkdir -p /usr/src/app/uploads && \
+    chown -R node:node /usr/src/app/uploads && \
+    chmod 755 /usr/src/app/uploads
 
 # Copy the rest of the source files into the image.
 COPY . .
+
+# Ensure node user owns all files
+RUN chown -R node:node /usr/src/app
+
+# Run the application as a non-root user.
+USER node
 
 # Expose the port that the application listens on.
 EXPOSE 8000
