@@ -2543,230 +2543,124 @@ function mixinEngineStatus(req, array) {
  */
 export const createUserProfileBulk = asyncHandler(async (req, res, next) => {
   try {
-    const url = req.body.url;
     let workbook;
-    //CHECK IF THE URL IS THERE FOR LINK UPLOAD
+    const url = req.body.url;
+
+    // Process file input
     if (url) {
       const domain = new URL(url).hostname;
-      if (
-        !ALLOWED_DOMAINS.some((allowedDomain) => domain.endsWith(allowedDomain))
-      ) {
+      if (!ALLOWED_DOMAINS.some((allowedDomain) => domain.endsWith(allowedDomain))) {
         throw new Error(`Invalid URL domain: ${domain}`);
       }
       const file = await getFileFromUrl(url);
-      // Parse the spreadsheet data
       workbook = xlsx.read(file, { type: 'buffer' });
     } else {
       workbook = xlsx.readFile(req.file.path);
     }
 
-    // Read the spreadsheet file
+    // Read the spreadsheet
     const sheetName = workbook.SheetNames[0];
     const worksheet = workbook.Sheets[sheetName];
-    const headers = [
-      'phone',
-      'name',
-      'designation',
-      'company',
-      'bio',
-      'email',
-      'wabusiness',
-      'location',
-      'landmark',
-      'maplink',
-      'whatsapp',
-      'instagram',
-      'facebook',
-      'linkedin',
-      'spotify',
-      'youtube',
-      'dribble',
-      'behance',
-      'medium',
-      'twitter',
-      'websitename',
-      'websitelink',
-      'youtubelink',
-    ];
-    const profileCheckList = ['name', 'designation', 'company', 'bio'];
-    const contactsCheckList = [
-      'phone',
-      'email',
-      'social',
-      'whatsapp',
-      'wabusiness',
-    ];
-    const multiDataCheckList = ['websitename', 'websitelink', 'youtubelink'];
-
-    headers.forEach((header) => {
-      if (worksheet[`${header}1`]) {
-        throw new Error(`Header '${header}' not found in '${sheetName}' sheet`);
-      }
-    });
-    // Convert the spreadsheet data to an array of objects
     const rows = xlsx.utils.sheet_to_json(worksheet);
 
-    rows.forEach((row, rowIndex) => {
-      headers.forEach((header) => {
-        if (!row[header]) {
-          // throw new Error(
-          //   `Missing data in '${header}' column in row ${rowIndex + 2}`
-          // );
+    // Validate data structure
+    const invalidRows = rows.filter(row => !row.phone || !/^\+[0-9]+/.test(row.phone));
+    if (invalidRows.length > 0) {
+      throw new Error(`Invalid phone numbers found in ${invalidRows.length} rows`);
+    }
+
+    // Process in batches
+    const BATCH_SIZE = 10;
+    const totalBatches = Math.ceil(rows.length / BATCH_SIZE);
+    let successCount = 0;
+    let errorCount = 0;
+
+    for (let batchIndex = 0; batchIndex < totalBatches; batchIndex++) {
+      const batchStart = batchIndex * BATCH_SIZE;
+      const batchEnd = Math.min(batchStart + BATCH_SIZE, rows.length);
+      const batch = rows.slice(batchStart, batchEnd);
+
+      // Process batch in parallel
+      const batchPromises = batch.map(async (profile) => {
+        try {
+          const update = {
+            profile: {
+              name: profile.name,
+              designation: profile.designation,
+              companyName: profile.company,
+              bio: profile.bio
+            },
+            contact: {
+              status: false,
+              contacts: [
+                { label: 'Phone', value: profile.phone, type: 'phone' },
+                { label: 'Email', value: profile.email || '', type: 'email' },
+                { label: 'WhatsApp Business', value: profile.wabusiness || '', type: 'wabusiness' },
+                { label: 'Location', value: profile.location || '', street: profile.landmark || '', pincode: profile.maplink || '', type: 'location' },
+                { label: 'WhatsApp', value: profile.whatsapp || '', type: 'whatsapp' }
+              ]
+            },
+            social: {
+              status: false,
+              socials: [
+                { label: 'Instagram', value: profile.instagram || '', type: 'instagram' },
+                { label: 'Facebook', value: profile.facebook || '', type: 'facebook' },
+                { label: 'LinkedIn', value: profile.linkedin || '', type: 'linkedin' },
+                { label: 'Twitter', value: profile.twitter || '', type: 'twitter' }
+              ].filter(social => social.value)
+            },
+            website: {
+              status: profile.websitename && profile.websitelink,
+              websites: profile.websitename && profile.websitelink ? 
+                profile.websitename.split(',').map((name, i) => ({
+                  name: name.trim(),
+                  link: profile.websitelink.split(',')[i].trim()
+                })) : []
+            },
+            video: {
+              status: !!profile.youtubelink,
+              videos: profile.youtubelink ? 
+                profile.youtubelink.split(',').map(link => ({ link: link.trim() })) : []
+            }
+          };
+
+          await createUserProfile({
+            body: {
+              phone: profile.phone,
+              update: JSON.stringify(update),
+              asFunction: true
+            },
+            query: { group: req?.query?.group }
+          }, res, next);
+
+          successCount++;
+        } catch (error) {
+          console.error(`Error processing profile for ${profile.phone}:`, error);
+          errorCount++;
         }
       });
-      if (!/^\+[0-9]+/.test(row.phone)) {
-        throw new Error(`Invalid phone in row ${rowIndex + 2}`);
-      }
-    });
 
-    for (const profile of rows) {
-      let body;
-      let update = {};
-      let value;
-      const { websitename, websitelink, youtubelink } = profile;
-      let contacts = [];
-      let socials = [];
-
-      //MULTIDATA
-      /*WEBSITE*/
-      if (websitename && websitelink) {
-        const name = websitename.split(',');
-        const link = websitelink.split(',');
-        if (name?.length == link?.length) {
-          let websites = [];
-          for (let i = 0; i < name?.length; i++) {
-            websites.push({
-              name: name[i],
-              link: link[i],
-            });
-          }
-          update['website'] = {
-            status: true,
-            websites: websites,
-          };
-        }
-      }
-      /*YOUTUBE VIDEO LINK*/
-      if (youtubelink) {
-        const link = youtubelink.split(',');
-        let videos = [];
-        for (let i = 0; i < link?.length; i++) {
-          videos.push({
-            link: link[i],
-          });
-        }
-        update['video'] = {
-          status: true,
-          videos: videos,
-        };
-      }
-
-      /*LOCATION*/
-      if (profile?.location || profile?.landmark || profile?.maplink) {
-        contacts.push({
-          label: 'Location',
-          value: profile?.location,
-          street: profile?.landmark,
-          pincode: profile?.maplink,
-          type: 'location',
-        });
-      }
-
-      //DELETE ALREADY DONE THINGS
-      delete profile?.location;
-      delete profile?.landmark;
-      delete profile?.maplink;
-      delete profile?.websitename;
-      delete profile?.websitelink;
-      delete profile?.youtubelink;
-
-      // console.log(profile);
-      // profile = profile.filter(obj => Object.keys(obj).length !== 0);
-      for (const key in profile) {
-        if (profile.hasOwnProperty(key)) {
-          // console.log(`${key}: ${profile[key]}`);
-          value = `${profile[key].trim()}`;
-          let contact = {},
-            social = {};
-          if (multiDataCheckList.includes(key)) {
-            //Multidata
-          } else if (contactsCheckList.includes(key)) {
-            //CONTACTS
-            contact['label'] = key.charAt(0).toUpperCase() + key.slice(1);
-            contact['value'] = value;
-            contact['type'] = key;
-          } else if (!profileCheckList.includes(key)) {
-            //SOCIALS
-            social['label'] = key.charAt(0).toUpperCase() + key.slice(1);
-            social['value'] = value;
-            social['type'] = key;
-          }
-          if (Object.keys(contact).length !== 0) contacts.push(contact);
-          if (Object.keys(social).length !== 0) socials.push(social);
-        }
-      }
-
-      update['profile'] = {
-        name: profile?.name,
-        designation: profile?.designation,
-        companyName: profile?.company,
-        bio: profile?.bio,
-      };
-      update['contact'] = {
-        status: false,
-        contacts: contacts,
-      };
-      update['social'] = {
-        status: false,
-        socials: socials,
-      };
-      update['product'] = {
-        status: false,
-        products: [],
-      };
-      update['service'] = {
-        status: false,
-        services: [],
-      };
-      update['document'] = {
-        status: false,
-        documents: [],
-      };
-      update['award'] = {
-        status: false,
-        awards: [],
-      };
-      update['certificate'] = {
-        status: false,
-        certificates: [],
-      };
-
-      body = {
-        phone: profile.phone,
-        update: JSON.stringify(update),
-        // update: update,
-        asFunction: true,
-      };
-
-      await createUserProfile(
-        { body: body, query: { group: req?.query?.group } },
-        res,
-        next
-      );
-
-      // console.log(update.contact)
-      // console.log(update.social)
-      body = {};
-      update = {};
-      update.length = 0;
-      socials.length = 0;
-      contacts.length = 0;
+      await Promise.all(batchPromises);
     }
-    let message = {
-      success: `Uploaded ${rows.length} new profiles created.`,
-    };
+
+    // Clean up the uploaded file if it exists
+    if (req.file && req.file.path) {
+      fs.unlink(req.file.path, (err) => {
+        if (err) console.error('Error deleting temporary file:', err);
+      });
+    }
+
+    let message = { success: `Uploaded ${successCount} new profiles created. ${errorCount} profiles failed.` };
+    return res.status(201).json({ success: true, message });
+
   } catch (error) {
-    return next(new ErrorResponse(`Error uploading users ${error}`, 400));
+    // Clean up the uploaded file in case of error
+    if (req.file && req.file.path) {
+      fs.unlink(req.file.path, (err) => {
+        if (err) console.error('Error deleting temporary file:', err);
+      });
+    }
+    return next(new ErrorResponse(`Error uploading users: ${error.message}`, 400));
   }
 });
 
