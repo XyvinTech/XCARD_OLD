@@ -815,24 +815,32 @@ document.addEventListener('DOMContentLoaded', async () => {
       case 'email':
         return `mailto:${value}`;
       case 'location':
-        // const locationBlock = document.getElementsByClassName('location')[0];
-
-        // document
-        //   .getElementById('location_display_id')
-        //   .classList.remove('d_none');
-
-        // locationBlock.querySelector('p').textContent = value;
-
-        // value = value.replace(/\s/g, '+');
-
-        // locationBlock.addEventListener('click', () => {
-        //   window.open(`https://www.google.com/maps?q=${value}`, '_blank');
-        // });
-
-        // return `https://www.google.com/maps?q=${value}`;
-
+        // Format the location value for Google Maps URL
+        const formattedLocation = value.replace(/\s/g, '+');
+        
+        // Show location in the UI if needed
+        const locationBlock = document.getElementsByClassName('location')[0];
+        if (locationBlock) {
+          const locationDisplay = document.getElementById('location_display_id');
+          if (locationDisplay) {
+            locationDisplay.classList.remove('d_none');
+          }
+          
+          const locationText = locationBlock.querySelector('p');
+          if (locationText) {
+            locationText.textContent = value;
+          }
+  
+          // Add click handler to open Google Maps
+          locationBlock.addEventListener('click', () => {
+            window.open(`https://www.google.com/maps?q=${formattedLocation}`, '_blank');
+          });
+        }
+        
+        // Return the Google Maps URL
+        return `https://www.google.com/maps?q=${formattedLocation}`;
       default:
-        return;
+        return value;
     }
   };
 
