@@ -1,26 +1,10 @@
 const viewable = [
-  'png',
-  'jpg',
-  'jpeg',
-  'gif',
-  'mp4',
-  'avi',
-  'mkv',
-  'mov',
-  'webm',
-  'mp3',
-  'ogg',
-  'wav',
-  'flac',
-  'aac',
-  'wma',
-  'm4a',
-  'opus',
-  'svg',
-  'ico',
-  'webp',
-  'bmp',
-  '3gp',
+  // Images
+  'png', 'jpg', 'jpeg', 'gif', 'svg', 'ico', 'webp', 'bmp',
+  // Videos
+  'mp4', 'avi', 'mkv', 'mov', 'webm', '3gp',
+  // Audio
+  'mp3', 'ogg', 'wav', 'flac', 'aac', 'wma', 'm4a', 'opus'
 ];
 
 const data = JSON.parse(document.currentScript.getAttribute('data'));
@@ -139,8 +123,6 @@ const contactCardImg = (type) => {
     case 'whatsapp':
       return 'whatsapp.svg';
     case 'email':
-      return 'email.svg';
-    case 'gmail':
       return 'email.svg';
     case 'gmail':
       return 'email.svg';
@@ -334,16 +316,22 @@ function generateContactCard(link, label) {
 }
 
 function generateUserSiteCard(websiteName, link) {
+  // Ensure the link has proper URL formatting
+  let formattedLink = link;
+  if (link && !link.startsWith('http://') && !link.startsWith('https://')) {
+    formattedLink = 'https://' + link;
+  }
+  
   return `
-      <div class="user_site_card">
-          <a href=${link}>
-              <div class="left_section">
-                  <img src="/profile/public/sienna/assets/icons/global.svg" alt="global">
-                  <p>${websiteName}</p>
-              </div>
-              <img src="/profile/public/sienna/assets/icons/arrow_outward.svg" alt="">
-          </a>
-      </div>
+    <div class="user_site_card">
+        <a href="${formattedLink}" target="_blank" rel="noopener noreferrer">
+            <div class="left_section">
+                <img src="/profile/public/sienna/assets/icons/global.svg" alt="global">
+                <p>${websiteName}</p>
+            </div>
+            <img src="/profile/public/sienna/assets/icons/arrow_outward.svg" alt="">
+        </a>
+    </div>
   `;
 }
 
@@ -584,18 +572,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     // user_company.innerText = company;
   }
 
-  // websites
-  if (data.website && data.website.status && data.website.websites.length > 0) {
-    var websites = data.website.websites;
-    websites.map((website) => {
+ // Usage in the DOMContentLoaded event listener
+if (data.website && data.website.status && data.website.websites.length > 0) {
+  var websites = data.website.websites;
+  websites.forEach((website) => {
+    if (website.link && website.name) {
       user_contact_sites.innerHTML += generateUserSiteCard(
         website.name,
         website.link
       );
-    });
-  } else {
-    document.getElementById('user_contact_sites').classList.add('d_none');
-  }
+    }
+  });
+} else {
+  document.getElementById('user_contact_sites').classList.add('d_none');
+}
 
   if (
     data.category &&
@@ -815,10 +805,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       case 'email':
         return `mailto:${value}`;
       case 'location':
-        // Format the location value for Google Maps URL
         const formattedLocation = value.replace(/\s/g, '+');
-        
-        // Show location in the UI if needed
         const locationBlock = document.getElementsByClassName('location')[0];
         if (locationBlock) {
           const locationDisplay = document.getElementById('location_display_id');
@@ -830,14 +817,11 @@ document.addEventListener('DOMContentLoaded', async () => {
           if (locationText) {
             locationText.textContent = value;
           }
-  
-          // Add click handler to open Google Maps
+          
           locationBlock.addEventListener('click', () => {
             window.open(`https://www.google.com/maps?q=${formattedLocation}`, '_blank');
           });
         }
-        
-        // Return the Google Maps URL
         return `https://www.google.com/maps?q=${formattedLocation}`;
       default:
         return value;
@@ -961,77 +945,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       document.getElementById('location_display_id').classList.add('d_none');
     }
   }
-
-  // if (data.contact && data.contact.status && data.contact.contacts.length > 0) {
-
-  //   if (data.contact != null && data.contact.contacts != null && data.contact.contacts.length > 0 && data.contact.status == true) {
-  //     document.getElementById("contact_section").classList.remove("d_none");
-  //     document.getElementById("save_contact_button_id").classList.remove("d_none");
-
-  //     if (data.social.status == false) {
-  //       data.social.socials = [];
-  //     }
-
-  //     for (const contact of data.contact.contacts) {
-  //       data.social.socials.push({
-  //         label: contact.label,
-  //         type: contact.type,
-  //         value: valueForSocials(contact.type, contact.value),
-  //       });
-
-  //       if (contact.type === "email") {
-  //         email = contact.value;
-  //       } else if (contact.type === "phone") {
-  //         phoneNumber = contact.value;
-  //       } else if (contact.type === "location") {
-  //         locationInfo = {
-  //           street: contact.street,
-  //           pincode: contact.pincode,
-  //           value: contact.value,
-  //         };
-  //       } else if (contact.type === "wabusiness") {
-  //         whatsapp = contact.value;
-  //       }
-  //     }
-  //   }
-
-  // }
-
-  // // social media links
-  // if ((data.social && data.social.status && data.social.socials.length > 0) || (data.contact && data.contact.status && data.contact.contacts.length > 0)) {
-  //   var socials = data.social.socials;
-
-  //   // Custom sorting function
-  //   socials.sort((a, b) => {
-  //     if (a.type === "phone") {
-  //       return -1; // "phone" comes before other types
-  //     } else if (b.type === "phone") {
-  //       return 1; // "phone" comes before other types
-  //     } else if (a.type === "whatsapp") {
-  //       return -1; // "whatsapp" comes after "phone"
-  //     } else if (b.type === "whatsapp") {
-  //       return 1; // "whatsapp" comes after "phone"
-  //     } else {
-  //       return 0; // Keep the original order for other types
-  //     }
-  //   });
-
-  //   socials.map((social) => {
-  //     if (social.type == "google") {
-  //       const ratingSection = document.getElementById("rating_section");
-  //       ratingSection.classList.remove("d_none");
-  //       ratingSection.addEventListener('click', () => {
-  //         window.open(social.value, '_blank');
-  //       });
-  //     };
-  //     contact_cards.innerHTML += generateContactCard(social.value, social.type);
-  //   });
-  // }
-
-  // else {
-  //   document.getElementById("contact_section").classList.add("d_none");
-  //   document.getElementById("save_contact_button_id").classList.add("d_none");
-  // }
 
   save_contact.addEventListener('click', () => {
     createVCard(
