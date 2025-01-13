@@ -219,7 +219,7 @@ export const duplicateProfile = async (req, res, next) => {
       .toLowerCase()
       .split(' ')
       .join('')}-${randomId().toLowerCase()}`;
-    const profileLink = `${process.env.HOST_URL_HTTPS}/profile/${cardId}`;
+    const profileLink = `${process.env.HOST_URL_HTTPS}/profile/${cardId.replace(/\s/g, '')}`;
 
     // Generate QR Code
     const qrOptions = {

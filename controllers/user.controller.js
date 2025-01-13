@@ -88,7 +88,7 @@ export const createUserProfile = asyncHandler(async (req, res, next) => {
       const cardId =
         `${profile?.name.toLowerCase().split(' ').join('')}-` +
         randomId().toLowerCase();
-      const profileLink = `${process.env.HOST_URL_HTTPS}/profile/${cardId}`;
+      const profileLink = `${process.env.HOST_URL_HTTPS}/profile/${cardId.replace(/\s/g, '')}`;
       const qrCode = await QRCode.toBuffer(profileLink, options);
       const qrFile = {
         buffer: qrCode,
