@@ -26,6 +26,7 @@ const viewable = [
 const data = JSON.parse(document.currentScript.getAttribute('data'));
 const id = data['_id'];
 const fetchUserData = async () => {
+  console.log(data, "data")
   return data;
 };
 const gamesEnabledPaths = JSON.parse(document.currentScript.getAttribute('gamesEnabledPaths'));
@@ -911,10 +912,13 @@ document.addEventListener('DOMContentLoaded', async () => {
       });
 
       socials.map((social) => {
-        if (social.type == 'google') {
+        if (social.type == 'location' || social.type == 'google') {
           const ratingSection = document.getElementById('rating_section');
           console.log('ratingSection', ratingSection);
           // ratingSection.classList.remove('d_none');
+          onclick = () => {
+            console.log('clicked', social.value)
+          }
           ratingSection.addEventListener('click', () => {
             window.open(social.value, '_blank');
           });
