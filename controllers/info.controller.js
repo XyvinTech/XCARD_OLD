@@ -1,5 +1,7 @@
 import asyncHandler from "../middlewares/async.middleware.js";
 import Profile from "../models/Profile.js";
+import User from "../models/User.js";
+import Group from "../models/Group.js";
 
 /**
  * @desc    Terms and Conditions
@@ -27,33 +29,110 @@ export const viewPrivacy = asyncHandler(async (req, res, next) => {
  * @access  Public
  * @schema  Public
  */
+// export const getTrendingProfiles = asyncHandler(async (req, res, next) => {
+//   const page = parseInt(req.query.page, 10) || 1;
+//   const limit = parseInt(req.query.limit, 10) || 20;
+//   const startIndex = (page - 1) * limit;
+
+//   const profiles = await Profile.find({ 
+//     'profile.name': { $exists: true, $ne: '' },  // Ensure profile has a name
+//     'visitCount': { $exists: true }  // Ensure visit count exists
+//   })
+//     .sort({ visitCount: -1 })
+//     .select('profile.name profile.companyName profile.designation profile.profilePicture visitCount')
+//     .skip(startIndex)
+//     .limit(limit);
+
+//   const totalValidProfiles = await Profile.countDocuments({ 
+//     'profile.name': { $exists: true, $ne: '' },
+//     'visitCount': { $exists: true }
+//   });
+
+//   res.status(200).json({
+//     success: true,
+//     data: profiles,
+//     pagination: {
+//       page,
+//       limit,
+//       totalPages: Math.ceil(totalValidProfiles / limit),
+//       totalResults: totalValidProfiles
+//     }
+//   });
+// });
+
+
 export const getTrendingProfiles = asyncHandler(async (req, res, next) => {
   const page = parseInt(req.query.page, 10) || 1;
   const limit = parseInt(req.query.limit, 10) || 20;
   const startIndex = (page - 1) * limit;
 
+  // Get profiles with required fields
   const profiles = await Profile.find({ 
-    'profile.name': { $exists: true, $ne: '' },  // Ensure profile has a name
-    'visitCount': { $exists: true }  // Ensure visit count exists
+    'profile.name': { $exists: true, $ne: '' },
+    'visitCount': { $exists: true },
+    'group': { $exists: true, $ne: null }
   })
     .sort({ visitCount: -1 })
-    .select('profile.name profile.companyName profile.designation profile.profilePicture visitCount')
+    .select('profile.name profile.companyName profile.designation profile.profilePicture visitCount group')
+    .populate({
+      path: 'group',
+      select: 'name groupAdmin'
+    })
     .skip(startIndex)
     .limit(limit);
 
   const totalValidProfiles = await Profile.countDocuments({ 
     'profile.name': { $exists: true, $ne: '' },
-    'visitCount': { $exists: true }
+    'visitCount': { $exists: true },
+    'group': { $exists: true, $ne: null }
   });
+
+  const response = await Promise.all(
+    profiles.map(async (profile) => {
+      try {
+        if (!profile.group) {
+          return {
+            profileLink: `/profile/${profile._id}`,
+            profileName: profile.profile.name,
+            visitCount: profile.visitCount,
+            groupName: 'N/A',
+            adminName: 'N/A'
+          };
+        }
+
+        // First find the user profile associated with the group admin
+        const adminProfile = await Profile.findOne({ 
+          user: profile.group.groupAdmin 
+        }).select('profile.name');
+
+        return {
+          groupName: profile.group.name,
+          adminName: adminProfile?.profile?.name || 'N/A',
+          profileLink: `/profile/${profile._id}`,
+          profileName: profile.profile.name,
+          visitCount: profile.visitCount,
+        };
+      } catch (error) {
+        console.error(`Error processing profile ${profile._id}:`, error);
+        return {
+          profileLink: `/profile/${profile._id}`,
+          profileName: profile.profile.name,
+          visitCount: profile.visitCount,
+          groupName: profile.group?.name || 'Error',
+          adminName: 'Error'
+        };
+      }
+    })
+  );
 
   res.status(200).json({
     success: true,
-    data: profiles,
+    data: response,
     pagination: {
       page,
       limit,
       totalPages: Math.ceil(totalValidProfiles / limit),
-      totalResults: totalValidProfiles
-    }
+      totalResults: totalValidProfiles,
+    },
   });
 });
