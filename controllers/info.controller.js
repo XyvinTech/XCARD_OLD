@@ -66,14 +66,14 @@ export const getTrendingProfiles = asyncHandler(async (req, res, next) => {
   const limit = parseInt(req.query.limit, 10) || 20;
   const startIndex = (page - 1) * limit;
 
-  // Get profiles with required fields
+  // Added profile.profileLink to select statement
   const profiles = await Profile.find({ 
     'profile.name': { $exists: true, $ne: '' },
     'visitCount': { $exists: true },
     'group': { $exists: true, $ne: null }
   })
     .sort({ visitCount: -1 })
-    .select('profile.name profile.companyName profile.designation profile.profilePicture visitCount group')
+    .select('profile.name profile.companyName profile.designation profile.profilePicture profile.profileLink visitCount group card.cardId') // Added profile.profileLink and card.cardId
     .populate({
       path: 'group',
       select: 'name groupAdmin'
@@ -92,8 +92,9 @@ export const getTrendingProfiles = asyncHandler(async (req, res, next) => {
       try {
         if (!profile.group) {
           return {
-            profileLink: `/profile/${profile._id}`,
+            profileLink: `https://app.visitingcard.store/profile/${profile.card?.cardId || profile._id}`, // Constructed link
             profileName: profile.profile.name,
+            profilePicture: profile.profile.profilePicture?.link || null,
             visitCount: profile.visitCount,
             groupName: 'N/A',
             adminName: 'N/A'
@@ -108,15 +109,17 @@ export const getTrendingProfiles = asyncHandler(async (req, res, next) => {
         return {
           groupName: profile.group.name,
           adminName: adminProfile?.profile?.name || 'N/A',
-          profileLink: `/profile/${profile._id}`,
+          profileLink: `https://app.visitingcard.store/profile/${profile.card?.cardId || profile._id}`, // Constructed link
           profileName: profile.profile.name,
+          profilePicture: profile.profile.profilePicture?.link || null,
           visitCount: profile.visitCount,
         };
       } catch (error) {
         console.error(`Error processing profile ${profile._id}:`, error);
         return {
-          profileLink: `/profile/${profile._id}`,
+          profileLink: `https://app.visitingcard.store/profile/${profile.card?.cardId || profile._id}`, // Constructed link
           profileName: profile.profile.name,
+          profilePicture: null,
           visitCount: profile.visitCount,
           groupName: profile.group?.name || 'Error',
           adminName: 'Error'
