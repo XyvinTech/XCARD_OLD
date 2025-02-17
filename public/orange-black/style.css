@@ -672,7 +672,8 @@ ul {
 }
 
 .modal-content > img {
-  height: 9.125rem;
+  /* height: 9.125rem; */
+  height: 21 rem;
   object-fit: cover;
 }
 
