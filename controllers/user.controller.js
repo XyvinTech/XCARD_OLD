@@ -2935,22 +2935,18 @@ export const exportEnquiry = asyncHandler (async (req, res) => {
 
 
 export const sendContactEmail = asyncHandler(async (req, res) => {
-  const { subject, firstName, lastName, emailAddress, message } = req.body;
+  const { subject, fullName, emailAddress, message } = req.body;
 
-  if (!subject || !firstName || !lastName || !emailAddress || !message) {
-    return res.status(400).json({ error: 'All fields are required' });
+  if (!Array.isArray(subject) || !fullName || !emailAddress || !message) {
+    return res.status(400).json({ error: 'All fields are required and subject must be an array' });
   }
 
-
-
   try {
-    
-
     const mailOptions = {
-      from:emailAddress,
-      to: process.env.NODE_MAILER_RECEIVER,
-      subject: `Contact Us Form Submission: ${subject}`,
-      text: `New message from ${firstName} ${lastName} (${emailAddress}):\n\n${message}`,
+      from: emailAddress,
+      to: process.env.NODE_MAILER_RECEIVER, 
+      subject: `Contact Us Form Submission: ${subject.join(', ')}`,
+      text: `New message from ${fullName} (${emailAddress}):\n\n${message}`,
     };
 
     await transporter.sendMail(mailOptions);
@@ -2959,6 +2955,4 @@ export const sendContactEmail = asyncHandler(async (req, res) => {
     console.error(error);
     res.status(500).json({ error: 'Failed to process the request', details: error.message });
   }
-
-
 });
