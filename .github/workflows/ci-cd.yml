@@ -85,7 +85,7 @@ jobs:
             aws ecr get-login-password --region $AWS_REGION | sudo docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }}
 
             # Pull the latest Docker image
-            sudo docker pull ${{ steps.login-ecr.outputs.registry }}/hef:latest
+            sudo docker pull ${{ steps.login-ecr.outputs.registry }}/xcard:latest
 
             # Stop and remove the existing container if running
             sudo docker stop XCARD_BACKEND || true
@@ -101,5 +101,5 @@ jobs:
             sudo docker run -d \
               -p 8000:8000 \
               --name XCARD_BACKEND \
-              --env-file /home/ec2-user/hef/.env/.env.production \
-              ${{ steps.login-ecr.outputs.registry }}/hef:latest
+              --env-file /home/ec2-user/xcard/.env/.env.production \
+              ${{ steps.login-ecr.outputs.registry }}/xcard:latest
