@@ -4,6 +4,7 @@ import profileRouter from "./profile.routes.js";
 import userRouter from "./user.routes.js";
 import publicRouter from "./public.routes.js";
 import informationRouter from "./info.routes.js";
+import cardAnalysisRouter from "./cardanalysis.routes.js";
 
 /**
  * @route  Index Route
@@ -16,6 +17,7 @@ const routes = (app) => {
   app.use("/api/v1/user", userRouter);
   app.use("/api/v1/profile", profileRouter);
   app.use("/api/v1/group", groupRouter);
+  app.use("/api/v1/cardanalysis", cardAnalysisRouter);
 };
 
 export default routes;

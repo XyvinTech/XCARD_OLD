@@ -1,0 +1,64 @@
+MEMORY FILE FOR XCARD_OLD PROJECT
+
+PRIME DIRECTIVE:
+- Always check if files exist and read them before making changes
+- Make sure all commands are for Windows (Note: User is on Linux but requested Windows commands)
+- Use extreme logic when making changes
+- Start in PLAN mode, only move to ACT mode when user types "ACT"
+- Always output the full updated plan in every response while in PLAN mode
+
+PROJECT OVERVIEW:
+- Node.js/Express application for business card/profile sharing
+- Multiple themes/templates available (blue-black, gold-black, orange-black, sienna, sky-blue, white-black, white-blue)
+- Authentication system with user management
+- Profile and group functionality
+- File upload capabilities
+- Multiple template rendering system
+
+KEY DIRECTORIES:
+- /controllers - Business logic
+- /models - Data models (User, Profile, Group, Setting)
+- /routes - API endpoints
+- /public - Static assets and templates
+- /middlewares - Authentication and error handling
+- /configs - Database and Firebase configuration
+- /utils - Helper functions
+- /views - EJS templates
+
+DEVELOPMENT RULES:
+- Readability over complexity
+- Continuous learning and knowledge sharing
+- Simplicity - avoid new data model changes when possible
+- TDD approach
+- Proper documentation required
+- Code reviews mandatory
+
+FOLDER ARCHITECTURE:
+- Follow established structure
+- Keep components reusable
+- Proper test organization
+- Clear separation of concerns
+
+RECENT IMPLEMENTATIONS:
+- Card Analysis Feature (Business Card OCR)
+  * Added tesseract.js dependency for OCR processing
+  * Created CardAnalysis model for storing OCR results
+  * Created cardanalysis.controller.js with analyze, save, and history functions
+  * Created cardanalysis.routes.js with proper authentication
+  * Integrated with existing file upload system
+  * Extracts: name, phone, email, address, website, business name
+  * Returns both extracted data and raw OCR text
+  * Allows saving selected fields to user profiles
+  
+API ENDPOINTS ADDED:
+- POST /api/v1/cardanalysis/analyze - Upload and analyze business card
+- POST /api/v1/cardanalysis/save - Save extracted data to profile
+- GET /api/v1/cardanalysis/history - Get analysis history
+
+DOCUMENTATION CREATED:
+- Created comprehensive API documentation at docs/card-analysis-api.md
+- Includes detailed endpoint specifications with request/response examples
+- Provides React and JavaScript implementation examples
+- Contains error handling guidelines and best practices
+- Features complete usage flow and testing examples
+- Ready for client-side developers to implement the feature 
