@@ -435,6 +435,17 @@ ul {
 .links .website-card img {
   height: 1rem;
 }
+.links .website-card i.bi-google-play {
+  font-size: 1.1rem;
+}
+.links .website-card i.fa-app-store-ios {
+  font-size: 1.1rem;
+}
+/* App icons used inside social cards */
+.app-icon {
+  font-size: 1.25rem;
+  color: var(--primary-light);
+}
 
 .links .action {
   background-color: transparent;

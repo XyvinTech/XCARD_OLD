@@ -128,6 +128,8 @@ const ProfileSchema = new mongoose.Schema(
                 'behance',
                 'github',
                 'google',
+                'appstore',
+                'googleplay',
                 'other',
               ],
             },
@@ -163,6 +165,7 @@ const ProfileSchema = new mongoose.Schema(
 
       websites: { type: [{ link: String, name: String }], default: [] },
     },
+    
     service: {
       status: { type: Boolean, default: false },
       label: { type: String, default: 'Services' }, // New field for editable heading
