@@ -213,7 +213,13 @@ body {
 .contact_card a {
   color: white;
   font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
 }
+.contact_card .app-icon { font-size: 1.75rem; display: inline-flex; align-items: center; justify-content: center; width: 100%; text-align: center; }
 .contact_card:hover {
   box-shadow: var(--card-box-shadow);
 }

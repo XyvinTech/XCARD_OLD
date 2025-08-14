@@ -286,12 +286,14 @@ const showAwardPopup = (heading, description, imageUrl) => {
 };
 
 function generateContactCard(link, type) {
+  const lower = String(type || '').toLowerCase();
+  const icon = lower === 'googleplay' ?
+    '<i class="bi bi-google-play app-icon"></i>' :
+    (lower === 'appstore' ? '<i class="bi bi-apple app-icon"></i>' : `<img src="/profile/public/gold-black/assets/icons/${contactCardImg(type)}" alt="">`);
   return `
         <div class="contact_card">
             <a href=${link}>
-                <img src="/profile/public/gold-black/assets/icons/${contactCardImg(
-                  type
-                )}" alt="">
+                ${icon}
             </a>
         </div>
     `;
