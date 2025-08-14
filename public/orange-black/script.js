@@ -606,13 +606,23 @@ function buildSocialCardInnerHTML(social){
       ? 'App Store'
       : 'Google Play'
     : social.type;
-  const label = isApp ? social.label : `@${social.label}`;
+  const hasLabel = typeof social.label === 'string' && social.label.trim() !== '';
+  const normalizedLabel = (social.label || '').trim().toLowerCase();
+  const normalizedTitle = String(title || '').trim().toLowerCase();
+  const isDuplicate = hasLabel && normalizedLabel === normalizedTitle;
+
+  // Choose a single display line:
+  // - Prefer label (with @ for non-app) when present and not duplicate
+  // - Otherwise show title/type
+  let displayText = title;
+  if (hasLabel && !isDuplicate) {
+    displayText = isApp ? social.label : `@${social.label}`;
+  }
   return `
       <a target="_blank" href="${social.value}">
       ${iconHtml}
       <div>
-        <p class="social">${title}</p>
-        <p class="userid">${label}</p>
+        <p class="userid">${displayText}</p>
       </div>
     </a>
   `;
