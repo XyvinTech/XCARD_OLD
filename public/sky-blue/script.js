@@ -33,7 +33,7 @@ const upis =
   data.upi && data.upi.status && data.upi.upis?.length > 0
     ? data.upi.upis
     : null;
-const socials =
+let socials =
   data.social && data.social.status && data.social.socials?.length > 0
     ? data.social.socials
     : null;
@@ -78,6 +78,7 @@ const bank =
 function run() {
   generateProfile();
   generateWebsites();
+  // Apps merged into Socials by detection
   generateSocials();
   generateAwards();
   generateServices();
@@ -490,6 +491,21 @@ function generateSocials() {
     return;
   }
 
+  // Detect App Store / Play Store links in socials and convert to dedicated types
+  if (socials && Array.isArray(socials)) {
+    const detected = [];
+    const filtered = [];
+    const androidRegex = /(play\.google\.com\/store|market:\/\/details)/i;
+    const iosRegex = /(apps\.apple\.com|itunes\.apple\.com|itms-apps:\/\/)/i;
+    for (const s of socials) {
+      const val = s?.value || '';
+      if (androidRegex.test(val)) { detected.push({ label: 'Google Play', value: val, type: 'googleplay' }); continue; }
+      if (iosRegex.test(val)) { detected.push({ label: 'App Store', value: val, type: 'appstore' }); continue; }
+      filtered.push(s);
+    }
+    socials = filtered.concat(detected);
+  }
+
   const large = [
     'phone',
     'whatsapp',
@@ -512,17 +528,19 @@ function generateSocials() {
       if (social.value === '') return;
 
       if (!large.includes(social.type)) {
+        const icon = `/profile/public/sky-blue/assets/orange-dark/socials/${contactCardImg(social.type)}`;
+        const isApp = social.type === 'appstore' || social.type === 'googleplay';
+        const title = isApp ? (social.type === 'appstore' ? 'App Store' : 'Google Play') : social.type;
+        const hasLabel = typeof social.label === 'string' && social.label.trim() !== '';
+        const normalizedLabel = (social.label || '').trim().toLowerCase();
+        const normalizedTitle = String(title || '').trim().toLowerCase();
+        const isDuplicate = hasLabel && normalizedLabel === normalizedTitle;
+        const displayText = hasLabel && !isDuplicate ? (isApp ? social.label : `@${social.label}`) : title;
         card.innerHTML = `
       <a target="_blank" href="${social.value}">
-      <img
-        src="/profile/public/sky-blue/assets/orange-dark/socials/${contactCardImg(
-          social.type
-        )}"
-        alt="${social.type}"
-      />
+      <img src="${icon}" alt="${social.type}" />
       <div>
-        <p class="social">${social.type}</p>
-        <p class="userid">@${social.label}</p>
+        <p class="userid">${displayText}</p>
       </div>
     </a>
       `;
@@ -973,6 +991,10 @@ function contactCardImg(label) {
       return 'wp_b.svg';
     case 'youtube':
       return 'youtube.svg';
+    case 'appstore':
+      return 'appstore.svg';
+    case 'googleplay':
+      return 'playstore.svg';
     default:
       return 'global.svg';
   }

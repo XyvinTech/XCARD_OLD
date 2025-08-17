@@ -305,12 +305,21 @@ const showAwardPopup = (heading, description, imageUrl) => {
 };
 
 function generateContactCard(link, label) {
+  let cardImageHtml = '';
+  const lower = String(label || '').toLowerCase();
+  if (lower === 'googleplay') {
+    cardImageHtml = '<i class="bi bi-google-play app-icon"></i>';
+  } else if (lower === 'appstore') {
+    cardImageHtml = '<i class="bi bi-apple app-icon"></i>';
+  } else {
+    cardImageHtml = `<img src="/profile/public/white-black/assets/icons/${contactCardImg(
+      label
+    )}" alt="">`;
+  }
   return `
         <div class="contact_card">
             <a href=${link}>
-                <img src="/profile/public/white-black/assets/icons/${contactCardImg(
-                  label
-                )}" alt="">
+              ${cardImageHtml}
             </a>
         </div>
     `;

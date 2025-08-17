@@ -201,177 +201,127 @@ export const submitForm = asyncHandler(async (req, res, next) => {
   }
 });
 
-export const duplicateProfile = async (req, res, next) => {
+/**
+ * @desc    Duplicate a profile
+ * @route   POST /api/v1/profile/duplicate/:profileId
+ * @access  Public (should be protected in production)
+ */
+export const duplicateProfile = asyncHandler(async (req, res, next) => {
+  const { profileId } = req.params;
+  const { name, email, phone } = req.body;
+  let newProfile = null;
+
+  // Debug logging
+  console.log('Duplicate profile called with:', { profileId, name, email, phone });
+
+  // 1. Find the profile to duplicate
+  const profileToDuplicate = await Profile.findById(profileId);
+  if (!profileToDuplicate) {
+    return res.status(404).json({ success: false, message: 'Profile not found' });
+  }
+
+  // 2. Generate cardId and profileLink
+  const cardId = `${name.toLowerCase().split(' ').join('')}-${randomId().toLowerCase()}`;
+  const profileLink = `${process.env.HOST_URL_HTTPS}/profile/${cardId}`;
+
+  // 3. Generate QR Code
+  const qrOptions = {
+    scale: 34,
+    color: { dark: '#BEFF6C', light: '#1C1C1E' },
+  };
+  let qrImageUrl = '';
   try {
-    const { profileId } = req.params;
-    const { name, email, phone } = req.body; // New phone number from the request body
-
-    let newProfile;
-    // Find the profile to duplicate
-    const profileToDuplicate = await Profile.findById(profileId);
-    if (!profileToDuplicate) {
-      return res
-        .status(404)
-        .send({ success: false, message: 'Profile not found' });
-    }
-    // Generate cardId and profileLink
-    const cardId = `${name
-      .toLowerCase()
-      .split(' ')
-      .join('')}-${randomId().toLowerCase()}`;
-    const profileLink = `${process.env.HOST_URL_HTTPS}/profile/${cardId}`;
-
-    // Generate QR Code
-    const qrOptions = {
-      scale: 34,
-      color: { dark: '#BEFF6C', light: '#1C1C1E' },
-    }; // Adjust these options as needed
     const qrCode = await QRCode.toBuffer(profileLink, qrOptions);
     const qrFile = { buffer: qrCode, mimetype: 'image/jpeg' };
-    const qrImageUrl = await uploadFile(
-      qrFile,
-      'cards',
-      getRandomFileName('card-')
-    );
-
-    await admin
-      .auth()
-      .createUser({
-        email: email,
-        password: phone, // User's password
-        phoneNumber: phone,
-        displayName: name,
-        disabled: false,
-      })
-      .then(async (userRecord) => {
-        //If new user enters create single user and profile.
-        const user = await User.create({
-          username: phone,
-          uid: userRecord?.uid,
-          role: 'user',
-          providerData: userRecord?.providerData,
-        });
-
-        // Convert to a plain object and remove the _id to ensure a new document is created
-        const duplicatedData = profileToDuplicate.toObject();
-        delete duplicatedData._id;
-
-        // Update the Profile name
-        duplicatedData.profile.name = name;
-
-        // Replace the phone number in the contacts
-        if (duplicatedData.contact && duplicatedData.contact.contacts) {
-          duplicatedData.contact.contacts = duplicatedData.contact.contacts.map(
-            (contact) => {
-              if (contact.type === 'phone') {
-                return { ...contact, value: phone }; // Set the new phone number
-              }
-              if (contact.type === 'email') {
-                return { ...contact, value: email }; // Set the new email
-              }
-              return contact;
-            }
-          );
-        }
-        duplicatedData.user = user?.id;
-        duplicatedData.card = {
-          ...duplicatedData.card,
-          cardId,
-          theme: duplicatedData.card?.theme,
-        }; // Assuming 'theme' is part of the card object
-        duplicatedData.profile = {
-          ...duplicatedData.profile,
-          profileLink,
-          profileQR: qrImageUrl,
-        };
-        duplicatedData.visitCount = 0;
-        duplicatedData.form = {
-          status: 0,
-          forms: [],
-        };
-
-        // Create the new profile
-        newProfile = new Profile(duplicatedData);
-        await newProfile.save();
-      })
-      .catch(async (error) => {
-        //If User already exisits create second or third profile
-        if (
-          error?.errorInfo?.code === 'auth/phone-number-already-exists' ||
-          error?.errorInfo?.code === 'auth/email-already-exists'
-        ) {
-          let userRecord;
-          // If email already exists, try to get the user by email
-          if (error?.errorInfo?.code === 'auth/email-already-exists') {
-            console.log('Fetching user details by email from Firebase');
-            userRecord = await admin.auth().getUserByEmail(email);
-          }
-          // If phone number already exists, try to get the user by phone number
-          else if (
-            error?.errorInfo?.code === 'auth/phone-number-already-exists'
-          ) {
-            console.log('Fetching user details by phone number from Firebase');
-            userRecord = await admin.auth().getUserByPhoneNumber(phone);
-          }
-          let user = await User.findOne({ username: phone });
-
-          if (user == null) {
-            user = await User.create({
-              username: phone,
-              uid: userRecord?.uid,
-              role: 'user',
-              providerData: userRecord?.providerData,
-            });
-          }
-          const duplicatedData = profileToDuplicate.toObject();
-          delete duplicatedData._id;
-
-          // Update the Profile name
-          duplicatedData.profile.name = name;
-
-          // Replace the phone number in the contacts
-          if (duplicatedData.contact && duplicatedData.contact.contacts) {
-            duplicatedData.contact.contacts =
-              duplicatedData.contact.contacts.map((contact) => {
-                if (contact.type === 'phone') {
-                  return { ...contact, value: phone }; // Set the new phone number
-                }
-                if (contact.type === 'email') {
-                  return { ...contact, value: email }; // Set the new email
-                }
-                return contact;
-              });
-          }
-          duplicatedData.user = user?.id;
-          duplicatedData.card = {
-            ...duplicatedData.card,
-            cardId,
-            theme: duplicatedData.card?.theme,
-          }; // Assuming 'theme' is part of the card object
-          duplicatedData.profile = {
-            ...duplicatedData.profile,
-            profileLink,
-            profileQR: qrImageUrl,
-          };
-          duplicatedData.visitCount = 0;
-          duplicatedData.form = {
-            status: 0,
-            forms: [],
-          };
-
-          // Create the new profile
-          newProfile = new Profile(duplicatedData);
-          await newProfile.save();
-        }
-      });
-
-    // Send back the new profile data
-    res.status(201).send({ success: true, data: newProfile });
-  } catch (error) {
-    console.log(error);
-    next(error);
+    qrImageUrl = await uploadFile(qrFile, 'cards', getRandomFileName('card-'));
+  } catch (err) {
+    console.error('QR code generation/upload failed:', err);
+    return res.status(500).json({ success: false, message: 'QR code generation failed' });
   }
-};
+
+  // 4. Try to create a new Firebase user
+  let user = null;
+  let userRecord = null;
+  try {
+    userRecord = await admin.auth().createUser({
+      email: email,
+      password: phone,
+      phoneNumber: phone,
+      displayName: name,
+      disabled: false,
+    });
+    user = await User.create({
+      username: phone,
+      uid: userRecord?.uid,
+      role: 'user',
+      providerData: userRecord?.providerData,
+    });
+  } catch (error) {
+    // If user already exists, fetch user
+    if (error?.errorInfo?.code === 'auth/phone-number-already-exists' || error?.errorInfo?.code === 'auth/email-already-exists') {
+      try {
+        if (error?.errorInfo?.code === 'auth/email-already-exists') {
+          userRecord = await admin.auth().getUserByEmail(email);
+        } else if (error?.errorInfo?.code === 'auth/phone-number-already-exists') {
+          userRecord = await admin.auth().getUserByPhoneNumber(phone);
+        }
+        user = await User.findOne({ username: phone });
+        if (!user) {
+          user = await User.create({
+            username: phone,
+            uid: userRecord?.uid,
+            role: 'user',
+            providerData: userRecord?.providerData,
+          });
+        }
+      } catch (fetchError) {
+        console.error('Error fetching existing user:', fetchError);
+        return res.status(500).json({ success: false, message: 'Error fetching existing user' });
+      }
+    } else {
+      console.error('Firebase user creation error:', error);
+      return res.status(500).json({ success: false, message: 'User creation failed' });
+    }
+  }
+
+  // 5. Duplicate the profile data
+  try {
+    const duplicatedData = profileToDuplicate.toObject();
+    delete duplicatedData._id;
+    duplicatedData.profile.name = name;
+    if (duplicatedData.contact && duplicatedData.contact.contacts) {
+      duplicatedData.contact.contacts = duplicatedData.contact.contacts.map((contact) => {
+        if (contact.type === 'phone') return { ...contact, value: phone };
+        if (contact.type === 'email') return { ...contact, value: email };
+        return contact;
+      });
+    }
+    duplicatedData.user = user?.id;
+    duplicatedData.card = {
+      ...duplicatedData.card,
+      cardId,
+      theme: duplicatedData.card?.theme,
+    };
+    duplicatedData.profile = {
+      ...duplicatedData.profile,
+      profileLink,
+      profileQR: qrImageUrl,
+    };
+    duplicatedData.visitCount = 0;
+    duplicatedData.form = {
+      status: 0,
+      forms: [],
+    };
+    newProfile = new Profile(duplicatedData);
+    await newProfile.save();
+  } catch (duplicationError) {
+    console.error('Profile duplication error:', duplicationError);
+    return res.status(500).json({ success: false, message: 'Profile duplication failed' });
+  }
+
+  // 6. Respond with the new profile
+  return res.status(201).json({ success: true, data: newProfile });
+});
 
 // Controller to check if games are enabled for a profile
 export const getIsGamesEnabled = async (req, res, next) => {

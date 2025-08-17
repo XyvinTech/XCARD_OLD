@@ -305,6 +305,11 @@ const showAwardPopup = (heading, description, imageUrl) => {
 function generateContactCard(link, label) {
   var cardImage;
   label = label.toLowerCase();
+  if (label === 'googleplay') {
+    cardImage = '<i class="bi bi-google-play app-icon"></i>';
+  } else if (label === 'appstore') {
+    cardImage = '<i class="bi bi-apple app-icon"></i>';
+  } else
   if (label == 'email') {
     cardImage = '<i class="fa-solid fa-at"></i>';
   } else if (label == 'instagram') {

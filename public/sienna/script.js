@@ -27,6 +27,8 @@ const data = JSON.parse(document.currentScript.getAttribute('data'));
 const id = data['_id'];
 const fetchUserData = async () => {
   console.log(data, "data")
+  const products = data.product.products;
+  console.log('products', products);
   return data;
 };
 const gamesEnabledPaths = JSON.parse(document.currentScript.getAttribute('gamesEnabledPaths'));
@@ -361,20 +363,16 @@ function generateProductCard(
     originalPrice = fakePrice;
     fakePrice = null;
   }
+  const product_no_img = '/profile/public/sienna/assets/images/product_no_img.png';
+  const processedImageUrl = handleImage({ public: imageUrl }, product_no_img);
   return `
-  <div  onclick="showProductPopup('${productName}', ${fakePrice}, ${originalPrice}, '${imageUrl}','${description}','${link}')" class="product_card ${
-    isUncategorized ? 'enforceWidth' : ''
-  }">
-  <img class="product_img" src="${imageUrl}" alt="${productName}">
+  <div  onclick="showProductPopup('${productName}', ${fakePrice}, ${originalPrice}, '${processedImageUrl}','${description}','${link}')" class="product_card ${    isUncategorized ? 'enforceWidth' : ''  }">
+  <img class="product_img" src="${processedImageUrl}" alt="${productName}" onerror="this.src='${product_no_img}';this.onerror=null;">
           <div class="product_details">
               <div class="product_name">${productName}</div>
               <div class="product_price">
-                  <p class="fake_price f_16 fw_400">${
-                    fakePrice === null ? '' : `${fakePrice}`
-                  }</p>
-                  <p class="orginal_price f_16 fw_600">${
-                    originalPrice === null ? '' : `${originalPrice}`
-                  }</p>
+                  <p class="fake_price f_16 fw_400">${    fakePrice === null ? '' : `${fakePrice}`  }</p>
+                  <p class="orginal_price f_16 fw_600">${    originalPrice === null ? '' : `${originalPrice}`  }</p>
               </div>
           </div>
       </div>
@@ -598,115 +596,181 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('user_contact_sites').classList.add('d_none');
   }
 
+  // Handle products - check if we have product data first
   if (
-    data.category &&
-    data.category.status &&
-    data.category.categorys.length > 0
+    data.product &&
+    data.product.status === true &&
+    Array.isArray(data.product.products) &&
+    data.product.products.length > 0
   ) {
-    const categorys = data.category.categorys;
-    const categorySection = document.getElementById('category');
-    categorys.innterHTML = `
-      <option value="none">Filter by category</option>
-      <option value="all">All</option>
-    `;
-    categorys.forEach((category) => {
-      categorySection.innerHTML += `
-      <option value="${category.name}">${category.name}</option>      
-    `;
-    });
-
-    let uncategorizedProducts = [];
-
+    document.getElementById('products_section').classList.remove('d_none');
+    console.log('Total products:', data.product.products.length);
+    
+    // Check if categories exist
     if (
-      data.product &&
-      data.product.status == true &&
-      data.product.products.length > 0
+      data.category &&
+      data.category.status &&
+      data.category.categorys.length > 0
     ) {
-      document.getElementById('products_section').classList.remove('d_none');
-      data.product.products.map((product) => {
-        if (
-          product.category != null &&
-          product.category != '' &&
-          product.category != 'none'
-        ) {
-          products_card_section.innerHTML += generateProductCard(
-            product.name,
-            product.price,
-            product.offerPrice,
-            product.image.public,
-            product.description,
-            product.link
-          );
-        } else {
-          uncategorizedProducts.push(product);
+      // Categories exist - show category filter
+      const categorys = data.category.categorys;
+      const categorySection = document.getElementById('category');
+      categorySection.innerHTML = `
+        <option value="none">Filter by category</option>
+        <option value="all">All</option>
+      `;
+      categorys.forEach((category) => {
+        categorySection.innerHTML += `
+        <option value="${category.name}">${category.name}</option>      
+      `;
+      });
+
+      let uncategorizedProducts = [];
+
+      // Display products with categories
+      data.product.products.forEach((product) => {
+        if (!product || typeof product !== 'object') {
+          console.warn('Invalid product data:', product);
+          return;
+        }
+
+        try {
+          if (
+            product.category &&
+            product.category !== 'none'
+          ) {
+            products_card_section.innerHTML += generateProductCard(
+              product.name || 'Unnamed Product',
+              product.price,
+              product.offerPrice,
+              product.image?.public,
+              product.description || '',
+              product.link || '#'
+            );
+          } else {
+            uncategorizedProducts.push(product);
+          }
+        } catch (error) {
+          console.error('Error generating product card:', error, product);
         }
       });
-      if (uncategorizedProducts.length > 0 && data.product.status == true) {
+
+      // Display uncategorized products in slider
+      if (uncategorizedProducts.length > 0) {
         const uncategorizedProductsSection = document.getElementById(
           'uncategorized_products_glider'
         );
         document
           .getElementById('uncategorized_products')
           .classList.remove('d_none');
-        uncategorizedProducts.map((product) => {
-          uncategorizedProductsSection.innerHTML += generateProductCard(
-            product.name,
-            product.price,
-            product.offerPrice,
-            product.image.public,
-            product.description,
-            product.link,
-            true
-          );
+        uncategorizedProducts.forEach((product) => {
+          try {
+            uncategorizedProductsSection.innerHTML += generateProductCard(
+              product.name || 'Unnamed Product',
+              product.price,
+              product.offerPrice,
+              product.image?.public,
+              product.description || '',
+              product.link || '#',
+              true
+            );
+          } catch (error) {
+            console.error('Error generating uncategorized product card:', error, product);
+          }
         });
       }
-    }
 
-    categorySection.addEventListener('change', (e) => {
-      selectedCategory = e.target.value;
-      if (
-        data.product &&
-        data.product.status &&
-        data.product.products.length > 0
-      ) {
-        products_card_section.innerHTML = '';
-        if (selectedCategory == 'all') {
-          data.product.products.map((product) => {
-            if (product.category != null && product.category != '')
-              products_card_section.innerHTML += generateProductCard(
-                product.name,
-                product.price,
-                product.offerPrice,
-                product.image.public,
-                product.description,
-                product.link
-              );
-          });
-        } else {
-          var numerOfCards = 0;
+      // Category change event listener
+      categorySection.addEventListener('change', (e) => {
+        try {
+          selectedCategory = e.target.value;
           products_card_section.innerHTML = '';
-          data.product.products.map((product) => {
-            if (product.category == selectedCategory) {
-              numerOfCards = numerOfCards + 1;
-              products_card_section.innerHTML += generateProductCard(
-                product.name,
-                product.price,
-                product.offerPrice,
-                product.image.public,
-                product.description,
-                product.link
-              );
+          console.log('Filtering products by category:', selectedCategory);
+
+          if (selectedCategory === 'all') {
+            data.product.products.forEach((product) => {
+              if (!product || typeof product !== 'object') {
+                console.warn('Invalid product data during filtering:', product);
+                return;
+              }
+
+              if (product.category) {
+                try {
+                  products_card_section.innerHTML += generateProductCard(
+                    product.name || 'Unnamed Product',
+                    product.price,
+                    product.offerPrice,
+                    product.image?.public,
+                    product.description || '',
+                    product.link || '#'
+                  );
+                } catch (error) {
+                  console.error('Error generating product card during filtering:', error, product);
+                }
+              }
+            });
+          } else {
+            let numberOfCards = 0;
+            data.product.products.forEach((product) => {
+              if (!product || typeof product !== 'object') {
+                console.warn('Invalid product data during filtering:', product);
+                return;
+              }
+
+              if (product.category === selectedCategory) {
+                try {
+                  numberOfCards++;
+                  products_card_section.innerHTML += generateProductCard(
+                    product.name || 'Unnamed Product',
+                    product.price,
+                    product.offerPrice,
+                    product.image?.public,
+                    product.description || '',
+                    product.link || '#'
+                  );
+                } catch (error) {
+                  console.error('Error generating product card during filtering:', error, product);
+                }
+              }
+            });
+
+            if (numberOfCards === 0) {
+              products_card_section.innerHTML = `<div class="no-products">No products found in ${selectedCategory}</div>`;
             }
-          });
-          if (numerOfCards == 0) {
-            products_card_section.innerHTML = `No Products found in ${selectedCategory}`;
           }
+        } catch (error) {
+          console.error('Error in category change handler:', error);
         }
-      } else {
-        document.getElementById('products_section').classList.add('d_none');
-      }
-    });
+      });
+    } else {
+      // No categories - display all products directly
+      console.log('No categories found, displaying all products directly');
+      document.getElementById('category').classList.add('d_none');
+      
+      data.product.products.forEach((product) => {
+        if (!product || typeof product !== 'object') {
+          console.warn('Invalid product data:', product);
+          return;
+        }
+
+        try {
+          products_card_section.innerHTML += generateProductCard(
+            product.name || 'Unnamed Product',
+            product.price,
+            product.offerPrice,
+            product.image?.public,
+            product.description || '',
+            product.link || '#'
+          );
+        } catch (error) {
+          console.error('Error generating product card:', error, product);
+        }
+      });
+    }
   } else {
+    // No products - hide products section
+    console.log('No products found or products disabled');
+    document.getElementById('products_section').classList.add('d_none');
     document.getElementById('category').classList.add('d_none');
   }
 

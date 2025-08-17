@@ -10,7 +10,7 @@ const upis =
   data.upi && data.upi.status && data.upi.upis?.length > 0
     ? data.upi.upis
     : null;
-const socials =
+let socials =
   data.social && data.social.status && data.social.socials?.length > 0
     ? data.social.socials
     : null;
@@ -21,6 +21,22 @@ const websites =
   data.website.websites?.length > 0
     ? data.website.websites
     : null;
+// Detect app store links inside socials and normalize them as social entries
+(() => {
+  if (socials && Array.isArray(socials)) {
+    const { filteredSocials, detected } = extractAppsFromSocials(socials);
+    socials = filteredSocials;
+    // Push normalized app links back into socials so they display in Socials section
+    detected.forEach((a) => {
+      if (a.platform === 'ios') {
+        socials.push({ label: 'App Store', value: a.link, type: 'appstore' });
+      }
+      if (a.platform === 'android') {
+        socials.push({ label: 'Google Play', value: a.link, type: 'googleplay' });
+      }
+    });
+  }
+})();
 const services =
   data.service && data.service.status && data.service.services?.length > 0
     ? data.service.services
@@ -55,6 +71,7 @@ const bank =
 function run() {
   generateProfile();
   generateWebsites();
+  // Apps are shown under Socials (no separate section)
   generateSocials();
   generateAwards();
   generateServices();
@@ -496,29 +513,12 @@ function generateSocials() {
       if (social.value === '') return;
 
       if (!large.includes(social.type)) {
-        card.innerHTML = `
-      <a target="_blank" href="${social.value}">
-      <img
-        src="/profile/public/orange-black/assets/orange-dark/socials/${contactCardImg(
-          social.type
-        )}"
-        alt="${social.type}"
-      />
-      <div>
-        <p class="social">${social.type}</p>
-        <p class="userid">@${social.label}</p>
-      </div>
-    </a>
-      `;
+        const inner = buildSocialCardInnerHTML(social);
+        card.innerHTML = inner;
         largeDiv.appendChild(card);
       } else {
-        card.innerHTML = `
-      <a target="_blank" href="${social.value}">
-        <img src="/profile/public/orange-black/assets/orange-dark/socials/${contactCardImg(
-          social.type
-        )}" alt="${social.type}" />
-      </a>
-      `;
+        const inner = buildSocialIconOnlyHTML(social);
+        card.innerHTML = inner;
 
         smallDiv.append(card);
       }
@@ -596,6 +596,65 @@ function generateSocials() {
     </div>
   `;
   }
+}
+
+function buildSocialCardInnerHTML(social){
+  const iconHtml = getSocialIconHTML(social.type);
+  const isApp = social.type === 'appstore' || social.type === 'googleplay';
+  const title = isApp
+    ? social.type === 'appstore'
+      ? 'App Store'
+      : 'Google Play'
+    : social.type;
+  const hasLabel = typeof social.label === 'string' && social.label.trim() !== '';
+  const normalizedLabel = (social.label || '').trim().toLowerCase();
+  const normalizedTitle = String(title || '').trim().toLowerCase();
+  const isDuplicate = hasLabel && normalizedLabel === normalizedTitle;
+
+  // Choose a single display line:
+  // - Prefer label (with @ for non-app) when present and not duplicate
+  // - Otherwise show title/type
+  let displayText = title;
+  if (hasLabel && !isDuplicate) {
+    displayText = isApp ? social.label : `@${social.label}`;
+  }
+  return `
+      <a target="_blank" href="${social.value}">
+      ${iconHtml}
+      <div>
+        <p class="userid">${displayText}</p>
+      </div>
+    </a>
+  `;
+}
+
+function buildSocialIconOnlyHTML(social){
+  const iconHtml = getSocialIconHTML(social.type);
+  return `
+      <a target="_blank" href="${social.value}">
+        ${iconHtml}
+      </a>
+  `;
+}
+
+function getSocialIconPath(type){
+  const file = contactCardImg(type);
+  // Use icons folder for app badges for better consistency
+  if (type === 'appstore' || type === 'googleplay') {
+    return `/profile/public/orange-black/assets/orange-dark/icons/${file}`;
+  }
+  return `/profile/public/orange-black/assets/orange-dark/socials/${file}`;
+}
+
+function getSocialIconHTML(type){
+  if (type === 'googleplay') {
+    return '<i class="bi bi-google-play app-icon" aria-label="Google Play"></i>';
+  }
+  if (type === 'appstore') {
+    return '<i class="bi bi-apple app-icon" aria-label="App Store"></i>';
+  }
+  const path = getSocialIconPath(type);
+  return `<img src="${path}" alt="${type}" />`;
 }
 
 function generateVideos() {
@@ -978,6 +1037,10 @@ function contactCardImg(label) {
       return 'wp_b.svg';
     case 'youtube':
       return 'youtube.svg';
+    case 'appstore':
+      return 'appstore.svg';
+    case 'googleplay':
+      return 'playstore.svg';
     default:
       return 'global.svg';
   }
@@ -1055,10 +1118,41 @@ function shorten(str) {
 }
 
 function ensureHttps(url) {
-  // Check if the URL starts with "http://" or "https://"
-  if (!url.startsWith('http://') && !url.startsWith('https://')) {
-    // If not, prepend "https://"
-    url = 'https://' + url;
+  // If URL already has a scheme (e.g., http, https, market, itms), leave it
+  if (/^[a-zA-Z][a-zA-Z0-9+.-]*:\/\//.test(url)) {
+    return url;
   }
-  return url;
+  return 'https://' + url;
+}
+
+function extractAppsFromSocials(socials) {
+  const detected = [];
+  const filteredSocials = [];
+  const androidRegex = /(play\.google\.com\/store|market:\/\/details)/i;
+  const iosRegex = /(apps\.apple\.com|itunes\.apple\.com|itms-apps:\/\/)/i;
+
+  for (const s of socials) {
+    const value = s?.value || '';
+    if (androidRegex.test(value)) {
+      detected.push({ platform: 'android', link: value });
+      continue;
+    }
+    if (iosRegex.test(value)) {
+      detected.push({ platform: 'ios', link: value });
+      continue;
+    }
+    filteredSocials.push(s);
+  }
+  return { filteredSocials, detected };
+}
+
+function mergeApps(target, source) {
+  const seen = new Set(target.map((a) => `${a.platform}|${a.link}`));
+  source.forEach((a) => {
+    const key = `${a.platform}|${a.link}`;
+    if (!seen.has(key)) {
+      target.push(a);
+      seen.add(key);
+    }
+  });
 }
