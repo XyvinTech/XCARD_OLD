@@ -19,10 +19,12 @@ const upload = multer({
   },
   fileFilter: (req, file, cb) => {
     // Accept only image files
-    if (file.mimetype.startsWith('image/')) {
+    if (file.mimetype && file.mimetype.startsWith('image/')) {
       cb(null, true);
     } else {
-      cb(new Error('Only image files are allowed'), false);
+      const error = new Error('Only image files are allowed');
+      error.code = 'INVALID_FILE_TYPE';
+      cb(error, false);
     }
   }
 });

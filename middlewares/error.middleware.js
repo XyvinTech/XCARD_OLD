@@ -22,6 +22,12 @@ const errorHandler = (err, req, res, next) => {
     }
   }
 
+  // Handle multer file filter errors (these are regular Error instances, not MulterError)
+  if (err.message === 'Only image files are allowed' || err.code === 'INVALID_FILE_TYPE') {
+    const message = 'Only image files are allowed. Please upload a valid image file (JPG, PNG, GIF, etc.)';
+    error = new ErrorResponse(message, 400);
+  }
+
   // Mongoose bad ObjectId
   if (err.name === 'CastError') {
     const message = `Resource not found`;
