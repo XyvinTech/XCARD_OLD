@@ -15,6 +15,17 @@ import getRandomFileName from '../helpers/filename.helper.js';
 export const analyzeCard = asyncHandler(async (req, res, next) => {
   const startTime = Date.now();
   
+  console.log('=== CONTROLLER DEBUG ===');
+  console.log('File in controller:', req.file ? 'File received' : 'No file');
+  if (req.file) {
+    console.log('File details:', {
+      name: req.file.originalname,
+      type: req.file.mimetype,
+      size: req.file.size
+    });
+  }
+  console.log('======================');
+  
   if (!req.file) {
     return next(new ErrorResponse('Please upload a card image', 400));
   }

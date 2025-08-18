@@ -18,13 +18,32 @@ const upload = multer({
     fieldSize: 1 * 1024 * 1024,
   },
   fileFilter: (req, file, cb) => {
-    // Accept only image files
-    if (file.mimetype && file.mimetype.startsWith('image/')) {
+    console.log('=== FILE FILTER DEBUG ===');
+    console.log('File object:', file);
+    console.log('Field name:', file?.fieldname);
+    console.log('Original name:', file?.originalname);
+    console.log('Mimetype:', file?.mimetype);
+    console.log('Size:', file?.size);
+    console.log('========================');
+    
+    // Very permissive check - accept anything that looks like an image
+    if (!file) {
+      console.log('❌ No file object received');
+      cb(new Error('No file received'), false);
+      return;
+    }
+    
+    // Accept if it has image mimetype OR image file extension
+    const hasImageMimetype = file.mimetype && file.mimetype.includes('image');
+    const hasImageExtension = file.originalname && 
+      /\.(jpg|jpeg|png|gif|bmp|webp|svg)$/i.test(file.originalname);
+    
+    if (hasImageMimetype || hasImageExtension) {
+      console.log('✅ File accepted - mimetype:', file.mimetype, 'name:', file.originalname);
       cb(null, true);
     } else {
-      const error = new Error('Only image files are allowed');
-      error.code = 'INVALID_FILE_TYPE';
-      cb(error, false);
+      console.log('❌ File rejected - mimetype:', file.mimetype, 'name:', file.originalname);
+      cb(new Error('Only image files are allowed'), false);
     }
   }
 });

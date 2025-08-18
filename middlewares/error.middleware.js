@@ -28,6 +28,12 @@ const errorHandler = (err, req, res, next) => {
     error = new ErrorResponse(message, 400);
   }
 
+  // Handle no file error
+  if (err.code === 'NO_FILE') {
+    const message = 'No file received. Please select and upload an image file.';
+    error = new ErrorResponse(message, 400);
+  }
+
   // Mongoose bad ObjectId
   if (err.name === 'CastError') {
     const message = `Resource not found`;
