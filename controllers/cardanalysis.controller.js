@@ -237,11 +237,14 @@ export const saveCardData = asyncHandler(async (req, res, next) => {
 export const getAnalysisHistory = asyncHandler(async (req, res, next) => {
   const { page = 1, limit = 10 } = req.query;
   
+  const pageNum = parseInt(page, 10) || 1;
+  const limitNum = parseInt(limit, 10) || 10;
+
   const analyses = await CardAnalysis.find({ user: req.user.id })
     .populate('savedToProfile', 'profile.name card.theme')
     .sort({ createdAt: -1 })
-    .limit(limit * 1)
-    .skip((page - 1) * limit);
+    .limit(limitNum)
+    .skip((pageNum - 1) * limitNum);
 
   const total = await CardAnalysis.countDocuments({ user: req.user.id });
 
@@ -252,8 +255,8 @@ export const getAnalysisHistory = asyncHandler(async (req, res, next) => {
     data: {
       analyses,
       pagination: {
-        current: page,
-        pages: Math.ceil(total / limit),
+        current: pageNum,
+        pages: Math.ceil(total / limitNum),
         total
       }
     }
