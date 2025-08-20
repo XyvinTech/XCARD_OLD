@@ -24,6 +24,7 @@ const upload = multer({
     console.log('Original name:', file?.originalname);
     console.log('Mimetype:', file?.mimetype);
     console.log('Size:', file?.size);
+    console.log('=== FILE FILTER DEBUG ===');
     console.log('========================');
     
     // Very permissive check - accept anything that looks like an image
