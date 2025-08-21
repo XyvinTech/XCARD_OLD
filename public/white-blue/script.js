@@ -653,6 +653,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   const data = await fetchUserData();
 
+
+   // Check if profile has the specific group ID and hide enquiry section
+  if (data.group && data.group === '689c7532d75d59a0d06966e3') {
+    const enquirySection = document.querySelector('.enquiry_section');
+    if (enquirySection) {
+      enquirySection.style.display = 'none';
+    }
+  }
+
   if (data) {
     const loader = document.getElementById('loader');
     loader.style.display = 'none';
