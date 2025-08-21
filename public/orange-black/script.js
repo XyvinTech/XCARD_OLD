@@ -724,13 +724,13 @@ function generateEnquiry() {
   const id = data['_id'];
   
   
-  if (data.group && data.group === '689c7532d75d59a0d06966e3') {
-    const enquirySection = document.getElementById('enquiry');
-    if (enquirySection) {
-      enquirySection.style.display = 'none';
-    }
-    return; 
-  }
+  // if (data.group && data.group === '689c7532d75d59a0d06966e3') {
+  //   const enquirySection = document.getElementById('enquiry');
+  //   if (enquirySection) {
+  //     enquirySection.style.display = 'none';
+  //   }
+  //   return; 
+  // }
 
   const form = document.querySelector('#enquiry form');
   form.addEventListener('submit', async (e) => {
