@@ -636,13 +636,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const enquiry_btn = document.getElementById('enquiry_btn');
   console.log(enquiry_btn);
   
-  // Check if profile has the specific group ID and hide enquiry section
-  // if (data.group && data.group === '689c7532d75d59a0d06966e3') {
-  //   const enquirySection = document.querySelector('.enquiry_section');
-  //   if (enquirySection) {
-  //     enquirySection.style.display = 'none';
-  //   }
-  // }
+  
 
   // contact
   const save_contact = document.getElementById('save_contact');
