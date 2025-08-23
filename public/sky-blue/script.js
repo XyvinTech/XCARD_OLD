@@ -699,13 +699,17 @@ function generateEnquiry() {
   const id = data['_id'];
   
   // Check if profile has the specific group ID and hide enquiry section
-  // if (data.group && data.group === '689c7532d75d59a0d06966e3') {
-  //   const enquirySection = document.getElementById('enquiry');
-  //   if (enquirySection) {
-  //     enquirySection.style.display = 'none';
-  //   }
-  //   return; // Exit function early
-  // }
+  if (data && data.group) {
+    console.log('Profile Group ID:', data.group);
+    
+    if (data.group === '689c7532d75d59a0d06966e3') {
+      const enquirySection = document.getElementById('enquiry');
+      if (enquirySection) {
+        enquirySection.style.display = 'none';
+      }
+      return; // Exit function early
+    }
+  }
 
   const form = document.querySelector('#enquiry form');
   form.addEventListener('submit', async (e) => {

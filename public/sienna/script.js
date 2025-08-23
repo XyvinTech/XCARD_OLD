@@ -527,14 +527,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   // enquery form
   const enquiry_btn = document.getElementById('enquiry_btn');
   
-  // Check if profile has the specific group ID and hide enquiry section
-  // if (data.group && data.group === '689c7532d75d59a0d06966e3') {
-  //   const enquirySection = document.querySelector('.enquiry_section');
-  //   if (enquirySection) {
-  //     enquirySection.style.display = 'none';
-  //   }
-  // }
-
   // contact
   const save_contact = document.getElementById('save_contact');
   console.log('save_contact', save_contact);
@@ -550,9 +542,23 @@ document.addEventListener('DOMContentLoaded', async () => {
   const data = await fetchUserData();
   const gamesEnabledPaths = await fetchgamesEnabledPaths();
 
+  // Check if profile has the specific group ID and hide enquiry section
+  if (data && data.group) {
+    console.log('Profile Group ID:', data.group);
+    
+    if (data.group === '689c7532d75d59a0d06966e3') {
+      const enquirySection = document.querySelector('.enquiry_section');
+      if (enquirySection) {
+        enquirySection.style.display = 'none';
+      }
+    }
+  }
+
   if (data && gamesEnabledPaths) {
     const loader = document.getElementById('loader');
     loader.style.display = 'none';
+
+    console.log(data);
   }
 
 
