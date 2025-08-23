@@ -603,6 +603,13 @@ ul {
   margin-bottom: 4.5rem;
 }
 
+/* Hide enquiry form for restricted group */
+#enquiry.hidden {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
 #enquiry h2 {
   font-size: 1.125rem;
   font-weight: 600;

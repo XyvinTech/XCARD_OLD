@@ -82,6 +82,17 @@ function run() {
   generateCatalogues();
   generateUpis();
   generateEnquiry();
+  
+  // Double-check that enquiry form is hidden for restricted group
+  hideEnquiryFormIfRestricted();
+  
+  // Final check after a short delay to handle any race conditions
+  if (data.group && data.group === '689c7532d75d59a0d06966e3') {
+    setTimeout(() => {
+      hideEnquiryFormIfRestricted();
+    }, 100);
+  }
+  
   setup();
 }
 function scrollToTop() {
@@ -102,6 +113,22 @@ function handleScroll() {
 window.addEventListener('scroll', handleScroll);
 
 document.addEventListener('DOMContentLoaded', () => {
+  // Log the group ID for debugging
+  console.log('Profile Group ID:', data.group);
+  console.log('Full profile data:', data);
+  
+  // Check and hide enquiry form immediately if profile belongs to restricted group
+  if (data.group && data.group === '689c7532d75d59a0d06966e3') {
+    const enquirySection = document.getElementById('enquiry');
+    if (enquirySection) {
+      enquirySection.style.display = 'none';
+      enquirySection.style.visibility = 'hidden';
+      enquirySection.style.opacity = '0';
+      enquirySection.classList.add('hidden');
+      console.log('Enquiry form hidden on DOM load for group:', data.group);
+    }
+  }
+  
   run();
   setContent();
 });
@@ -720,17 +747,38 @@ function generateCertificates() {
   });
 }
 
+// Helper function to hide enquiry form for restricted group
+function hideEnquiryFormIfRestricted() {
+  console.log('Checking group ID in helper function:', data.group);
+  if (data.group && data.group === '689c7532d75d59a0d06966e3') {
+    const enquirySection = document.getElementById('enquiry');
+    if (enquirySection) {
+      enquirySection.style.display = 'none';
+      enquirySection.style.visibility = 'hidden';
+      enquirySection.style.opacity = '0';
+      enquirySection.classList.add('hidden');
+      console.log('Enquiry form hidden by helper function for group:', data.group);
+    }
+  } else {
+    console.log('Group ID does not match restricted group or is undefined');
+  }
+}
+
 function generateEnquiry() {
   const id = data['_id'];
   
-  
-  // if (data.group && data.group === '689c7532d75d59a0d06966e3') {
-  //   const enquirySection = document.getElementById('enquiry');
-  //   if (enquirySection) {
-  //     enquirySection.style.display = 'none';
-  //   }
-  //   return; 
-  // }
+  // Check if profile belongs to the specific group and hide enquiry form
+  if (data.group && data.group === '689c7532d75d59a0d06966e3') {
+    const enquirySection = document.getElementById('enquiry');
+    if (enquirySection) {
+      enquirySection.style.display = 'none';
+      enquirySection.style.visibility = 'hidden';
+      enquirySection.style.opacity = '0';
+      enquirySection.classList.add('hidden');
+      console.log('Enquiry form hidden for group:', data.group);
+    }
+    return; // Exit early, don't set up the form
+  }
 
   const form = document.querySelector('#enquiry form');
   form.addEventListener('submit', async (e) => {
