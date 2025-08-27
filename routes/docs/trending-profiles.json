@@ -8,8 +8,8 @@
   "paths": {
     "/api/v1/information/trending-profiles": {
       "get": {
-        "summary": "Get trending profiles",
-        "description": "Retrieves a paginated list of profiles sorted by visit count in descending order",
+        "summary": "Get trending profiles with search and filter functionality",
+        "description": "Retrieves a paginated list of profiles sorted by visit count in descending order. Supports search across multiple fields and filtering by various criteria.",
         "tags": ["Information"],
         "parameters": [
           {
@@ -32,6 +32,81 @@
               "maximum": 100
             },
             "description": "Number of items per page"
+          },
+          {
+            "in": "query",
+            "name": "search",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Search across name, company, designation, bio, and theme fields"
+          },
+          {
+            "in": "query",
+            "name": "profileName",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by exact profile name"
+          },
+          {
+            "in": "query",
+            "name": "companyName",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by exact company name"
+          },
+          {
+            "in": "query",
+            "name": "designation",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by exact designation"
+          },
+          {
+            "in": "query",
+            "name": "theme",
+            "schema": {
+              "type": "string",
+              "enum": ["gold&black", "white&black", "violet&green", "orange&black", "aero&black", "white&blue", "blue&black", "restaturants"]
+            },
+            "description": "Filter by card theme"
+          },
+          {
+            "in": "query",
+            "name": "minVisits",
+            "schema": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "description": "Minimum visit count"
+          },
+          {
+            "in": "query",
+            "name": "maxVisits",
+            "schema": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "description": "Maximum visit count"
+          },
+          {
+            "in": "query",
+            "name": "visible",
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "Filter by visibility status"
+          },
+          {
+            "in": "query",
+            "name": "isDisabled",
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "Filter by disabled status"
           }
         ],
         "responses": {
@@ -51,30 +126,53 @@
                       "items": {
                         "type": "object",
                         "properties": {
-                          "profile": {
-                            "type": "object",
-                            "properties": {
-                              "name": {
-                                "type": "string",
-                                "example": "John Doe"
-                              },
-                              "companyName": {
-                                "type": "string",
-                                "example": "Tech Corp"
-                              },
-                              "designation": {
-                                "type": "string",
-                                "example": "Software Engineer"
-                              },
-                              "profilePicture": {
-                                "type": "object",
-                                "description": "Profile picture object containing URL and other details"
-                              }
-                            }
+                          "profileLink": {
+                            "type": "string",
+                            "example": "https://app.visitingcard.store/profile/12345"
+                          },
+                          "profileName": {
+                            "type": "string",
+                            "example": "John Doe"
+                          },
+                          "companyName": {
+                            "type": "string",
+                            "example": "Tech Corp"
+                          },
+                          "designation": {
+                            "type": "string",
+                            "example": "Software Engineer"
+                          },
+                          "bio": {
+                            "type": "string",
+                            "example": "Experienced software engineer with expertise in web development"
+                          },
+                          "profilePicture": {
+                            "type": "string",
+                            "example": "https://example.com/profile.jpg"
                           },
                           "visitCount": {
                             "type": "number",
                             "example": 150
+                          },
+                          "theme": {
+                            "type": "string",
+                            "example": "orange&black"
+                          },
+                          "visible": {
+                            "type": "boolean",
+                            "example": true
+                          },
+                          "isDisabled": {
+                            "type": "boolean",
+                            "example": false
+                          },
+                          "groupName": {
+                            "type": "string",
+                            "example": "Tech Professionals"
+                          },
+                          "adminName": {
+                            "type": "string",
+                            "example": "Admin User"
                           }
                         }
                       }
@@ -97,6 +195,24 @@
                         "totalResults": {
                           "type": "integer",
                           "example": 100
+                        }
+                      }
+                    },
+                    "filters": {
+                      "type": "object",
+                      "properties": {
+                        "search": {
+                          "type": "string",
+                          "example": "john",
+                          "description": "Applied search term"
+                        },
+                        "appliedFilters": {
+                          "type": "object",
+                          "description": "Currently applied filters"
+                        },
+                        "availableFilters": {
+                          "type": "object",
+                          "description": "Description of all available filter options"
                         }
                       }
                     }
