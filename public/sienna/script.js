@@ -723,6 +723,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
               }
             });
+            
           } else {
             let numberOfCards = 0;
             data.product.products.forEach((product) => {
