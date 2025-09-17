@@ -633,6 +633,8 @@ function buildSocialCardInnerHTML(social){
       ? 'App Store'
       : 'Google Play'
     : social.type;
+  // If type is 'google' we want to display a more friendly label
+  const displayType = social.type === 'google' ? 'Google Review' : title;
   const hasLabel = typeof social.label === 'string' && social.label.trim() !== '';
   const normalizedLabel = (social.label || '').trim().toLowerCase();
   const normalizedTitle = String(title || '').trim().toLowerCase();
@@ -641,7 +643,7 @@ function buildSocialCardInnerHTML(social){
   // Choose a single display line:
   // - Prefer label (with @ for non-app) when present and not duplicate
   // - Otherwise show title/type
-  let displayText = title;
+  let displayText = displayType;
   if (hasLabel && !isDuplicate) {
     displayText = isApp ? social.label : `@${social.label}`;
   }
@@ -657,8 +659,9 @@ function buildSocialCardInnerHTML(social){
 
 function buildSocialIconOnlyHTML(social){
   const iconHtml = getSocialIconHTML(social.type);
+  const titleAttr = social.type === 'google' ? ' title="Google Review" aria-label="Google Review"' : '';
   return `
-      <a target="_blank" href="${social.value}">
+      <a target="_blank" href="${social.value}"${titleAttr}>
         ${iconHtml}
       </a>
   `;

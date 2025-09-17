@@ -529,8 +529,10 @@ function generateSocials() {
 
       if (!large.includes(social.type)) {
         const icon = `/profile/public/sky-blue/assets/orange-dark/socials/${contactCardImg(social.type)}`;
-        const isApp = social.type === 'appstore' || social.type === 'googleplay';
-        const title = isApp ? (social.type === 'appstore' ? 'App Store' : 'Google Play') : social.type;
+  const isApp = social.type === 'appstore' || social.type === 'googleplay';
+  // Friendly title mapping
+  let title = isApp ? (social.type === 'appstore' ? 'App Store' : 'Google Play') : social.type;
+  if (social.type === 'google') title = 'Google Review';
         const hasLabel = typeof social.label === 'string' && social.label.trim() !== '';
         const normalizedLabel = (social.label || '').trim().toLowerCase();
         const normalizedTitle = String(title || '').trim().toLowerCase();
@@ -546,8 +548,9 @@ function generateSocials() {
       `;
         largeDiv.appendChild(card);
       } else {
+        const smallTitle = social.type === 'google' ? ' title="Google Review" aria-label="Google Review"' : '';
         card.innerHTML = `
-      <a target="_blank" href="${social.value}">
+      <a target="_blank" href="${social.value}"${smallTitle}>
         <img src="/profile/public/sky-blue/assets/orange-dark/socials/${contactCardImg(
           social.type
         )}" alt="${social.type}" />

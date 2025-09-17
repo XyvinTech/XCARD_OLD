@@ -316,9 +316,10 @@ function generateContactCard(link, label) {
       label
     )}" alt="">`;
   }
+  const titleAttr = String(label).toLowerCase() === 'google' ? ' title="Google Review" aria-label="Google Review"' : '';
   return `
         <div class="contact_card">
-            <a href=${link}>
+            <a href=${link}${titleAttr}>
               ${cardImageHtml}
             </a>
         </div>
@@ -353,7 +354,7 @@ function generateLongContactCard(label, type, link, value) {
                   type
                 )}" alt="">
                 <div class="contact_info">
-                    <h5 class="fw_500 f_12">${label}</h5>
+          <h5 class="fw_500 f_12">${type === 'google' ? 'Google Review' : label}</h5>
                     <p class="f_14 fw_600">${value}</p>
                 </div>
             </a>

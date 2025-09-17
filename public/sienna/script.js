@@ -325,9 +325,10 @@ const showAwardPopup = (heading, description, imageUrl) => {
 };
 
 function generateContactCard(link, label) {
+  const titleAttr = String(label).toLowerCase() === 'google' ? ' title="Google Review" aria-label="Google Review"' : '';
   return `
       <div class="contact_card">
-          <a style="display: flex;align-content: center;justify-content: center;" href=${link} >
+          <a style="display: flex;align-content: center;justify-content: center;" href=${link}${titleAttr}>
               <img src="/profile/public/sienna/assets/icons/${contactCardImg(
                 label
               )}" alt="">
@@ -348,6 +349,11 @@ function generateUserSiteCard(websiteName, link) {
           </a>
       </div>
   `;
+}
+
+// Friendly display for google contact type in long contact cards
+function friendlyLabelFor(type, label) {
+  return String(type).toLowerCase() === 'google' ? 'Google Review' : label;
 }
 
 function generateProductCard(

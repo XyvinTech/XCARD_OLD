@@ -352,11 +352,24 @@ function generateContactCard(link, label) {
 
   return `
         <div class="contact_card">
-            <a href=${link}>
+      <a href=${link}${buildIconTitleAttr(label)}>
             ${cardImage}
             </a>
         </div>
     `;
+}
+
+function buildSocialDisplayLabel(social) {
+  const lower = String(social.type || social).toLowerCase();
+  if (lower === 'google') return 'Google Review';
+  if (lower === 'appstore') return 'App Store';
+  if (lower === 'googleplay') return 'Google Play';
+  return social.label && social.label.trim() !== '' ? social.label : social.type || social;
+}
+
+function buildIconTitleAttr(social){
+  const type = typeof social === 'string' ? social : social.type;
+  return String(type).toLowerCase() === 'google' ? ' title="Google Review" aria-label="Google Review"' : '';
 }
 
 function generateContactMeLabel(status) {
@@ -382,6 +395,8 @@ function generateLongContactCard(label, type, link, value) {
   var cardImage;
   temp = label;
   label = type;
+  // If type is google, prefer friendly label
+  const displayLabel = type === 'google' ? 'Google Review' : temp;
   if (label == 'email') {
     cardImage = '<i class="fa-solid fa-at"></i>';
   } else if (label == 'instagram') {
@@ -431,7 +446,7 @@ function generateLongContactCard(label, type, link, value) {
             <a class="contact_link" href="${link}">
                 ${cardImage}
                 <div class="contact_info">
-                    <h5 class="fw_500 f_12">${label}</h5>
+                    <h5 class="fw_500 f_12">${displayLabel}</h5>
                     <p class="f_14 fw_600">${value}</p>
                 </div>
             </a>

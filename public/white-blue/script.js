@@ -352,9 +352,9 @@ function generateContactCard(link, label) {
 
   return `
         <div class="contact_card">
-            <a href=${link}>
-            ${cardImage}
-            </a>
+      <a href=${link}${label === 'google' ? ' title="Google Review" aria-label="Google Review"' : ''}>
+      ${cardImage}
+      </a>
         </div>
     `;
 }
@@ -423,18 +423,19 @@ function generateLongContactCard(label, type, link, value) {
   }
 
   label = temp;
+  const displayLabel = type === 'google' ? 'Google Review' : label;
 
   return `
-        <div class="contact_long_card">
-            <a class="contact_link" href="${link}">
-                ${cardImage}
-                <div class="contact_info">
-                    <h5 class="fw_500 f_12">${label}</h5>
-                    <p class="f_14 fw_600">${value}</p>
-                </div>
-            </a>
+    <div class="contact_long_card">
+      <a class="contact_link" href="${link}">
+        ${cardImage}
+        <div class="contact_info">
+          <h5 class="fw_500 f_12">${displayLabel}</h5>
+          <p class="f_14 fw_600">${value}</p>
         </div>
-    `;
+      </a>
+    </div>
+  `;
 }
 
 function generateUserSiteCard(websiteName, link) {

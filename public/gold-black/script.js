@@ -290,13 +290,14 @@ function generateContactCard(link, type) {
   const icon = lower === 'googleplay' ?
     '<i class="bi bi-google-play app-icon"></i>' :
     (lower === 'appstore' ? '<i class="bi bi-apple app-icon"></i>' : `<img src="/profile/public/gold-black/assets/icons/${contactCardImg(type)}" alt="">`);
+  const titleAttr = buildIconTitleAttr({ type });
   return `
-        <div class="contact_card">
-            <a href=${link}>
-                ${icon}
-            </a>
-        </div>
-    `;
+    <div class="contact_card">
+      <a href=${link}${titleAttr}>
+        ${icon}
+      </a>
+    </div>
+  `;
 }
 
 function generateContactMeLabel(status) {
@@ -320,6 +321,9 @@ function generateLongContactCard(label, type, link, value) {
     return '';
   }
 
+  // If type is google, use friendly label
+  const displayLabel = type === 'google' ? 'Google Review' : label;
+
   return `
         <div class="contact_long_card">
             <a class="contact_link" href="${link}">
@@ -327,12 +331,24 @@ function generateLongContactCard(label, type, link, value) {
                   type
                 )}" alt="">
                 <div class="contact_info">
-                    <h5 class="fw_500 f_12">${label}</h5>
+                    <h5 class="fw_500 f_12">${displayLabel}</h5>
                     <p class="gradient_text f_14 fw_600">${value}</p>
                 </div>
             </a>
         </div>
     `;
+}
+
+function buildSocialDisplayLabel(social) {
+  const lower = String(social.type || '').toLowerCase();
+  if (lower === 'google') return 'Google Review';
+  if (lower === 'appstore') return 'App Store';
+  if (lower === 'googleplay') return 'Google Play';
+  return social.label && social.label.trim() !== '' ? social.label : social.type;
+}
+
+function buildIconTitleAttr(social){
+  return social.type === 'google' ? ' title="Google Review" aria-label="Google Review"' : '';
 }
 
 function generateUserSiteCard(websiteName, link) {
